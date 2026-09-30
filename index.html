@@ -13,7 +13,7 @@
     document.documentElement.setAttribute('data-mode', m === 'light' ? 'light' : 'dark'); })();
   // Signed-in role, kept for this browser tab only (a new visit asks to sign in again).
   (function(){ try{ var r = sessionStorage.getItem('laqyan-role');
-    if((r === 'student' || r === 'admin') && sessionStorage.getItem('laqyan-user'))
+    if((r === 'student' || r === 'admin' || r === 'guest') && sessionStorage.getItem('laqyan-user'))
       document.documentElement.setAttribute('data-role', r); }catch(e){} })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -495,9 +495,9 @@
   @media (max-width:480px){.field-row{grid-template-columns:1fr;}}
   /* ---------- Entry screen (student / admin) ---------- */
   .gate{position:fixed; inset:0; z-index:90; display:grid; place-items:center; padding:20px; overflow-y:auto;}
-  :root[data-role="student"] .gate, :root[data-role="admin"] .gate{display:none;}
-  :root:not([data-role="student"]):not([data-role="admin"]) .stage,
-  :root:not([data-role="student"]):not([data-role="admin"]) .mobile-cta{display:none;}
+  :root[data-role="student"] .gate, :root[data-role="admin"] .gate, :root[data-role="guest"] .gate{display:none;}
+  :root:not([data-role="student"]):not([data-role="admin"]):not([data-role="guest"]) .stage,
+  :root:not([data-role="student"]):not([data-role="admin"]):not([data-role="guest"]) .mobile-cta{display:none;}
   .gate-card{
     position:relative; isolation:isolate; overflow:hidden;
     width:min(460px, 100%); padding:34px 28px 20px; text-align:center;
@@ -524,6 +524,22 @@
   .role-text small{display:block; margin-top:2px; font-size:12.5px; color:var(--muted);}
   .role-arrow{width:18px; height:18px; flex:none; margin-inline-start:auto; color:var(--faint); transition:transform .2s ease, color .2s ease;}
   .role-card:hover .role-arrow{color:var(--indigo-soft); transform:translateX(-3px);}
+  .guest-link{
+    align-self:center; margin-top:6px; padding:8px 14px; border-radius:10px; border:0; background:transparent;
+    font-size:14px; font-weight:500; color:var(--indigo-soft); cursor:pointer; text-decoration:underline; text-underline-offset:4px;
+  }
+  .guest-link:hover{background:var(--hover); color:var(--title);}
+  :root[data-mode="light"] .guest-link{color:var(--indigo);}
+  #guestDialog{width:min(420px, calc(100vw - 24px));}
+  .guest-body{padding:26px 24px 22px; text-align:center;}
+  .guest-ico{
+    width:52px; height:52px; margin:0 auto 14px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    background:var(--card-2); border:1px solid var(--line-2); color:var(--indigo-soft);
+  }
+  .guest-ico svg{width:26px; height:26px;}
+  .guest-body h2{font-size:18px; font-weight:600; color:var(--title);}
+  .guest-body p{margin-top:8px; font-size:14px; color:var(--muted); line-height:1.7;}
+  .guest-body .form-actions{margin-top:20px;}
   .gate-foot{
     margin-top:22px; padding-top:14px; border-top:1px solid var(--line);
     display:flex; align-items:center; justify-content:center; gap:10px; font-size:12px; color:var(--faint);
@@ -544,7 +560,8 @@
   }
   .link-btn svg{width:15px; height:15px;}
   .link-btn:hover{color:var(--title);}
-  :root[data-role="student"] .report-wrap{display:none;}
+  :root[data-role="student"] .report-wrap, :root[data-role="guest"] .report-wrap{display:none;}
+  :root[data-role="guest"] #btnTour{display:none;}
 
   /* Admin-only actions in the detail popup */
   .admin-actions{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line-2);}
@@ -611,7 +628,7 @@
   .nav-dash .nav-ico{color:var(--indigo-soft);}
   .nav-dash.active{border-top-color:transparent; border-radius:14px;}
   .admin-tag{margin-inline-start:auto; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; background:rgba(76,99,245,.14); color:var(--indigo-soft);}
-  :root[data-role="student"] .nav-dash{display:none;}
+  :root[data-role="student"] .nav-dash, :root[data-role="guest"] .nav-dash{display:none;}
 
   /* List view vs dashboard view */
   .dash{display:none;}
@@ -749,8 +766,8 @@
   }
 
   /* ---------- Chat assistant (مساعد لقيان) ---------- */
-  :root:not([data-role="student"]):not([data-role="admin"]) .chat-fab,
-  :root:not([data-role="student"]):not([data-role="admin"]) .chat-panel{display:none;}
+  :root:not([data-role="student"]):not([data-role="admin"]):not([data-role="guest"]) .chat-fab,
+  :root:not([data-role="student"]):not([data-role="admin"]):not([data-role="guest"]) .chat-panel{display:none;}
   .chat-fab{
     position:fixed; bottom:24px; inset-inline-end:24px; z-index:45;
     display:flex; align-items:center; gap:10px; height:54px; padding:0 20px 0 16px; border-radius:999px;
@@ -1313,6 +1330,7 @@
         <span class="role-text"><strong data-i18n="role.admin"></strong><small data-i18n="role.adminSub"></small></span>
         <svg class="role-arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
       </button>
+      <button class="guest-link" id="roleGuest" type="button" data-i18n="role.guest"></button>
     </div>
 
     <form class="gate-step" id="gateLogin" hidden novalidate>
@@ -1369,6 +1387,19 @@
     </div>
   </div>
 </div>
+
+<!-- Guest: "sign in to continue" prompt -->
+<dialog id="guestDialog" aria-labelledby="guestTitle" aria-describedby="guestMsg">
+  <div class="guest-body">
+    <span class="guest-ico"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/></svg></span>
+    <h2 id="guestTitle" data-i18n="guest.title"></h2>
+    <p id="guestMsg"></p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" data-close-dialog="guestDialog" data-i18n="btn.cancel"></button>
+      <button type="button" class="btn btn-primary" id="guestSignIn" data-i18n="guest.signIn"></button>
+    </div>
+  </div>
+</dialog>
 
 <div class="toast" id="toast" role="status">
   <span class="tick"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg></span>
@@ -1428,6 +1459,12 @@
       'chat.errNet':'تعذّر الوصول للمساعد، تحقّق من اتصالك وحاول مرة ثانية.', 'chat.retry':'إعادة المحاولة',
       'role.student':'طالب / طالبة', 'role.studentSub':'تصفّح المفقودات والموجودات وأبلغ عن غرض',
       'role.admin':'مشرف', 'role.adminSub':'إدارة البلاغات وتعديلها وتحميل التقارير',
+      'role.guest':'تصفّح كزائر', 'badge.guest':'زائر', 'toast.welcomeGuest':'تتصفّح لقيان كزائر',
+      'guest.title':'سجّل الدخول للمتابعة', 'guest.signIn':'تسجيل الدخول',
+      'guest.report':'تسجيل البلاغات متاح للطلاب والمشرفين بعد تسجيل الدخول.',
+      'guest.contact':'بيانات التواصل تظهر للطلاب بعد تسجيل الدخول، حفاظًا على خصوصيتهم.',
+      'guest.chat':'مساعد لقيان متاح للطلاب بعد تسجيل الدخول.',
+      'guest.revealBtn':'سجّل الدخول لعرض بيانات التواصل',
       'detail.title':'تفاصيل البلاغ', 'badge.student':'طالب', 'badge.admin':'مشرف',
       'toast.welcomeStudent':'مرحبًا بك في لقيان', 'toast.welcomeAdmin':'مرحبًا بك، تم الدخول كمشرف',
       'status.lost':'مفقود', 'status.found':'موجود', 'status.delivered':'تم التسليم',
@@ -1521,6 +1558,12 @@
       'chat.errNet':"Couldn't reach the assistant. Check your connection and try again.", 'chat.retry':'Try again',
       'role.student':'Student', 'role.studentSub':'Browse lost and found items and report one',
       'role.admin':'Admin', 'role.adminSub':'Manage and edit reports, download statistics',
+      'role.guest':'Browse as guest', 'badge.guest':'Guest', 'toast.welcomeGuest':"You're browsing LaqYan as a guest",
+      'guest.title':'Sign in to continue', 'guest.signIn':'Sign in',
+      'guest.report':'Posting reports is available to students and admins after signing in.',
+      'guest.contact':'Contact details are shown to signed-in students, to protect their privacy.',
+      'guest.chat':'The LaqYan assistant is available to students after signing in.',
+      'guest.revealBtn':'Sign in to see contact details',
       'detail.title':'Report details', 'badge.student':'Student', 'badge.admin':'Admin',
       'toast.welcomeStudent':'Welcome to LaqYan', 'toast.welcomeAdmin':'Welcome, you are signed in as admin',
       'status.lost':'Lost', 'status.found':'Found', 'status.delivered':'Returned',
@@ -1614,6 +1657,7 @@
     share: '<path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z"/>',
     copy: '<path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/>',
     chat: '<path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/>',
+    guest: '<path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/>',
     grad: '<path d="M251.76,88.94l-120-64a8,8,0,0,0-7.52,0l-120,64a8,8,0,0,0,0,14.12L32,117.87v48.42a15.91,15.91,0,0,0,4.06,10.65C49.16,191.53,78.51,216,128,216a130,130,0,0,0,48-8.76V240a8,8,0,0,0,16,0V199.51a115.63,115.63,0,0,0,27.94-22.57A15.91,15.91,0,0,0,224,166.29V117.87l27.76-14.81a8,8,0,0,0,0-14.12ZM128,200c-43.27,0-68.72-21.14-80-33.71V126.4l76.24,40.66a8,8,0,0,0,7.52,0L176,143.47v46.34C163.4,195.69,147.52,200,128,200Zm80-33.75a97.83,97.83,0,0,1-16,14.25V134.93l16-8.53ZM188,118.94l-.22-.13-56-29.87a8,8,0,0,0-7.52,14.12L171,128l-43,22.93L25,96,128,41.07,231,96Z"/>',
   };
   function svg(name, extra){ return '<svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor" aria-hidden="true" '+(extra||'')+'>'+ICONS[name]+'</svg>'; }
@@ -1842,10 +1886,15 @@
   const root = document.documentElement;
   function currentRole(){ return root.getAttribute('data-role'); }
   function isAdmin(){ return currentRole() === 'admin'; }
+  function isGuest(){ return currentRole() === 'guest'; }
   function renderBadge(){
     const r = currentRole(); if(!r) return;
     const badge = document.getElementById('roleBadge');
-    badge.innerHTML = svg(r === 'admin' ? 'shield' : 'grad') + esc(t(r === 'admin' ? 'badge.admin' : 'badge.student'));
+    badge.innerHTML = svg(r === 'admin' ? 'shield' : r === 'guest' ? 'guest' : 'grad') +
+      esc(t(r === 'admin' ? 'badge.admin' : r === 'guest' ? 'badge.guest' : 'badge.student'));
+    // Guests get "Sign in" instead of "Switch account" on the same button.
+    const sw = document.querySelector('#btnSwitchRole [data-i18n]');
+    sw.dataset.i18n = r === 'guest' ? 'guest.signIn' : 'role.switch'; sw.textContent = t(sw.dataset.i18n);
     badge.title = userLogin;
   }
 
@@ -1873,13 +1922,13 @@
   }
   function enterAs(role){
     root.setAttribute('data-role', role);
-    try{ sessionStorage.setItem('laqyan-role', role); sessionStorage.setItem('laqyan-user', userLogin); }catch(e){}
+    try{ sessionStorage.setItem('laqyan-role', role); sessionStorage.setItem('laqyan-user', userLogin || role); }catch(e){}
     renderBadge();
     toggleReportMenu(false);
     setView('list');                           // cards/details depend on the role
     window.scrollTo(0, 0);
-    toast(t(role === 'admin' ? 'toast.welcomeAdmin' : 'toast.welcomeStudent'));
-    if(!openFromHash() && !tourSeen(role)) setTimeout(() => startTour(), 450);
+    toast(t(role === 'admin' ? 'toast.welcomeAdmin' : role === 'guest' ? 'toast.welcomeGuest' : 'toast.welcomeStudent'));
+    if(!openFromHash() && role !== 'guest' && !tourSeen(role)) setTimeout(() => startTour(), 450);   // the tour shows posting, which guests can't do
   }
   function leave(){
     endTour(false);
@@ -1894,6 +1943,20 @@
 
   document.getElementById('roleStudent').addEventListener('click', ()=>showGateStep('student'));
   document.getElementById('roleAdmin').addEventListener('click', ()=>showGateStep('admin'));
+  document.getElementById('roleGuest').addEventListener('click', ()=>{ userLogin = ''; adminPw = ''; enterAs('guest'); });
+
+  /* Guests browse only. Posting, contact details and the assistant ask them to sign in.
+     (UI rule: contact_info is still readable through the public API, see supabase/migrations.) */
+  const guestDialog = document.getElementById('guestDialog');
+  function guestPrompt(kind){
+    document.getElementById('guestMsg').textContent = t('guest.' + kind);
+    guestDialog.showModal();
+  }
+  document.getElementById('guestSignIn').addEventListener('click', ()=>{
+    guestDialog.close();
+    leave();
+    showGateStep('student');
+  });
   document.getElementById('gateBack').addEventListener('click', ()=>showGateStep('roles'));
   document.getElementById('btnSwitchRole').addEventListener('click', leave);
   gateLogin.addEventListener('submit', async (e)=>{
@@ -2298,6 +2361,7 @@
     el.hidden = !msg;
   }
   function openReport(type, editItem){
+    if(isGuest()){ guestPrompt('report'); return; }
     reportForm.reset();
     showFormError('');
     editingId = editItem ? editItem.id : null;
@@ -2467,7 +2531,7 @@
       (it.returned
         ? '<div class="returned-box">'+svg('check')+'<div><strong>'+esc(t('returned.title'))+'</strong><span>'+esc(t('returned.body'))+'</span></div></div>'
         : '<div class="contact-box" id="contactBox">'+
-            '<button class="btn btn-primary btn-block" id="revealBtn" type="button">'+svg('phone')+' '+esc(t('contact.reveal'))+'</button>'+
+            '<button class="btn btn-primary btn-block" id="revealBtn" type="button">'+svg('phone')+' '+esc(t(isGuest() ? 'guest.revealBtn' : 'contact.reveal'))+'</button>'+
           '</div>')+
       '<div class="share-row" id="shareRow">'+
         '<span class="share-lbl">'+svg('share')+esc(t('share.label'))+'</span>'+
@@ -2493,6 +2557,7 @@
 
     const revealBtn = document.getElementById('revealBtn');
     if(revealBtn) revealBtn.addEventListener('click', function(){
+      if(isGuest()){ guestPrompt('contact'); return; }
       document.getElementById('contactBox').innerHTML =
         '<div class="contact-lbl">'+svg('phone')+esc(t('contact.label'))+'</div>'+
         '<div class="contact-reveal">'+esc(it.contact)+'</div>'+
@@ -2603,6 +2668,7 @@
   });
   // Close on backdrop clicks only. A backdrop click targets the <dialog> itself; this also ignores the
   // synthetic (0,0) click that pressing Enter in a form sends to the submit button.
+  closeOnBackdrop(document.getElementById('guestDialog'));
   function closeOnBackdrop(dlg){
     dlg.addEventListener('click', (e)=>{
       if(e.target !== dlg) return;
@@ -2890,6 +2956,7 @@
     chatAdd(box);
   }
   function openChat(){
+    if(isGuest()){ guestPrompt('chat'); return; }
     chatPanel.hidden = false;
     chatFab.setAttribute('aria-expanded', 'true');
     if(!chatLog.childElementCount) chatWelcome();
