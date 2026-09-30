@@ -1,4 +1,4 @@
-// LaqYan (لقيان) — "مساعد لقيان" chat agent.
+// LaqYan (لقيان): "مساعد لقيان" chat agent.
 //
 // POST { message, history: [{role:'user'|'model', text}], section: 'male'|'female' }
 //  ->  { reply, items: [id…], created: row|null }    or    { error: code, reply }
@@ -198,7 +198,7 @@ function systemPrompt(section: string): string {
 - أول شي حاول تجاوب من بيانات الموجودات الفعلية عن طريق أداة البحث search_items، ما تخمن ولا تختلق نتائج.
 - اسأل عن تفاصيل الغرض إذا كانت الرسالة غامضة (وش نوعه، وين تقريبًا ضاع، متى) قبل ما تبحث.
 - إذا لقيت تطابق محتمل: اكتب سطر واحد فيه اسم الغرض كما هو في النتائج بالضبط (عشان تظهر بطاقته تحت رسالتك) واسأل هل هو غرضه. لا تعيد الموقع والتاريخ والوصف لأن البطاقة تعرضها. إذا أكثر من تطابق اذكر أسماءها بالضبط كنقاط قصيرة.
-- إذا أكّد الطالب إنه غرضه: قل له باختصار يضغط البطاقة ثم زر «هذا الغرض لي — عرض بيانات التواصل».
+- إذا أكّد الطالب إنه غرضه: قل له باختصار يضغط البطاقة ثم زر «هذا الغرض لي، اعرض بيانات التواصل».
 - إذا ما فيه أي تطابق مناسب، وضح للطالب إنه ما فيه بلاغ مطابق حاليًا، واعرض عليه تسجّل بلاغ مفقود بدلاً منه.
 - لتسجيل البلاغ، اجمع الحقول الناقصة بس (اسم الغرض، التصنيف، الوصف، الموقع، التاريخ، وسيلة التواصل) في سؤال واحد، ولا تسأل عن شي قاله الطالب من قبل. التصنيف استنتجه بنفسك ولا تسأل عنه.
 - قبل الحفظ لخّص البلاغ كنقاط قصيرة (الغرض، الموقع، التاريخ، التواصل) واطلب تأكيد صريح، وبعدها فقط استخدم create_lost_report.
@@ -211,7 +211,7 @@ function systemPrompt(section: string): string {
 - ردودك دائمًا بالعربي، ودودة ومباشرة: ثلاث أسطر كحد أقصى (الملخص قبل الحفظ مستثنى)، بدون حشو.
 - سلّم وترحّب في أول رد فقط؛ بعدها ادخل في الموضوع مباشرة.
 - اكتب التواريخ بالعربي مثل «24 سبتمبر» (بدون السنة إذا هي السنة الحالية)، وليس 2026-09-24.
-- التنسيق: جمل قصيرة، نقاط بـ «- » عند الحاجة، و**عريض** لاسم الغرض فقط. بدون عناوين ولا جداول.`;
+- التنسيق: جمل قصيرة، نقاط بـ «- » عند الحاجة، و**عريض** لاسم الغرض فقط. بدون عناوين ولا جداول ولا إيموجي، ولا تستخدم الشرطة الطويلة (—)؛ استخدم الفاصلة أو النقطة.`;
 }
 
 // ------------------------------------------------------------------ Gemini
@@ -309,7 +309,7 @@ Deno.serve(async (req) => {
 
       if (!calls.length || round === MAX_TOOL_ROUNDS) {
         const reply = parts.filter((p) => typeof p.text === 'string' && !p.thought).map((p) => p.text).join('').trim()
-          || (created ? 'تم تسجيل بلاغك بنجاح ✅' : 'ما قدرت أجهّز رد مناسب، ممكن توضّح أكثر؟');
+          || (created ? 'تم تسجيل بلاغك بنجاح.' : 'ما قدرت أجهّز رد مناسب، ممكن توضّح أكثر؟');
         // Item cards for the UI: search results the reply actually names.
         const items = [...seen].filter(([, name]) => reply.includes(name)).map(([id]) => id);
         return json({ reply, items, created, model: pinned.model });
@@ -338,8 +338,8 @@ Deno.serve(async (req) => {
   } catch (e) {
     const code = e instanceof GeminiError ? e.code : 'upstream';
     if (!(e instanceof GeminiError)) console.error('chat-assistant', e);
-    // A report saved before the failure still counts — tell the client so it can show it.
-    return json({ error: code, reply: created ? 'تم تسجيل بلاغك بنجاح ✅' : FALLBACK[code], created }, 200);
+    // A report saved before the failure still counts; tell the client so it can show it.
+    return json({ error: code, reply: created ? 'تم تسجيل بلاغك بنجاح.' : FALLBACK[code], created }, 200);
   }
   return json({ error: 'upstream', reply: FALLBACK.upstream }, 200);
 });
