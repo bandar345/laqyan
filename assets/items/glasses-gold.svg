@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200"><defs>
+  <radialGradient id="shd" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <linearGradient id="wht" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9DDE8"/></linearGradient>
+  <linearGradient id="whtS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#EEF0F5"/><stop offset="1" stop-color="#C9CEDB"/></linearGradient>
+  <linearGradient id="blk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#454A5C"/><stop offset="1" stop-color="#1C1F29"/></linearGradient>
+  <linearGradient id="blkG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5A6075"/><stop offset=".5" stop-color="#2A2E3B"/><stop offset="1" stop-color="#1A1C25"/></linearGradient>
+  <linearGradient id="slv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6F7FB"/><stop offset=".55" stop-color="#C3C8D5"/><stop offset="1" stop-color="#8E94A6"/></linearGradient>
+  <linearGradient id="slvD" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A8094"/><stop offset=".5" stop-color="#454A5C"/><stop offset="1" stop-color="#2A2E3A"/></linearGradient>
+  <linearGradient id="brs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F8DE92"/><stop offset=".55" stop-color="#D2A444"/><stop offset="1" stop-color="#9C6E1E"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE3A0"/><stop offset=".5" stop-color="#D6A84A"/><stop offset="1" stop-color="#A67928"/></linearGradient>
+  <linearGradient id="lthB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A56D38"/><stop offset="1" stop-color="#6A3F1D"/></linearGradient>
+  <linearGradient id="lthK" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E4251"/><stop offset="1" stop-color="#15171E"/></linearGradient>
+  <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A93FF"/><stop offset="1" stop-color="#2B50C4"/></linearGradient>
+  <linearGradient id="pink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB3CF"/><stop offset="1" stop-color="#E27AA3"/></linearGradient>
+  <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B2C8F"/><stop offset=".5" stop-color="#2A4BC9"/><stop offset="1" stop-color="#1A8FB0"/></linearGradient>
+  <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3FD3B0"/><stop offset="1" stop-color="#127A70"/></linearGradient>
+  <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+  <pattern id="chk" width="8" height="8" patternUnits="userSpaceOnUse">
+    <rect width="8" height="8" fill="#F5F1EA"/><rect width="4" height="4" fill="#C62430"/><rect x="4" y="4" width="4" height="4" fill="#C62430"/>
+    <rect x="4" y="0" width="4" height="4" fill="#E9B8BA"/><rect x="0" y="4" width="4" height="4" fill="#E9B8BA"/>
+  </pattern>
+</defs><ellipse cx="160" cy="182" rx="106" ry="9" fill="url(#shd)"/><rect x="58" y="126" width="204" height="48" rx="24" fill="#CDB68D"/><rect x="58" y="126" width="204" height="48" rx="24" fill="url(#gloss)" opacity=".35"/><line x1="62" y1="150" x2="258" y2="150" stroke="#A88F63" stroke-width="1.5"/><path d="M84 84 L50 70 M236 84 L270 70" stroke="url(#gold)" stroke-width="3.5" stroke-linecap="round"/><path d="M50 70 L42 76 M270 70 L278 76" stroke="#6B5A3A" stroke-width="4" stroke-linecap="round"/><circle cx="120" cy="100" r="34" fill="#BFD7F5" fill-opacity=".18" stroke="url(#gold)" stroke-width="4"/><circle cx="200" cy="100" r="34" fill="#BFD7F5" fill-opacity=".18" stroke="url(#gold)" stroke-width="4"/><path d="M154 96 Q160 88 166 96" stroke="url(#gold)" stroke-width="3.5" fill="none"/><ellipse cx="150" cy="114" rx="3" ry="5" fill="#EDEFF5" opacity=".8"/><ellipse cx="170" cy="114" rx="3" ry="5" fill="#EDEFF5" opacity=".8"/><path d="M100 86 L116 76 M180 86 L196 76" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".6"/></svg>

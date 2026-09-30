@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200"><defs>
+  <radialGradient id="shd" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <linearGradient id="wht" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9DDE8"/></linearGradient>
+  <linearGradient id="whtS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#EEF0F5"/><stop offset="1" stop-color="#C9CEDB"/></linearGradient>
+  <linearGradient id="blk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#454A5C"/><stop offset="1" stop-color="#1C1F29"/></linearGradient>
+  <linearGradient id="blkG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5A6075"/><stop offset=".5" stop-color="#2A2E3B"/><stop offset="1" stop-color="#1A1C25"/></linearGradient>
+  <linearGradient id="slv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6F7FB"/><stop offset=".55" stop-color="#C3C8D5"/><stop offset="1" stop-color="#8E94A6"/></linearGradient>
+  <linearGradient id="slvD" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A8094"/><stop offset=".5" stop-color="#454A5C"/><stop offset="1" stop-color="#2A2E3A"/></linearGradient>
+  <linearGradient id="brs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F8DE92"/><stop offset=".55" stop-color="#D2A444"/><stop offset="1" stop-color="#9C6E1E"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE3A0"/><stop offset=".5" stop-color="#D6A84A"/><stop offset="1" stop-color="#A67928"/></linearGradient>
+  <linearGradient id="lthB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A56D38"/><stop offset="1" stop-color="#6A3F1D"/></linearGradient>
+  <linearGradient id="lthK" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E4251"/><stop offset="1" stop-color="#15171E"/></linearGradient>
+  <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A93FF"/><stop offset="1" stop-color="#2B50C4"/></linearGradient>
+  <linearGradient id="pink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB3CF"/><stop offset="1" stop-color="#E27AA3"/></linearGradient>
+  <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B2C8F"/><stop offset=".5" stop-color="#2A4BC9"/><stop offset="1" stop-color="#1A8FB0"/></linearGradient>
+  <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3FD3B0"/><stop offset="1" stop-color="#127A70"/></linearGradient>
+  <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+  <pattern id="chk" width="8" height="8" patternUnits="userSpaceOnUse">
+    <rect width="8" height="8" fill="#F5F1EA"/><rect width="4" height="4" fill="#C62430"/><rect x="4" y="4" width="4" height="4" fill="#C62430"/>
+    <rect x="4" y="0" width="4" height="4" fill="#E9B8BA"/><rect x="0" y="4" width="4" height="4" fill="#E9B8BA"/>
+  </pattern>
+</defs><path d="M160 22 V12 a8 8 0 1 1 8 -8" stroke="url(#slv)" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M112 38 L160 22 L208 38" stroke="url(#slv)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M124 34 L102 44 L58 100 L80 110 L106 72 L94 196 L226 196 L214 72 L240 110 L262 100 L218 44 L196 34 Q160 46 124 34 Z" fill="url(#lthK)" stroke="#5E647A" stroke-width="1.3"/><path d="M58 100 L80 110" stroke="url(#gold)" stroke-width="4"/><path d="M262 100 L240 110" stroke="url(#gold)" stroke-width="4"/><path d="M62 92 L82 102 M258 92 L238 102" stroke="#E2B74C" stroke-width="2" stroke-dasharray="2 3"/><path d="M124 34 Q160 46 196 34" stroke="url(#gold)" stroke-width="3" fill="none"/><path d="M160 44 V196" stroke="#0B0C10" stroke-width="2"/><path d="M156 50 V194 M164 50 V194" stroke="#E2B74C" stroke-width="1.6" stroke-dasharray="2 4"/><path d="M112 60 Q108 130 104 190" stroke="#FFFFFF" stroke-width="5" fill="none" opacity=".05"/></svg>

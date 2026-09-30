@@ -1,0 +1,2968 @@
+<meta charset="UTF-8">
+<title>لقيان</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Language (ar / en) and direction before first paint (default: Arabic, RTL).
+  (function(){ var l = 'ar'; try{ l = localStorage.getItem('laqyan-lang') || 'ar'; }catch(e){}
+    if(l !== 'en') l = 'ar';
+    document.documentElement.setAttribute('lang', l);
+    document.documentElement.setAttribute('dir', l === 'en' ? 'ltr' : 'rtl'); })();
+  // Apply the saved light/dark choice before first paint (default: dark).
+  (function(){ var m = 'dark'; try{ m = localStorage.getItem('laqyan-mode') || 'dark'; }catch(e){}
+    document.documentElement.setAttribute('data-mode', m === 'light' ? 'light' : 'dark'); })();
+  // Signed-in role, kept for this browser tab only (a new visit asks to sign in again).
+  (function(){ try{ var r = sessionStorage.getItem('laqyan-role');
+    if((r === 'student' || r === 'admin') && sessionStorage.getItem('laqyan-user'))
+      document.documentElement.setAttribute('data-role', r); }catch(e){} })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Two themes, switched by html[data-mode]. Components use tokens only. */
+  :root{
+    color-scheme: dark;
+    --bg: #05060F;
+    --card: #0A0B1E;
+    --card-2: #0E1026;
+    --line: rgba(255,255,255,.06);
+    --line-2: rgba(255,255,255,.10);
+    --title: #FFFFFF;
+    --text: #F4F5FA;
+    --text-2: #C4C8DA;
+    --muted: #8A90A8;
+    --faint: #5D6380;
+    --indigo: #4C63F5;
+    --indigo-2: #6B7DFF;
+    --indigo-soft: #B9C2FF;
+    --mint: #5FD6B8;
+    --coral: #F2724B;
+    --amber: #F5B94A;
+    --grad: linear-gradient(180deg, #6B7DFF 0%, #4C63F5 100%);
+    --ring: 0 0 0 3px rgba(76,99,245,.32);
+    --hover: rgba(255,255,255,.04);
+    --active: rgba(255,255,255,.08);
+    --btn-2: #15172B;
+    --btn-2-hover: #1C1F38;
+    --chip-bg: rgba(255,255,255,.03);
+    --shell-line: rgba(255,255,255,.08);
+    --shell-shadow: 0 50px 120px -40px rgba(4,5,20,.85);
+    --thumb-base: #070818;
+    --thumb-grid: rgba(255,255,255,.035);
+    --thumb-glow: rgba(76,99,245,.6);
+    --badge-bg: rgba(10,12,36,.85);
+    --pill-bg: rgba(6,7,20,.78);
+    --glass: rgba(8,9,24,.9);
+    --pop-shadow: 0 24px 60px -18px rgba(0,0,0,.75);
+    --toggle-on: rgba(255,255,255,.12);
+    --backdrop-base: #161947;
+    --backdrop-grid: rgba(255,255,255,.045);
+    --backdrop: radial-gradient(120% 85% at 50% -10%, #A3AAEC 0%, #6068CB 32%, #2B2F78 66%, #13153D 100%);
+    --dlg-backdrop: rgba(3,4,14,.72);
+    --font: 'Geist', 'IBM Plex Sans Arabic', system-ui, 'Segoe UI', Tahoma, sans-serif;
+  }
+  :root[data-mode="light"]{
+    color-scheme: light;
+    --bg: #F2F4FB;
+    --card: #FFFFFF;
+    --card-2: #F5F7FD;
+    --line: rgba(16,24,64,.08);
+    --line-2: rgba(16,24,64,.13);
+    --title: #0B1640;
+    --text: #131A3A;
+    --text-2: #3A4263;
+    --muted: #5D6380;
+    --faint: #8A90A8;
+    --indigo-soft: #4C63F5;
+    --mint: #138C70;
+    --coral: #D4502A;
+    --amber: #A96C06;
+    --ring: 0 0 0 3px rgba(76,99,245,.22);
+    --hover: rgba(16,24,64,.04);
+    --active: rgba(76,99,245,.10);
+    --btn-2: #EEF1FA;
+    --btn-2-hover: #E3E7F7;
+    --chip-bg: #F5F7FD;
+    --shell-line: rgba(255,255,255,.8);
+    --shell-shadow: 0 40px 100px -40px rgba(30,40,110,.45);
+    --thumb-base: #EEF1FD;
+    --thumb-grid: rgba(76,99,245,.07);
+    --thumb-glow: rgba(107,125,255,.38);
+    --badge-bg: #FFFFFF;
+    --pill-bg: rgba(255,255,255,.92);
+    --glass: rgba(255,255,255,.92);
+    --pop-shadow: 0 24px 60px -20px rgba(20,30,90,.3);
+    --toggle-on: #FFFFFF;
+    --backdrop-base: #B9C0F2;
+    --backdrop-grid: rgba(76,99,245,.09);
+    --backdrop: radial-gradient(120% 85% at 50% -10%, #FFFFFF 0%, #DDE1FB 35%, #AEB6EF 72%, #8E97E4 100%);
+    --dlg-backdrop: rgba(20,26,60,.38);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0; min-height:100vh;
+    color:var(--text);
+    font-family:var(--font);
+    line-height:1.55;
+    font-variant-numeric: tabular-nums;
+    background-color:var(--backdrop-base);
+    background-image:
+      linear-gradient(var(--backdrop-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--backdrop-grid) 1px, transparent 1px),
+      var(--backdrop);
+    background-size:56px 56px, 56px 56px, 100% 100%;
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{text-wrap:balance; margin:0; font-weight:500;}
+  p{margin:0;}
+  img{max-width:100%; display:block;}
+  button{font-family:inherit; color:inherit;}
+  input,select,textarea{font-family:inherit; font-size:inherit;}
+  ::selection{background:var(--indigo); color:#fff;}
+  :focus-visible{outline:2px solid var(--indigo-2); outline-offset:2px;}
+
+  @keyframes rise{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes pop{from{opacity:0; transform:translateY(10px) scale(.985);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none !important; transition-duration:.001ms !important;}
+  }
+
+  /* ---------- Stage & shell ---------- */
+  .stage{padding:32px 24px;}
+  .app-shell{
+    max-width:1380px; margin-inline:auto;
+    background:var(--bg);
+    border:1px solid var(--shell-line);
+    border-radius:28px;
+    box-shadow:var(--shell-shadow);
+    padding:20px;
+    display:grid; grid-template-columns:276px minmax(0,1fr); gap:20px;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    display:flex; flex-direction:column; gap:14px;
+    position:sticky; top:20px; align-self:start;
+    min-height:calc(100vh - 106px);
+  }
+  .side-card{
+    position:relative; overflow:hidden; background:var(--card);
+    border:1px solid var(--line); border-radius:24px; padding:20px;
+  }
+  .brand-top{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:22px;}
+  /* Logos sit directly on the card (no chip). */
+  .logo-chip{background:transparent; display:inline-flex; align-items:center; justify-content:center;}
+  /* KSU wordmark = white text on a black box. Dark: screen-blend drops the black.
+     Light: invert (black text on white box) + multiply drops the white. */
+  .logo-chip--wide{height:44px;}
+  .logo-chip--wide img{height:44px; width:auto; mix-blend-mode:screen;}
+  :root[data-mode="light"] .logo-chip--wide img{filter:invert(1); mix-blend-mode:multiply;}
+  /* KSU shield = black line-art on transparency. */
+  .site-footer .logo-chip img{filter:brightness(0) invert(1);}
+  :root[data-mode="light"] .site-footer .logo-chip img{filter:brightness(0); opacity:.75;}
+
+  .theme-toggle{
+    display:inline-flex; gap:2px; padding:3px; border-radius:99px; flex:none;
+    background:var(--card-2); border:1px solid var(--line-2);
+  }
+  .theme-btn{
+    width:32px; height:32px; border-radius:50%; border:0; background:transparent; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:var(--muted);
+    transition:background .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .theme-btn svg{width:17px; height:17px;}
+  .theme-btn:hover{color:var(--title);}
+  .theme-btn.active{background:var(--toggle-on); color:var(--title); box-shadow:0 1px 3px rgba(0,0,0,.18);}
+
+  .eyebrow{
+    font-family:'Geist', sans-serif; font-size:11.5px; font-weight:500; letter-spacing:.14em;
+    color:var(--muted); text-transform:uppercase; margin-bottom:6px; direction:ltr; text-align:right;
+  }
+  .brand-card h1{font-size:30px; font-weight:700; color:var(--title); line-height:1.2; font-family:'IBM Plex Sans Arabic', sans-serif;}
+  .brand-card h1 .app-logo{height:52px; width:auto; margin-inline-start:-3px;}
+  .app-logo--light{display:none;}
+  :root[data-mode="light"] .app-logo--dark{display:none;}
+  :root[data-mode="light"] .app-logo--light{display:block;}
+  .brand-card .tagline{margin-top:4px; font-size:13.5px; color:var(--muted);}
+
+  .nav-label{font-size:12px; color:var(--faint); margin:0 6px 10px; font-weight:500;}
+
+  /* Section switch (male / female students) */
+  .seg{
+    display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px;
+    border-radius:14px; background:var(--card-2); border:1px solid var(--line);
+  }
+  .seg-btn{
+    border:0; background:transparent; cursor:pointer; padding:10px 6px; border-radius:10px;
+    font-size:13.5px; font-weight:500; color:var(--text-2); white-space:nowrap;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:background .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .seg-btn:hover{color:var(--title);}
+  .seg-btn .seg-count{font-family:'Geist', sans-serif; font-size:12px; opacity:.75;}
+  .seg-btn.active{
+    background:var(--grad); color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 8px 20px -10px rgba(76,99,245,.8);
+  }
+
+  .tabs{display:flex; flex-direction:column; gap:4px;}
+  .tab-btn{
+    border:none; background:transparent; width:100%;
+    display:flex; align-items:center; gap:12px;
+    padding:12px 14px; border-radius:14px;
+    font-size:15px; font-weight:500; color:var(--text-2); cursor:pointer; text-align:start;
+    transition:background .2s ease, color .2s ease;
+  }
+  .tab-btn:hover{background:var(--hover); color:var(--title);}
+  .tab-btn .nav-ico{width:20px; height:20px; flex:none;}
+  .tab-btn#tabLost .nav-ico{color:var(--coral);}
+  .tab-btn#tabFound .nav-ico{color:var(--mint);}
+  .tab-btn .count{
+    margin-inline-start:auto; font-family:'Geist', sans-serif; font-size:12.5px; font-weight:500;
+    min-width:28px; text-align:center; padding:2px 8px; border-radius:99px;
+    border:1px solid var(--line-2); color:var(--muted);
+  }
+  .tab-btn.active{background:var(--active); color:var(--title);}
+  .tab-btn.active .count{background:var(--indigo); border-color:transparent; color:#fff;}
+
+  .side-cta{
+    margin-top:auto; width:100%; text-align:start; cursor:pointer;
+    display:flex; align-items:center; gap:12px;
+    padding:16px 18px; border-radius:20px;
+    border:1px solid rgba(160,172,255,.35);
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(140,155,255,.45), transparent 55%),
+      linear-gradient(135deg, #1B2585 0%, #3246D6 55%, #5B6CF7 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 16px 40px -18px rgba(76,99,245,.9);
+    transition:filter .2s ease, transform .2s ease;
+  }
+  .side-cta:hover{filter:brightness(1.08);}
+  .side-cta:active{transform:translateY(1px);}
+  .side-cta svg{width:22px; height:22px; flex:none; color:#fff;}
+  .side-cta strong{display:block; font-size:15px; font-weight:600; color:#fff;}
+  .side-cta span{display:block; font-size:12.5px; color:rgba(255,255,255,.75);}
+
+  /* ---------- Main ---------- */
+  .main{min-width:0; display:flex; flex-direction:column; gap:18px;}
+  .topbar{display:flex; flex-wrap:wrap; align-items:center; gap:12px;}
+  .filters{display:flex; flex-wrap:nowrap; gap:10px; flex:1 1 0; min-width:0;}
+  @media (max-width:1240px){ .filters{flex-wrap:wrap; flex-basis:100%;} }
+  .top-actions{display:flex; gap:10px; flex:none;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    height:44px; padding:0 18px; border-radius:12px; border:1px solid transparent;
+    font-size:14.5px; font-weight:500; cursor:pointer; white-space:nowrap;
+    transition:background .2s ease, border-color .2s ease, box-shadow .2s ease, filter .2s ease, transform .12s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn svg{width:18px; height:18px; flex:none;}
+  .btn-primary{
+    background:var(--grad); color:#fff; border-color:rgba(160,172,255,.45);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 10px 26px -10px rgba(76,99,245,.8);
+  }
+  .btn-primary:hover{filter:brightness(1.08); box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 12px 32px -8px rgba(107,125,255,.9);}
+  .btn-outline{background:var(--btn-2); color:var(--title); border-color:var(--line-2);}
+  .btn-outline:hover{background:var(--btn-2-hover); border-color:rgba(107,125,255,.4);}
+  .btn-ghost{background:transparent; color:var(--text-2); border-color:var(--line-2);}
+  .btn-ghost:hover{background:var(--hover); color:var(--title);}
+  .btn-sm{height:38px; padding:0 14px; font-size:13.5px;}
+  .btn-sm svg{width:16px; height:16px;}
+  .btn-block{width:100%;}
+
+  .search-field{position:relative; flex:1 1 240px; min-width:200px;}
+  .search-field svg{
+    position:absolute; inset-inline-start:14px; top:50%; translate:0 -50%;
+    width:18px; height:18px; color:var(--muted); pointer-events:none;
+  }
+  .search-field input, select.filter-select{
+    height:44px; border:1px solid var(--line-2); border-radius:12px;
+    background:var(--card); color:var(--text);
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .search-field input{width:100%; padding:0 14px; padding-inline-start:42px;}
+  select.filter-select, .field select{
+    appearance:none; -webkit-appearance:none; cursor:pointer;
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%238A90A8" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>');
+    background-repeat:no-repeat; background-position:left 14px center;
+  }
+  select.filter-select{padding:0 14px; padding-inline-end:36px; flex:0 1 150px; min-width:120px;}
+  @media (max-width:1240px){ select.filter-select{flex:1 1 150px;} }
+  option{background:var(--card-2); color:var(--text);}
+  input::placeholder, textarea::placeholder{color:var(--faint);}
+  .search-field input:focus-visible, select.filter-select:focus-visible,
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible{
+    outline:none; border-color:var(--indigo-2); box-shadow:var(--ring);
+  }
+
+  .results-bar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding-inline:4px;}
+  .results-meta{font-size:13px; color:var(--muted);}
+  .results-meta strong{color:var(--text-2); font-weight:500;}
+
+  /* Download report menu */
+  .report-wrap{position:relative;}
+  .report-menu{
+    position:absolute; top:calc(100% + 8px); inset-inline-end:0; z-index:25;
+    min-width:250px; padding:6px; border-radius:14px;
+    background:var(--card); border:1px solid var(--line-2); box-shadow:var(--pop-shadow);
+    display:none;
+  }
+  .report-menu.open{display:block; animation:pop .18s ease;}
+  .menu-item{
+    display:flex; align-items:center; gap:12px; width:100%;
+    padding:10px 12px; border:0; border-radius:10px; background:transparent;
+    text-align:start; cursor:pointer; color:var(--text);
+  }
+  .menu-item:hover, .menu-item:focus-visible{background:var(--hover);}
+  .menu-item svg{width:20px; height:20px; flex:none; color:var(--indigo-soft);}
+  .menu-item strong{display:block; font-size:14px; font-weight:500; color:var(--title);}
+  .menu-item span{display:block; font-size:12px; color:var(--muted);}
+
+  /* ---------- Grid & cards ---------- */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(268px, 1fr)); gap:18px;}
+  .card{
+    position:relative; overflow:hidden; width:100%;
+    display:flex; flex-direction:column; gap:14px; padding:18px;
+    text-align:start; cursor:pointer; font:inherit; color:inherit;
+    background:radial-gradient(70% 40% at 50% 0%, rgba(76,99,245,.10), transparent 70%), var(--card);
+    border:1px solid var(--line); border-radius:24px;
+    transition:border-color .25s ease, box-shadow .3s ease, background .3s ease, transform .25s ease;
+    animation:rise .45s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay:calc(var(--i, 0) * 40ms);
+  }
+  /* Border spotlight: a glowing ring around the whole box, lit around the pointer
+     (--mx/--my set in JS). At rest it sits at top-center, like a soft top-edge highlight. */
+  @property --mx{syntax:'<length-percentage>'; inherits:true; initial-value:50%;}
+  @property --my{syntax:'<length-percentage>'; inherits:true; initial-value:0%;}
+  @property --ga{syntax:'<number>'; inherits:true; initial-value:.6;}
+  @property --gw{syntax:'<length>'; inherits:true; initial-value:150px;}
+  .card::before, .side-card::before, dialog::before, .gate-card::before, .kpi::before, .panel::before{
+    content:""; position:absolute; inset:0; border-radius:inherit; padding:1.5px;
+    pointer-events:none; z-index:3;
+    background:radial-gradient(circle var(--gw) at var(--mx) var(--my),
+      rgba(140,158,255,var(--ga)) 0%, rgba(107,125,255,calc(var(--ga) * .55)) 40%, transparent 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+            mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    transition:--mx .18s ease-out, --my .18s ease-out, --ga .3s ease, --gw .3s ease;
+  }
+  /* Soft inner light that trails the pointer. */
+  .card::after, .side-card::after{
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:-1;
+    background:radial-gradient(circle 220px at var(--mx) var(--my), rgba(76,99,245,calc((var(--ga) - .6) * .3)), transparent 70%);
+    transition:--mx .18s ease-out, --my .18s ease-out, --ga .3s ease;
+  }
+  /* Own stacking context: the inner light (z -1) paints above the box's fill but under its content,
+     and the logo's blend mode still blends with the card fill. */
+  .side-card, .card{isolation:isolate;}
+  .card:hover{
+    border-color:rgba(107,125,255,.42);
+    box-shadow:0 0 0 1px rgba(107,125,255,.14), 0 20px 50px -22px rgba(76,99,245,.7);
+    transform:translateY(-2px);
+  }
+  .card:focus{
+    outline:none;
+    background:linear-gradient(180deg, rgba(76,99,245,.18) 0%, rgba(76,99,245,.03) 65%), var(--card);
+    border-color:rgba(107,125,255,.55);
+  }
+  .card:focus-visible{box-shadow:var(--ring);}
+
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+  .card-title{display:block; font-size:16.5px; font-weight:500; color:var(--title); line-height:1.4;}
+  .card-cat{display:block; margin-top:3px; font-size:12.5px; color:var(--muted);}
+  .arrow-btn{
+    width:34px; height:34px; flex:none; border-radius:10px;
+    border:1px solid var(--line-2); color:var(--text-2);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .arrow-btn svg{width:16px; height:16px; transform:scaleX(-1);}
+  .card:hover .arrow-btn{border-color:rgba(107,125,255,.55); color:var(--title); background:rgba(76,99,245,.12);}
+
+  .card-thumb, .detail-thumb{
+    position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); border-radius:16px;
+    background:
+      radial-gradient(90% 120% at 50% 125%, var(--thumb-glow) 0%, rgba(76,99,245,.12) 45%, transparent 72%),
+      linear-gradient(var(--thumb-grid) 1px, transparent 1px) 0 0 / 22px 22px,
+      linear-gradient(90deg, var(--thumb-grid) 1px, transparent 1px) 0 0 / 22px 22px,
+      var(--thumb-base);
+  }
+  .card-thumb{height:136px; flex:none;}
+  .card-thumb img, .detail-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  /* Product illustrations: centred on the grid, with a soft lift */
+  .card-thumb img.illus, .detail-thumb img.illus{
+    object-fit:contain; padding:6px 10px;
+    filter:drop-shadow(0 10px 16px rgba(0,0,0,.35));
+    transition:transform .35s cubic-bezier(.2,.7,.2,1);
+  }
+  .detail-thumb img.illus{padding:12px 18px;}
+  :root[data-mode="light"] .card-thumb img.illus, :root[data-mode="light"] .detail-thumb img.illus{filter:drop-shadow(0 10px 14px rgba(30,40,110,.18));}
+  .card:hover .card-thumb img.illus{transform:scale(1.05) translateY(-2px);}
+  .card-thumb{height:150px;}
+  .icon-badge{
+    position:relative; width:58px; height:58px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--badge-bg); color:var(--indigo-soft);
+    border:1px solid rgba(122,140,255,.45);
+    box-shadow:0 0 0 6px rgba(76,99,245,.08), 0 0 38px rgba(76,99,245,.45);
+  }
+  .icon-badge svg{width:26px; height:26px;}
+
+  .status-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11.5px; font-weight:600; line-height:1; padding:5px 9px; border-radius:8px;
+    border:1px solid; background:var(--pill-bg); backdrop-filter:blur(6px);
+  }
+  .card-thumb .status-pill, .detail-thumb .status-pill{position:absolute; top:10px; inset-inline-start:10px;}
+  .status-pill.lost{color:var(--amber); border-color:rgba(245,185,74,.55);}
+  .status-pill.found{color:var(--mint); border-color:rgba(95,214,184,.55);}
+  .status-pill.delivered{color:var(--indigo-soft); border-color:rgba(122,140,255,.55);}
+
+  .card-desc{
+    font-size:13.5px; color:var(--muted); line-height:1.65;
+    overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  }
+  .card-meta{
+    margin-top:auto; padding-top:12px; border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:6px; font-size:12.5px; color:var(--text-2);
+  }
+  .card-meta-row{display:flex; align-items:center; gap:7px;}
+  .card-meta-row svg{width:15px; height:15px; flex:none; color:var(--faint);}
+  .card-meta-row .ago{color:var(--muted);}
+
+  .empty-state{
+    grid-column:1/-1; text-align:center; padding:64px 20px; color:var(--muted);
+    border:1px dashed var(--line-2); border-radius:24px; background:var(--card);
+    animation:rise .4s ease both;
+  }
+  .empty-state svg{width:48px; height:48px; color:var(--indigo-soft); margin-bottom:14px;}
+  .empty-state h3{font-size:17px; color:var(--title); margin-bottom:6px;}
+  .empty-state p{font-size:13.5px; margin-bottom:18px;}
+
+  .site-footer{
+    display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    padding:18px 8px 6px; color:var(--faint); font-size:12.5px; text-align:center;
+    border-top:1px solid var(--line);
+  }
+  .site-footer .logo-chip{height:26px;}
+  .site-footer .logo-chip img{height:22px; width:auto;}
+  .site-footer strong{color:var(--text-2); font-weight:500;}
+
+  /* ---------- Dialogs ---------- */
+  dialog{
+    padding:0; width:min(580px, calc(100vw - 24px)); max-height:88vh; overflow:hidden;
+    background:var(--card); color:var(--text);
+    border:1px solid var(--line-2); border-radius:24px;
+    box-shadow:0 40px 100px -30px rgba(0,0,0,.6), 0 0 0 1px rgba(76,99,245,.1);
+  }
+  dialog[open]{animation:pop .28s cubic-bezier(.2,.7,.2,1);}
+  dialog::backdrop{background:var(--dlg-backdrop); backdrop-filter:blur(6px);}
+  .modal-head{
+    position:relative; display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px; border-bottom:1px solid var(--line); background:var(--card);
+  }
+  .modal-head h2{font-size:17px; font-weight:500; color:var(--title);}
+  .icon-btn{
+    width:36px; height:36px; border-radius:10px; cursor:pointer;
+    border:1px solid var(--line-2); background:transparent; color:var(--text-2);
+    display:flex; align-items:center; justify-content:center;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .icon-btn:hover{background:var(--hover); color:var(--title); border-color:rgba(107,125,255,.4);}
+  .icon-btn svg{width:18px; height:18px;}
+  .modal-body{padding:22px; overflow-y:auto; max-height:calc(88vh - 74px);}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:13px; font-weight:500; margin-bottom:7px; color:var(--muted);}
+  .field .hint{font-size:12px; color:var(--faint); margin-top:6px;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:11px 14px; border-radius:12px;
+    border:1px solid var(--line-2); background-color:var(--card-2); color:var(--text);
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field select{padding-inline-end:38px;}
+  .field textarea{resize:vertical; min-height:84px;}
+  .field.err input, .field.err select, .field.err textarea{border-color:var(--coral);}
+  .field .err-msg{display:none; color:var(--coral); font-size:12px; margin-top:6px;}
+  .field.err .err-msg{display:block;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:480px){.field-row{grid-template-columns:1fr;}}
+  /* ---------- Entry screen (student / admin) ---------- */
+  .gate{position:fixed; inset:0; z-index:90; display:grid; place-items:center; padding:20px; overflow-y:auto;}
+  :root[data-role="student"] .gate, :root[data-role="admin"] .gate{display:none;}
+  :root:not([data-role="student"]):not([data-role="admin"]) .stage,
+  :root:not([data-role="student"]):not([data-role="admin"]) .mobile-cta{display:none;}
+  .gate-card{
+    position:relative; isolation:isolate; overflow:hidden;
+    width:min(460px, 100%); padding:34px 28px 20px; text-align:center;
+    background:var(--card); border:1px solid var(--line-2); border-radius:28px;
+    box-shadow:var(--shell-shadow); animation:pop .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .gate-logo{height:64px; width:auto; margin:0 auto 18px;}
+  .gate-card h1{font-size:23px; font-weight:700; color:var(--title); font-family:'IBM Plex Sans Arabic', sans-serif;}
+  .gate-sub{margin-top:6px; margin-bottom:22px; font-size:14px; color:var(--muted);}
+  .gate-step{display:flex; flex-direction:column; gap:10px; text-align:start;}
+  .gate-step[hidden]{display:none;}
+  .role-card{
+    display:flex; align-items:center; gap:14px; width:100%; padding:16px; cursor:pointer; text-align:start;
+    border-radius:18px; border:1px solid var(--line-2); background:var(--card-2);
+    transition:border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .role-card:hover{border-color:rgba(107,125,255,.55); background:var(--active); transform:translateY(-1px); box-shadow:0 14px 30px -18px rgba(76,99,245,.8);}
+  .role-ico{
+    width:48px; height:48px; flex:none; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    background:rgba(76,99,245,.14); color:var(--indigo-soft); border:1px solid rgba(122,140,255,.3);
+  }
+  .role-ico svg{width:24px; height:24px;}
+  .role-text strong{display:block; font-size:16px; font-weight:600; color:var(--title);}
+  .role-text small{display:block; margin-top:2px; font-size:12.5px; color:var(--muted);}
+  .role-arrow{width:18px; height:18px; flex:none; margin-inline-start:auto; color:var(--faint); transition:transform .2s ease, color .2s ease;}
+  .role-card:hover .role-arrow{color:var(--indigo-soft); transform:translateX(-3px);}
+  .gate-foot{
+    margin-top:22px; padding-top:14px; border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; gap:10px; font-size:12px; color:var(--faint);
+  }
+  .gate-foot .logo-chip--wide, .gate-foot .logo-chip--wide img{height:30px;}
+
+  /* Role badge in the sidebar + what each role sees */
+  .role-bar{display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  .role-badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600;
+    padding:4px 10px; border-radius:99px; border:1px solid var(--line-2); color:var(--text-2); background:var(--chip-bg);
+  }
+  .role-badge svg{width:14px; height:14px;}
+  :root[data-role="admin"] .role-badge{background:var(--grad); color:#fff; border-color:transparent;}
+  .link-btn{
+    display:inline-flex; align-items:center; gap:5px; border:0; background:none; padding:4px 2px; cursor:pointer;
+    font-size:12.5px; color:var(--muted); border-radius:6px;
+  }
+  .link-btn svg{width:15px; height:15px;}
+  .link-btn:hover{color:var(--title);}
+  :root[data-role="student"] .report-wrap{display:none;}
+
+  /* Admin-only actions in the detail popup */
+  .admin-actions{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line-2);}
+  .admin-actions .admin-lbl{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); margin-bottom:10px;}
+  .admin-actions .admin-lbl svg{width:14px; height:14px; color:var(--indigo-soft);}
+  .admin-actions .confirm-text{font-size:13.5px; color:var(--text); margin-bottom:10px;}
+  /* Possible matches */
+  .card-meta-row.match-hint{color:var(--indigo-soft); font-weight:500;}
+  .card-meta-row.match-hint svg{color:var(--indigo-soft);}
+  .matches{
+    margin-bottom:16px; padding:14px; border-radius:16px;
+    border:1px solid rgba(122,140,255,.35); background:rgba(76,99,245,.07);
+  }
+  .matches-head{display:flex; align-items:center; gap:8px; color:var(--indigo-soft);}
+  .matches-head svg{width:18px; height:18px; flex:none;}
+  .matches-head strong{font-size:14.5px; font-weight:600; color:var(--title);}
+  .matches-count{
+    margin-inline-start:auto; font-family:'Geist', sans-serif; font-size:12px; font-weight:600;
+    min-width:24px; text-align:center; padding:1px 8px; border-radius:99px; background:var(--indigo); color:#fff;
+  }
+  .matches-note{font-size:12.5px; color:var(--muted); margin:4px 0 10px;}
+  .match-row{
+    display:flex; align-items:center; gap:12px; width:100%; padding:8px; margin-top:8px; cursor:pointer; text-align:start;
+    border-radius:12px; border:1px solid var(--line); background:var(--card);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .match-row:hover{border-color:rgba(107,125,255,.55); background:var(--active);}
+  .match-thumb{
+    width:56px; height:42px; flex:none; border-radius:10px; overflow:hidden; position:relative;
+    display:flex; align-items:center; justify-content:center; background:var(--thumb-base); color:var(--indigo-soft);
+  }
+  .match-thumb img{width:100%; height:100%; object-fit:contain; padding:3px;}
+  .match-thumb img.photo{object-fit:cover; padding:0;}
+  .match-thumb svg{width:20px; height:20px;}
+  .match-text{min-width:0; flex:1;}
+  .match-text strong{display:block; font-size:13.5px; font-weight:500; color:var(--title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .match-text span{display:block; font-size:12px; color:var(--muted);}
+  .match-row .status-pill{flex:none;}
+  .match-chev{color:var(--faint); flex:none; display:flex;}
+  .match-chev svg{width:16px; height:16px;}
+  .meta-clear{margin-inline-start:8px; color:var(--indigo-soft); font-weight:500;}
+  .meta-clear svg{width:13px; height:13px;}
+  .dash-foot{
+    grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    padding:2px 4px; font-size:12.5px; color:var(--muted);
+  }
+  .dash-foot > span{display:flex; align-items:center; gap:6px;}
+  .dash-foot > span svg{width:15px; height:15px; color:var(--indigo-soft); flex:none;}
+
+  .admin-btns{display:flex; gap:10px; flex-wrap:wrap;}
+  .admin-btns .btn{flex:1 1 180px;}
+  .btn-return{background:rgba(76,99,245,.12); color:var(--indigo-soft); border-color:rgba(122,140,255,.5);}
+  .btn-return:hover{background:rgba(76,99,245,.2);}
+  .returned-box{
+    display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:16px;
+    background:rgba(76,99,245,.1); border:1px solid rgba(122,140,255,.4); color:var(--indigo-soft);
+  }
+  .returned-box > svg{width:26px; height:26px; flex:none;}
+  .returned-box strong{display:block; font-size:14.5px; font-weight:600; color:var(--title);}
+  .returned-box span{display:block; font-size:12.5px; color:var(--muted);}
+
+  /* Sidebar entry for the dashboard (admins only) */
+  .nav-dash{margin-top:6px; border-top:1px solid var(--line); border-radius:0 0 14px 14px; padding-top:14px;}
+  .nav-dash .nav-ico{color:var(--indigo-soft);}
+  .nav-dash.active{border-top-color:transparent; border-radius:14px;}
+  .admin-tag{margin-inline-start:auto; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; background:rgba(76,99,245,.14); color:var(--indigo-soft);}
+  :root[data-role="student"] .nav-dash{display:none;}
+
+  /* List view vs dashboard view */
+  .dash{display:none;}
+  .main[data-view="dash"] .topbar, .main[data-view="dash"] .grid{display:none;}
+  .main[data-view="dash"] .dash{display:grid;}
+
+  /* ---------- Admin dashboard ---------- */
+  .dash{grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px; animation:rise .4s ease both;}
+  .kpis{grid-column:1/-1; display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:14px;}
+  .kpi, .panel{
+    position:relative; overflow:hidden; isolation:isolate;
+    background:var(--card); border:1px solid var(--line); border-radius:20px;
+  }
+  .kpi{padding:16px 18px;}
+  .kpi-lbl{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--muted);}
+  .kpi-lbl svg{width:16px; height:16px; flex:none;}
+  .kpi-lbl .k-lost{color:var(--coral);} .kpi-lbl .k-found{color:var(--mint);} .kpi-lbl .k-ret{color:var(--indigo-soft);}
+  .kpi-val{font-family:'Geist', sans-serif; font-size:32px; font-weight:500; color:var(--title); line-height:1.15; margin-top:8px;}
+  .kpi-sub{font-size:12px; color:var(--faint); margin-top:2px;}
+  .meter{height:6px; border-radius:99px; background:var(--line-2); margin-top:10px; overflow:hidden;}
+  .meter > span{display:block; height:100%; border-radius:99px; background:var(--grad);}
+  .panel{padding:20px; border-radius:24px;}
+  .panel.wide{grid-column:1/-1;}
+  .panel-head{margin-bottom:16px;}
+  .panel-head h3{font-size:16px; font-weight:500; color:var(--title);}
+  .panel-head p{font-size:12.5px; color:var(--muted); margin-top:2px;}
+  .bars{display:flex; flex-direction:column; gap:6px;}
+  .bar-row{
+    display:grid; grid-template-columns:minmax(96px, 150px) 1fr 34px; align-items:center; gap:12px;
+    padding:6px 8px; margin-inline:-8px; border-radius:10px; font-size:13px; color:var(--text-2); cursor:default;
+  }
+  .bar-row:hover{background:var(--hover);}
+  .bar-lbl{display:flex; align-items:center; gap:8px; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .bar-lbl svg{width:16px; height:16px; flex:none; color:var(--muted);}
+  .bar-track{height:12px; display:flex;}
+  /* Bar grows from the start (right in RTL); only the far end is rounded */
+  .bar-fill{
+    height:100%; min-width:3px; background:var(--indigo-2);
+    border-start-end-radius:4px; border-end-end-radius:4px;
+    transition:filter .2s ease;
+  }
+  :root[data-mode="light"] .bar-fill{background:var(--indigo);}
+  .bar-row:hover .bar-fill{filter:brightness(1.15);}
+  .bar-val{font-family:'Geist', sans-serif; font-weight:500; color:var(--title); text-align:end;}
+  .dash-table-wrap{overflow-x:auto;}
+  .dash-table{width:100%; border-collapse:collapse; font-size:13.5px; min-width:520px;}
+  .dash-table th{font-size:12px; font-weight:500; color:var(--muted); text-align:start; padding:8px 10px; border-bottom:1px solid var(--line-2);}
+  .dash-table td{padding:12px 10px; border-bottom:1px solid var(--line); color:var(--text-2);}
+  .dash-table tr:last-child td{border-bottom:0;}
+  .dash-table td.num, .dash-table th.num{text-align:end; font-family:'Geist', sans-serif;}
+  .dash-table td.num{color:var(--title); font-weight:500;}
+  .dash-table td:first-child{color:var(--title); font-weight:500;}
+  .chart-tip{
+    position:fixed; z-index:95; pointer-events:none; opacity:0; transition:opacity .12s ease;
+    padding:8px 12px; border-radius:10px; font-size:12.5px; line-height:1.5;
+    background:var(--card-2); color:var(--text); border:1px solid var(--line-2); box-shadow:var(--pop-shadow);
+  }
+  .chart-tip.show{opacity:1;}
+  .chart-tip b{color:var(--title); font-weight:600;}
+  @media (max-width:1180px){ .kpis{grid-template-columns:repeat(3, minmax(0,1fr));} }
+  @media (max-width:760px){
+    .dash{grid-template-columns:1fr;}
+    .kpis{grid-template-columns:repeat(2, minmax(0,1fr));}
+    .kpi-val{font-size:26px;}
+  }
+
+  .btn-danger{background:rgba(242,114,75,.1); color:var(--coral); border-color:rgba(242,114,75,.45);}
+  .btn-danger:hover{background:rgba(242,114,75,.18);}
+  .btn-danger-solid{background:#DE5536; color:#fff; border-color:#DE5536;}
+  .btn-danger-solid:hover{filter:brightness(1.08);}
+
+  .admin-lock{
+    width:56px; height:56px; margin:0 auto 12px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(76,99,245,.12); color:var(--indigo-soft); border:1px solid rgba(122,140,255,.35);
+  }
+  .admin-lock svg{width:26px; height:26px;}
+  .admin-note{text-align:center; font-size:13.5px; color:var(--muted); margin-bottom:18px;}
+  #adminPassword{text-align:center; letter-spacing:.3em; font-family:'Geist', sans-serif;}
+  .form-actions{display:flex; gap:10px; margin-top:8px;}
+  .form-actions .btn{flex:1;}
+
+  .detail-thumb{aspect-ratio:16/8; margin-bottom:18px; border-radius:18px;}
+  .detail-thumb .icon-badge{width:76px; height:76px;}
+  .detail-thumb .icon-badge svg{width:34px; height:34px;}
+  .detail-title-row h3{font-size:22px; font-weight:500; color:var(--title);}
+  .detail-tags{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px;}
+  .cat-chip{
+    display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--text-2);
+    padding:5px 10px; border-radius:8px; border:1px solid var(--line-2); background:var(--chip-bg);
+  }
+  .cat-chip svg{width:14px; height:14px; color:var(--indigo-soft);}
+  .detail-desc{font-size:14.5px; color:var(--muted); line-height:1.75; margin-bottom:18px;}
+  .detail-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:18px;}
+  .detail-item{background:var(--card-2); border:1px solid var(--line); border-radius:16px; padding:14px;}
+  .detail-item .lbl{font-size:12px; color:var(--muted); margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .detail-item .lbl svg{width:14px; height:14px;}
+  .detail-item .val{font-size:15px; font-weight:500; color:var(--title);}
+  .contact-box{
+    border:1px dashed rgba(122,140,255,.35); border-radius:16px; padding:16px; text-align:center; font-size:13px;
+    background:radial-gradient(80% 120% at 50% 120%, rgba(76,99,245,.18), transparent 70%), var(--card-2);
+  }
+  .contact-lbl{display:flex; align-items:center; justify-content:center; gap:6px; color:var(--muted); margin-bottom:8px;}
+  .contact-lbl svg{width:14px; height:14px;}
+  .contact-reveal{
+    font-family:'Geist', sans-serif; font-size:21px; font-weight:500; color:var(--indigo-soft);
+    direction:ltr; unicode-bidi:plaintext; word-break:break-all; animation:rise .35s ease both;
+  }
+  .contact-note{font-size:12px; color:var(--faint); margin-top:8px;}
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed; bottom:24px; left:50%; translate:-50% 12px; z-index:80;
+    display:flex; align-items:center; gap:12px;
+    padding:14px 18px; border-radius:16px;
+    background:var(--card-2); color:var(--title); border:1px solid var(--line-2);
+    font-size:14px; font-weight:500;
+    box-shadow:var(--pop-shadow);
+    opacity:0; pointer-events:none; transition:opacity .25s ease, translate .25s ease;
+  }
+  .toast.show{opacity:1; translate:-50% 0;}
+  .toast .tick{
+    width:26px; height:26px; border-radius:50%; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(95,214,184,.16); color:var(--mint);
+  }
+  .toast .tick svg{width:15px; height:15px;}
+
+  /* ---------- Mobile CTA bar ---------- */
+  .mobile-cta{
+    display:none; position:fixed; bottom:0; inset-inline:0; z-index:40;
+    gap:10px; padding:10px 12px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
+    background:var(--glass); backdrop-filter:blur(14px);
+    border-top:1px solid var(--line-2);
+  }
+
+  /* ---------- Chat assistant (مساعد لقيان) ---------- */
+  :root:not([data-role="student"]):not([data-role="admin"]) .chat-fab,
+  :root:not([data-role="student"]):not([data-role="admin"]) .chat-panel{display:none;}
+  .chat-fab{
+    position:fixed; bottom:24px; inset-inline-end:24px; z-index:45;
+    display:flex; align-items:center; gap:10px; height:54px; padding:0 20px 0 16px; border-radius:999px;
+    border:1px solid rgba(160,172,255,.45); color:#fff; cursor:pointer; font-size:15px; font-weight:600;
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(140,155,255,.45), transparent 55%),
+      linear-gradient(135deg, #1B2585 0%, #3246D6 55%, #5B6CF7 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 18px 40px -14px rgba(76,99,245,.95);
+    transition:filter .2s ease, transform .2s ease;
+  }
+  .chat-fab:hover{filter:brightness(1.08);}
+  .chat-fab:active{transform:translateY(1px);}
+  .chat-fab svg{width:24px; height:24px; flex:none;}
+  .chat-fab[aria-expanded="true"]{display:none;}
+  .chat-panel{
+    position:fixed; bottom:24px; inset-inline-end:24px; z-index:60;
+    width:min(400px, calc(100vw - 32px)); height:min(620px, calc(100vh - 48px));
+    display:flex; flex-direction:column; overflow:hidden;
+    background:var(--card); color:var(--text); border:1px solid var(--line-2); border-radius:24px;
+    box-shadow:var(--pop-shadow); animation:pop .22s ease both;
+  }
+  .chat-panel[hidden]{display:none;}
+  .chat-head{
+    display:flex; align-items:center; gap:12px; padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    background:radial-gradient(90% 140% at 100% 0%, rgba(76,99,245,.18), transparent 70%), var(--card);
+  }
+  .chat-avatar{
+    width:40px; height:40px; border-radius:13px; flex:none; display:flex; align-items:center; justify-content:center;
+    background:var(--grad); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .chat-avatar svg{width:22px; height:22px;}
+  .chat-head-text{flex:1; min-width:0;}
+  .chat-head h2{font-size:16px; font-weight:700; color:var(--title);}
+  .chat-head p{font-size:12px; color:var(--muted); margin-top:2px;}
+  .chat-log{flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; overscroll-behavior:contain;}
+  /* User on the right, assistant on the left (both languages). */
+  .msg{max-width:86%; padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.7; white-space:normal; overflow-wrap:anywhere; animation:rise .2s ease both;}
+  .msg.user{margin-left:auto; background:var(--grad); color:#fff; border-bottom-right-radius:6px;}
+  .msg.bot{margin-right:auto; background:var(--card-2); color:var(--text); border:1px solid var(--line); border-bottom-left-radius:6px;}
+  .msg.bot.error{border-color:rgba(242,114,75,.4);}
+  .msg strong{font-weight:600; color:var(--title);}
+  .msg.user strong{color:#fff;}
+  .msg-retry{margin-top:8px;}
+  .chat-typing{display:inline-flex; gap:5px; align-items:center; padding:14px 16px;}
+  .chat-typing i{width:7px; height:7px; border-radius:50%; background:var(--muted); animation:chatDot 1.1s infinite ease-in-out;}
+  .chat-typing i:nth-child(2){animation-delay:.15s;} .chat-typing i:nth-child(3){animation-delay:.3s;}
+  @keyframes chatDot{0%,80%,100%{opacity:.25; transform:translateY(0);} 40%{opacity:1; transform:translateY(-3px);}}
+  @media (prefers-reduced-motion: reduce){ .chat-typing i{animation:none; opacity:.6;} }
+  .chat-suggest{display:flex; flex-wrap:wrap; gap:8px; margin-right:auto; max-width:92%;}
+  .chat-chip{
+    padding:7px 12px; border-radius:999px; font-size:13px; cursor:pointer;
+    border:1px solid rgba(107,125,255,.35); background:var(--chip-bg); color:var(--indigo-soft);
+  }
+  .chat-chip:hover{background:var(--hover); color:var(--title);}
+  :root[data-mode="light"] .chat-chip{color:var(--indigo);}
+  .chat-items{display:flex; flex-direction:column; gap:8px; margin-right:auto; width:86%;}
+  .chat-item{
+    display:flex; align-items:center; gap:10px; width:100%; padding:8px; text-align:start; cursor:pointer;
+    border-radius:14px; border:1px solid var(--line-2); background:var(--card-2); color:var(--text);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .chat-item:hover{border-color:rgba(107,125,255,.5); background:var(--hover);}
+  .chat-item .ci-pic{width:48px; height:48px; border-radius:10px; flex:none; overflow:hidden; background:var(--thumb-base); color:var(--indigo-soft); display:flex; align-items:center; justify-content:center;}
+  .chat-item .ci-pic svg{width:22px; height:22px;}
+  .chat-item .ci-pic img.photo{background:#fff;}
+  .chat-item .ci-pic img{width:100%; height:100%; object-fit:cover;}
+  .chat-item .ci-pic img.illus{object-fit:contain; background:var(--thumb-base);}
+  .chat-item .ci-text{flex:1; min-width:0;}
+  .chat-item strong{display:block; font-size:13.5px; font-weight:600; color:var(--title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .chat-item small{display:block; font-size:12px; color:var(--muted);}
+  .chat-item .ci-open{font-size:12px; color:var(--indigo-soft); flex:none;}
+  :root[data-mode="light"] .chat-item .ci-open{color:var(--indigo);}
+  .chat-success{
+    display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--mint);
+    margin-right:auto;
+  }
+  .chat-success .tick{width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(95,214,184,.16);}
+  .chat-success .tick svg{width:14px; height:14px;}
+  .chat-form{display:flex; align-items:flex-end; gap:8px; padding:12px; border-top:1px solid var(--line); background:var(--card);}
+  .chat-form textarea{
+    flex:1; min-width:0; resize:none; max-height:120px; min-height:44px; padding:11px 14px; border-radius:14px;
+    border:1px solid var(--line-2); background:var(--card-2); color:var(--text); font:inherit; font-size:14px; line-height:1.5;
+  }
+  .chat-form textarea:focus{outline:none; box-shadow:var(--ring); border-color:rgba(107,125,255,.5);}
+  .chat-send{width:44px; height:44px; padding:0; flex:none; border-radius:14px;}
+  .chat-send svg{width:20px; height:20px;}
+  :root[dir="rtl"] .chat-send svg{transform:scaleX(-1);}
+  .chat-send:disabled{opacity:.5; cursor:default; filter:none;}
+  .chat-note{padding:0 12px 10px; font-size:11px; color:var(--faint); text-align:center; background:var(--card);}
+  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .app-shell{grid-template-columns:1fr;}
+    .sidebar{position:static; min-height:0;}
+    .side-cta{display:none;}
+    .brand-card{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+    .brand-top{margin-bottom:0; order:2; flex-direction:column-reverse; align-items:flex-end;}
+    .tabs{flex-direction:row;}
+    .tab-btn{justify-content:center;}
+    .tab-btn .count{margin-inline-start:4px;}
+    .nav-label{display:none;}
+    .nav-card, .section-card{padding:6px;}
+    .nav-card{display:flex; gap:4px;}
+    .nav-card .tabs{flex:2;}
+    .nav-dash{flex:1; margin-top:0; border-top:0; border-radius:14px; padding-top:12px; justify-content:center;}
+    .nav-dash .admin-tag{display:none;}
+    .app-shell{grid-template-columns:minmax(0,1fr);}
+    .sidebar, .main{min-width:0;}
+    .section-card .seg{border:0; background:transparent; padding:0;}
+  }
+  @media (max-width:760px){
+    .stage{padding:10px;}
+    .app-shell{padding:12px; border-radius:22px; gap:12px;}
+    .side-card{padding:16px; border-radius:20px;}
+    .sidebar{gap:10px;}
+    .brand-card h1{font-size:24px;}
+    .brand-card h1 .app-logo{height:44px;}
+    .eyebrow{font-size:10.5px;}
+    .logo-chip--wide, .logo-chip--wide img{height:32px;}
+    .top-actions{display:none;}
+    .mobile-cta{display:flex;}
+    .toast{bottom:148px;}
+    .chat-fab{bottom:calc(78px + env(safe-area-inset-bottom)); inset-inline-end:14px; width:56px; height:56px; padding:0; justify-content:center;}
+    .chat-fab .chat-fab-label{display:none;}
+    .chat-panel{inset:0; width:100%; height:100%; border-radius:0; border:0; z-index:100;}
+    body{padding-bottom:72px;}
+    select.filter-select{max-width:none;}
+    .card{padding:16px; border-radius:20px;}
+    .tab-btn{padding:11px 10px; font-size:14px;}
+    .nav-card{flex-wrap:wrap;}
+    .nav-card .tabs{flex:1 1 100%;}
+    .nav-dash{flex:1 1 100%; padding-top:10px; padding-bottom:10px;}
+    .tab-btn .count{min-width:24px; padding:1px 6px;}
+  }
+
+  /* ---------- Printable report (PDF via the print dialog) ---------- */
+  #printReport{display:none;}
+  @media print{
+    @page{size:A4; margin:14mm 12mm;}
+    html, body{background:#fff !important;}
+    body > *:not(#printReport){display:none !important;}
+    #printReport{display:block !important;}
+  }
+  #printReport{
+    color:#0B1640; background:#fff; font-family:'IBM Plex Sans Arabic', 'Geist', sans-serif; font-size:11.5px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .rp-head{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:14px; border-bottom:2px solid #4C63F5;}
+  .rp-head img{height:46px; width:auto;}
+  .rp-head h1{font-size:20px; font-weight:700; color:#0B1640;}
+  .rp-head p{color:#5D6380; font-size:11.5px; margin-top:2px;}
+  .rp-status{display:inline-block; font-size:10px; font-weight:600; padding:1px 7px; border-radius:6px; border:1px solid;}
+  .rp-status.lost{color:#A96C06; border-color:#EBCB8B;}
+  .rp-status.found{color:#138C70; border-color:#9EDCCB;}
+  .rp-status.delivered{color:#3B50D8; border-color:#B5C0F7;}
+  .rp-summary{display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; margin:14px 0 6px;}
+  .rp-stat{border:1px solid #DDE2F3; border-radius:10px; padding:8px 10px;}
+  .rp-stat b{display:block; font-family:'Geist', sans-serif; font-size:18px; font-weight:600; color:#0B1640;}
+  .rp-stat span{color:#5D6380; font-size:11px;}
+  .rp-section{margin-top:18px; break-inside:auto;}
+  .rp-section > h2{font-size:15px; font-weight:700; color:#0B1640; padding:6px 10px; background:#EEF1FD; border-radius:8px; margin-bottom:8px;}
+  .rp-section h3{font-size:12.5px; font-weight:600; margin:10px 0 6px; display:flex; align-items:center; gap:8px;}
+  .rp-dot{width:8px; height:8px; border-radius:50%; display:inline-block;}
+  /* Explicit colors: table cells must not pick up the app theme's (possibly light) text color. */
+  .rp-table{width:100%; border-collapse:collapse; font-size:11px; font-family:inherit; color:#0B1640;}
+  .rp-table td{color:#1E2749;}
+  .rp-table td b{color:#0B1640; font-weight:600;}
+  .rp-section h3{color:#0B1640;}
+  .rp-table th{background:#F3F5FC; color:#3A4263; font-weight:600; text-align:start; padding:6px 8px; border-bottom:1px solid #DDE2F3;}
+  .rp-table td{padding:6px 8px; border-bottom:1px solid #EDF0F8; vertical-align:top;}
+  .rp-table tr{break-inside:avoid;}
+  .rp-table td.date{white-space:nowrap;}
+  .rp-table td.num{font-family:'Geist', sans-serif; color:#8A90A8; width:24px;}
+  .rp-empty{color:#8A90A8; padding:6px 8px;}
+  .rp-foot{margin-top:18px; padding-top:8px; border-top:1px solid #DDE2F3; color:#8A90A8; font-size:10.5px; text-align:center;}
+
+  /* ---------- Language switch ---------- */
+  .brand-tools{display:flex; align-items:center; gap:8px;}
+  .lang-btn{
+    height:38px; min-width:38px; padding:0 10px; border-radius:99px; cursor:pointer;
+    border:1px solid var(--line-2); background:var(--card-2); color:var(--title);
+    font-family:'Geist', 'IBM Plex Sans Arabic', sans-serif; font-size:13px; font-weight:600;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .lang-btn:hover{border-color:rgba(107,125,255,.5); background:var(--active);}
+  .gate-lang{position:absolute; top:16px; inset-inline-end:16px; z-index:2;}
+
+  /* Left-to-right (English) adjustments; the rest of the layout uses logical properties. */
+  :root[dir="ltr"] select.filter-select, :root[dir="ltr"] .field select{background-position:right 14px center;}
+  :root[dir="ltr"] .arrow-btn svg{transform:none;}
+  :root[dir="ltr"] .role-arrow, :root[dir="ltr"] .match-chev svg{transform:scaleX(-1);}
+  :root[dir="ltr"] .role-card:hover .role-arrow{transform:scaleX(-1) translateX(-3px);}
+  :root[dir="ltr"] .eyebrow{text-align:left;}
+  :root[lang="en"] .brand-card h1, :root[lang="en"] .gate-card h1{font-family:'Geist', sans-serif;}
+  /* English labels are longer: give the filters their own row a little earlier. */
+  @media (max-width:1320px){ :root[lang="en"] .filters{flex-wrap:wrap; flex-basis:100%;} :root[lang="en"] select.filter-select{flex:1 1 150px;} }
+
+  /* ---------- Photo picker (report form) ---------- */
+  .photo-drop{
+    width:100%; display:flex; align-items:center; gap:14px; padding:14px; cursor:pointer; text-align:start;
+    border-radius:14px; border:1.5px dashed var(--line-2); background:var(--card-2); color:var(--text-2);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .photo-drop:hover, .photo-drop.drag{border-color:var(--indigo-2); background:var(--active);}
+  .photo-drop .ph-ico{
+    width:46px; height:46px; flex:none; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:rgba(76,99,245,.14); color:var(--indigo-soft); border:1px solid rgba(122,140,255,.3);
+  }
+  .photo-drop .ph-ico svg{width:22px; height:22px;}
+  .photo-drop strong{display:block; font-size:14px; font-weight:500; color:var(--title);}
+  .photo-drop small{display:block; font-size:12px; color:var(--muted); margin-top:2px;}
+  .photo-preview{position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--line-2); aspect-ratio:16/9; background:var(--thumb-base);}
+  .photo-preview[hidden]{display:none;}
+  .photo-preview img{width:100%; height:100%; object-fit:cover;}
+  .photo-tools{position:absolute; top:10px; inset-inline-end:10px; display:flex; gap:6px;}
+  .photo-tools button{
+    display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border-radius:99px; cursor:pointer;
+    border:1px solid rgba(255,255,255,.25); background:rgba(6,7,20,.72); color:#fff; font-size:12.5px; backdrop-filter:blur(6px);
+  }
+  .photo-tools button svg{width:14px; height:14px;}
+  .photo-busy{font-size:12px; color:var(--muted); margin-top:6px;}
+
+  /* ---------- Share (detail popup) ---------- */
+  .share-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .share-row .share-lbl{font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:6px; margin-inline-end:auto;}
+  .share-row .share-lbl svg{width:15px; height:15px; color:var(--indigo-soft);}
+  .share-row .btn{height:34px; padding:0 12px; font-size:13px; text-decoration:none;}
+  .share-row .btn svg{width:15px; height:15px;}
+  .share-fallback{width:100%; margin-top:8px; padding:9px 12px; border-radius:10px; border:1px solid var(--line-2); background:var(--card-2); color:var(--text); font-family:'Geist', sans-serif; font-size:12.5px; direction:ltr;}
+
+  /* ---------- Guided tour ---------- */
+  .tour{position:fixed; inset:0; z-index:120;}
+  .tour[hidden]{display:none;}
+  .tour-catch{position:fixed; inset:0;}
+  .tour-spot{
+    position:fixed; border-radius:18px; pointer-events:none;
+    box-shadow:0 0 0 9999px rgba(3,4,14,.68), 0 0 0 2px var(--indigo-2), 0 0 34px rgba(76,99,245,.65);
+    transition:top .3s cubic-bezier(.2,.7,.2,1), left .3s cubic-bezier(.2,.7,.2,1), width .3s cubic-bezier(.2,.7,.2,1), height .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .tour-spot.none{width:0 !important; height:0 !important; top:50% !important; left:50% !important; box-shadow:0 0 0 9999px rgba(3,4,14,.68);}
+  .tour-card{
+    position:fixed; width:min(340px, calc(100vw - 24px)); padding:16px 18px;
+    background:var(--card); border:1px solid var(--line-2); border-radius:18px; box-shadow:var(--pop-shadow);
+    transition:top .3s cubic-bezier(.2,.7,.2,1), left .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .tour-card::before{
+    content:""; position:absolute; top:0; inset-inline:16%; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(122,140,255,.8), transparent);
+  }
+  .tour-step{font-family:'Geist', sans-serif; font-size:12px; font-weight:600; color:var(--indigo-soft);}
+  .tour-card h3{font-size:16.5px; font-weight:600; color:var(--title); margin:4px 0 6px;}
+  .tour-card p{font-size:13.5px; line-height:1.75; color:var(--text-2);}
+  .tour-dots{display:flex; gap:5px; margin-top:12px;}
+  .tour-dots i{width:6px; height:6px; border-radius:99px; background:var(--line-2); transition:width .2s ease, background .2s ease;}
+  .tour-dots i.on{width:18px; background:var(--indigo-2);}
+  .tour-actions{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:14px;}
+  .tour-actions > div{display:flex; gap:8px;}
+  /* ---------- Database loading / error states ---------- */
+  .state-box{
+    grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center;
+    padding:64px 20px; border:1px dashed var(--line-2); border-radius:24px; background:var(--card); color:var(--muted);
+  }
+  .state-box h3{font-size:17px; color:var(--title);}
+  .state-box p{font-size:13.5px;}
+  .state-box > svg{width:44px; height:44px; color:var(--coral);}
+  .spinner{width:34px; height:34px; border-radius:50%; border:3px solid var(--line-2); border-top-color:var(--indigo-2); animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .form-error{margin:4px 0 12px; padding:10px 12px; border-radius:12px; font-size:13px; color:var(--coral);
+    background:rgba(242,114,75,.1); border:1px solid rgba(242,114,75,.4);}
+  .form-error[hidden]{display:none;}
+  .btn[aria-busy="true"], .btn:disabled{opacity:.65; cursor:progress;}
+
+  /* Elements that set their own display must still honour [hidden]. */
+  .photo-drop[hidden], .tour-actions [hidden], .share-row [hidden]{display:none;}
+</style>
+
+<div class="stage">
+  <div class="app-shell">
+
+    <aside class="sidebar">
+      <div class="side-card brand-card">
+        <div class="brand-top">
+          <div class="brand-tools">
+            <div class="theme-toggle" role="group" data-i18n-aria="theme.aria">
+              <button class="theme-btn" type="button" data-mode-btn="dark" data-i18n-aria="theme.dark" data-i18n-title="theme.dark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+              </button>
+              <button class="theme-btn" type="button" data-mode-btn="light" data-i18n-aria="theme.light" data-i18n-title="theme.light">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+              </button>
+            </div>
+            <button class="lang-btn" type="button" data-lang-toggle data-i18n="lang.other" data-i18n-aria="lang.switch" data-i18n-title="lang.switch"></button>
+          </div>
+          <span class="logo-chip logo-chip--wide"><img src="logo-horizontal.png?v=2" data-i18n-alt="ksu" alt="جامعة الملك سعود"></span>
+        </div>
+        <div>
+          <p class="eyebrow">KSU · Lost &amp; Found</p>
+          <h1>
+            <img class="app-logo app-logo--dark" src="assets/logo/logo-horizontal.svg" data-i18n-alt="app.title" alt="لقيان">
+            <img class="app-logo app-logo--light" src="assets/logo/logo-horizontal-light.svg" data-i18n-alt="app.title" alt="لقيان">
+          </h1>
+          <p class="tagline" data-i18n="brand.tagline"></p>
+          <div class="role-bar">
+            <span class="role-badge" id="roleBadge"></span>
+            <button class="link-btn" id="btnSwitchRole" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>
+              <span data-i18n="role.switch"></span>
+            </button>
+            <button class="link-btn" id="btnTour" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.4"/><circle cx="12" cy="16.8" r=".7" fill="currentColor"/></svg>
+              <span data-i18n="tour.replay"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-card section-card">
+        <p class="nav-label" data-i18n="nav.section"></p>
+        <div class="seg" role="tablist" data-i18n-aria="nav.section">
+          <button class="seg-btn active" id="secMale" role="tab" aria-selected="true" type="button">
+            <span data-i18n="seg.male"></span> <span class="seg-count" id="countMale"></span>
+          </button>
+          <button class="seg-btn" id="secFemale" role="tab" aria-selected="false" type="button">
+            <span data-i18n="seg.female"></span> <span class="seg-count" id="countFemale"></span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="side-card nav-card">
+        <p class="nav-label" data-i18n="nav.reports"></p>
+        <div class="tabs" role="tablist" data-i18n-aria="nav.reports">
+          <button class="tab-btn active" id="tabLost" role="tab" aria-selected="true" type="button">
+            <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M9.2 9.2a2 2 0 0 1 3.7 1c0 1.3-1.9 1.7-1.9 2.8"/><circle cx="11" cy="15.2" r=".6" fill="currentColor"/></svg>
+            <span data-i18n="tab.lost"></span> <span class="count" id="countLost">0</span>
+          </button>
+          <button class="tab-btn" id="tabFound" role="tab" aria-selected="false" type="button">
+            <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.7L16.2 9.5"/></svg>
+            <span data-i18n="tab.found"></span> <span class="count" id="countFound">0</span>
+          </button>
+        </div>
+        <button class="tab-btn nav-dash" id="navDash" type="button">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          <span data-i18n="nav.dash"></span> <span class="admin-tag" data-i18n="tag.admin"></span>
+        </button>
+      </nav>
+
+      <button class="side-cta" id="btnReportFoundSide" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg>
+        <div>
+          <strong data-i18n="cta.title"></strong>
+          <span data-i18n="cta.sub"></span>
+        </div>
+      </button>
+    </aside>
+
+    <main class="main" id="main" data-view="list">
+      <div class="topbar">
+        <div class="filters">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" id="searchInput" data-i18n-ph="search.ph" data-i18n-aria="search.aria">
+          </div>
+          <select class="filter-select" id="categorySelect" data-i18n-aria="filter.cat"></select>
+          <select class="filter-select" id="locationSelect" data-i18n-aria="filter.loc"></select>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-outline" id="btnReportLostHeader" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>
+            <span data-i18n="btn.reportLost"></span>
+          </button>
+          <button class="btn btn-primary" id="btnReportFoundHeader" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span data-i18n="btn.reportFound"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="results-bar">
+        <p class="results-meta" id="resultsMeta"></p>
+        <div class="report-wrap">
+          <button class="btn btn-outline btn-sm" id="btnDownloadReport" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="reportMenu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg>
+            <span data-i18n="btn.download"></span>
+          </button>
+          <div class="report-menu" id="reportMenu" role="menu">
+            <button class="menu-item" type="button" role="menuitem" id="reportPdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+              <div><strong data-i18n="menu.pdf"></strong><span data-i18n="menu.pdfSub"></span></div>
+            </button>
+            <button class="menu-item" type="button" role="menuitem" id="reportCsv">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></svg>
+              <div><strong data-i18n="menu.csv"></strong><span data-i18n="menu.csvSub"></span></div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <section class="grid" id="grid" aria-live="polite"></section>
+
+      <!-- Admin dashboard (shown instead of the grid) -->
+      <section class="dash" id="dash" data-i18n-aria="dash.aria"></section>
+
+      <footer class="site-footer">
+        <span class="logo-chip"><img src="logo-shield.png?v=2" alt=""></span>
+        <strong data-i18n="app.title"></strong>
+        <span data-i18n="footer" id="footerNote"></span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<div class="mobile-cta">
+  <button class="btn btn-outline btn-block" id="btnReportLostMobile" type="button" data-i18n="btn.reportLost"></button>
+  <button class="btn btn-primary btn-block" id="btnReportFoundMobile" type="button" data-i18n="btn.reportFound"></button>
+</div>
+
+<!-- Chat assistant: floating button + panel (backed by the chat-assistant Edge Function) -->
+<button class="chat-fab" id="chatFab" type="button" aria-controls="chatPanel" aria-expanded="false" data-i18n-aria="chat.open">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.2 0-2.3-.2-3.3-.6L4 20l1.3-3.6C4.5 15.1 4 13.4 4 11.5 4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/><path d="M12 8.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg>
+  <span class="chat-fab-label" data-i18n="chat.fab"></span>
+</button>
+<section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
+  <header class="chat-head">
+    <span class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.2 0-2.3-.2-3.3-.6L4 20l1.3-3.6C4.5 15.1 4 13.4 4 11.5 4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/><path d="M12 8.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></span>
+    <div class="chat-head-text">
+      <h2 id="chatTitle" data-i18n="chat.title"></h2>
+      <p data-i18n="chat.sub"></p>
+    </div>
+    <button class="icon-btn" id="chatClose" type="button" data-i18n-aria="close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </header>
+  <div class="chat-log" id="chatLog" role="log" aria-live="polite"></div>
+  <form class="chat-form" id="chatForm" novalidate>
+    <label for="chatInput" class="sr-only" data-i18n="chat.inputLabel"></label>
+    <textarea id="chatInput" rows="1" maxlength="600" dir="auto" data-i18n-ph="chat.placeholder"></textarea>
+    <button class="btn btn-primary chat-send" id="chatSend" type="submit" data-i18n-aria="chat.send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </form>
+  <p class="chat-note" data-i18n="chat.note"></p>
+</section>
+
+<!-- Report dialog (new report, or admin edit) -->
+<dialog id="reportDialog">
+  <div class="modal-head">
+    <h2 id="reportDialogTitle"></h2>
+    <button class="icon-btn" data-close-dialog="reportDialog" type="button" data-i18n-aria="close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form id="reportForm" novalidate>
+      <input type="hidden" id="reportType" value="lost">
+
+      <div class="field-row">
+        <div class="field" id="f-name">
+          <label for="itemName" data-i18n="form.name"></label>
+          <input type="text" id="itemName" data-i18n-ph="form.namePh" required>
+          <p class="err-msg" data-i18n="err.name"></p>
+        </div>
+        <div class="field" id="f-section">
+          <label for="itemSection" data-i18n="form.section"></label>
+          <select id="itemSection" required></select>
+          <p class="err-msg" data-i18n="err.section"></p>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field" id="f-category">
+          <label for="itemCategory" data-i18n="form.category"></label>
+          <select id="itemCategory" required></select>
+          <p class="err-msg" data-i18n="err.category"></p>
+        </div>
+        <div class="field" id="f-location">
+          <label for="itemLocation" data-i18n="form.location"></label>
+          <select id="itemLocation" required></select>
+          <p class="err-msg" data-i18n="err.location"></p>
+        </div>
+      </div>
+
+      <div class="field" id="f-desc">
+        <label for="itemDesc" data-i18n="form.desc"></label>
+        <textarea id="itemDesc" data-i18n-ph="form.descPh" required></textarea>
+        <p class="err-msg" data-i18n="err.desc"></p>
+      </div>
+
+      <div class="field-row">
+        <div class="field" id="f-date">
+          <label for="itemDate" data-i18n="form.date"></label>
+          <input type="date" id="itemDate" required>
+          <p class="err-msg" data-i18n="err.date"></p>
+        </div>
+        <div class="field" id="f-contact">
+          <label for="itemContact" data-i18n="form.contact"></label>
+          <input type="text" id="itemContact" data-i18n-ph="form.contactPh" inputmode="email" required>
+          <p class="err-msg" data-i18n="err.contact"></p>
+        </div>
+      </div>
+
+      <div class="field" id="f-photo">
+        <label for="itemPhoto" data-i18n="form.photo"></label>
+        <input type="file" id="itemPhoto" accept="image/*" hidden>
+        <button type="button" class="photo-drop" id="photoDrop">
+          <span class="ph-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/></svg></span>
+          <span><strong data-i18n="photo.pick"></strong><small data-i18n="photo.hint"></small></span>
+        </button>
+        <div class="photo-preview" id="photoPreview" hidden>
+          <img id="photoImg" data-i18n-alt="photo.preview" alt="">
+          <div class="photo-tools">
+            <button type="button" id="photoChange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/></svg><span data-i18n="photo.change"></span></button>
+            <button type="button" id="photoRemove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span data-i18n="photo.remove"></span></button>
+          </div>
+        </div>
+        <p class="photo-busy" id="photoBusy" hidden data-i18n="photo.busy"></p>
+        <p class="err-msg" data-i18n="err.photo"></p>
+      </div>
+
+      <p class="form-error" id="formError" role="alert" hidden></p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" data-close-dialog="reportDialog" data-i18n="btn.cancel"></button>
+        <button type="submit" class="btn btn-primary" id="submitReportBtn"></button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Entry screen: choose student or admin before using the site -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-card">
+    <button class="lang-btn gate-lang" type="button" data-lang-toggle data-i18n="lang.other" data-i18n-aria="lang.switch" data-i18n-title="lang.switch"></button>
+    <img class="gate-logo app-logo--dark" src="assets/logo/logo-horizontal.svg" data-i18n-alt="app.title" alt="لقيان">
+    <img class="gate-logo app-logo--light" src="assets/logo/logo-horizontal-light.svg" data-i18n-alt="app.title" alt="لقيان">
+    <h1 id="gateTitle" data-i18n="gate.title"></h1>
+    <p class="gate-sub" id="gateSub"></p>
+
+    <div class="gate-step" id="gateRoles">
+      <button class="role-card" id="roleStudent" type="button">
+        <span class="role-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11"/><path d="M21.5 9v5"/></svg></span>
+        <span class="role-text"><strong data-i18n="role.student"></strong><small data-i18n="role.studentSub"></small></span>
+        <svg class="role-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button class="role-card" id="roleAdmin" type="button">
+        <span class="role-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/></svg></span>
+        <span class="role-text"><strong data-i18n="role.admin"></strong><small data-i18n="role.adminSub"></small></span>
+        <svg class="role-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+    </div>
+
+    <form class="gate-step" id="gateLogin" hidden novalidate>
+      <div class="admin-lock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div class="field" id="f-loginId">
+        <label for="loginId" id="loginIdLabel"></label>
+        <input type="text" id="loginId" autocomplete="username" dir="ltr" spellcheck="false" autocapitalize="off">
+      </div>
+      <div class="field" id="f-login">
+        <label for="loginPassword" data-i18n="login.pwd"></label>
+        <input type="password" id="loginPassword" autocomplete="current-password" dir="ltr">
+        <p class="err-msg" id="loginErr"></p>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" id="gateBack" data-i18n="btn.back"></button>
+        <button type="submit" class="btn btn-primary" id="gateSubmit" data-i18n="btn.enter"></button>
+      </div>
+    </form>
+
+    <div class="gate-foot">
+      <span class="logo-chip logo-chip--wide"><img src="logo-horizontal.png?v=2" data-i18n-alt="ksu" alt="جامعة الملك سعود"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Detail dialog -->
+<dialog id="detailDialog">
+  <div class="modal-head">
+    <h2 data-i18n="detail.title"></h2>
+    <button class="icon-btn" data-close-dialog="detailDialog" type="button" data-i18n-aria="close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body" id="detailBody"></div>
+</dialog>
+
+<!-- Guided tour (first visit, or "جولة تعريفية") -->
+<div class="tour" id="tour" hidden>
+  <div class="tour-catch"></div>
+  <div class="tour-spot" id="tourSpot"></div>
+  <div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+    <div class="tour-step" id="tourStep"></div>
+    <h3 id="tourTitle"></h3>
+    <p id="tourBody"></p>
+    <div class="tour-dots" id="tourDots"></div>
+    <div class="tour-actions">
+      <button class="link-btn" type="button" id="tourSkip" data-i18n="tour.skip"></button>
+      <div>
+        <button class="btn btn-ghost btn-sm" type="button" id="tourPrev" data-i18n="tour.prev"></button>
+        <button class="btn btn-primary btn-sm" type="button" id="tourNext"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status">
+  <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+  <span id="toastMsg"></span>
+</div>
+
+<div class="chart-tip" id="chartTip" role="tooltip"></div>
+
+<!-- Filled on demand, shown only when printing -->
+<div id="printReport"></div>
+
+<!-- Supabase: library (pinned, integrity-checked) → settings → the single client (lib/supabaseClient.js) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script src="supabase-config.js"></script>
+<script src="lib/supabaseClient.js"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================================================================ Translations */
+  const I18N = {
+    ar: {
+      'app.title':'لقيان', 'ksu':'جامعة الملك سعود', 'brand.tagline':'مفقودات وموجودات الحرم الجامعي',
+      'lang.other':'EN', 'lang.switch':'English', 'theme.aria':'المظهر', 'theme.dark':'الوضع الداكن', 'theme.light':'الوضع الفاتح',
+      'role.switch':'تبديل الحساب', 'tour.replay':'جولة تعريفية', 'nav.section':'القسم', 'sec.male':'قسم الطلاب', 'sec.female':'قسم الطالبات', 'seg.male':'قسم الطلاب', 'seg.female':'قسم الطالبات',
+      'nav.reports':'البلاغات', 'tab.lost':'المفقودات', 'tab.found':'الموجودات', 'nav.dash':'الإحصائيات', 'tag.admin':'مشرف',
+      'cta.title':'الإبلاغ عن ملقوط', 'cta.sub':'وجدت غرضًا؟ انشره ليصل لصاحبه',
+      'search.ph':'ابحث بالاسم أو الموقع أو التصنيف…', 'search.aria':'بحث', 'filter.cat':'التصنيف', 'filter.loc':'الموقع',
+      'filter.allCat':'كل التصنيفات', 'filter.allLoc':'كل المواقع',
+      'btn.reportLost':'الإبلاغ عن مفقود', 'btn.reportFound':'الإبلاغ عن ملقوط', 'btn.download':'تحميل التقرير',
+      'menu.pdf':'تقرير PDF', 'menu.pdfSub':'اختر «حفظ بصيغة PDF» من نافذة الطباعة', 'menu.csv':'ملف Excel (CSV)', 'menu.csvSub':'جدول بكل الأغراض يُفتح في Excel',
+      'footer':'نموذج تجريبي لعرض توضيحي — جامعة الملك سعود · البيانات محفوظة على هذا الجهاز فقط', 'dash.aria':'لوحة الإحصائيات', 'close':'إغلاق',
+      'form.lostTitle':'الإبلاغ عن غرض مفقود', 'form.foundTitle':'الإبلاغ عن غرض ملقوط', 'form.editTitle':'تعديل البلاغ',
+      'form.submitLost':'نشر بلاغ الفقدان', 'form.submitFound':'نشر بلاغ العثور', 'form.save':'حفظ التعديلات',
+      'form.name':'اسم الغرض', 'form.namePh':'مثال: سماعات لاسلكية بيضاء', 'err.name':'يرجى إدخال اسم الغرض',
+      'form.section':'القسم', 'err.section':'يرجى اختيار القسم', 'form.category':'التصنيف', 'err.category':'يرجى اختيار التصنيف',
+      'form.location':'الموقع في الحرم الجامعي', 'err.location':'يرجى اختيار الموقع',
+      'form.desc':'وصف مختصر', 'form.descPh':'لون الغرض، علاماته المميزة، مكان العثور عليه بالتحديد…', 'err.desc':'يرجى إضافة وصف مختصر',
+      'form.date':'التاريخ', 'err.date':'يرجى تحديد تاريخ لا يتجاوز اليوم',
+      'form.contact':'وسيلة التواصل', 'form.contactPh':'05xxxxxxxx أو بريد جامعي', 'err.contact':'أدخل رقم جوال سعودي (05xxxxxxxx) أو بريدًا إلكترونيًا صحيحًا',
+      'form.photo':'صورة الغرض (اختياري)', 'photo.pick':'التقط صورة أو اختر من المعرض', 'photo.hint':'أو اسحب الصورة إلى هنا — تُصغَّر تلقائيًا',
+      'photo.change':'تغيير', 'photo.remove':'إزالة', 'photo.preview':'معاينة صورة الغرض', 'photo.busy':'جارٍ تجهيز الصورة…', 'err.photo':'تعذّرت قراءة الصورة، جرّب صورة أخرى',
+      'btn.cancel':'إلغاء', 'btn.back':'رجوع', 'btn.enter':'دخول',
+      'gate.title':'مرحبًا بك في لقيان', 'gate.sub':'اختر طريقة الدخول للمتابعة', 'gate.subAdmin':'سجّل الدخول باسم المشرف وكلمة المرور',
+      'gate.subStudent':'سجّل الدخول برقمك الجامعي وكلمة المرور',
+      'login.studentId':'الرقم الجامعي', 'login.adminName':'اسم المشرف', 'login.pwd':'كلمة المرور',
+      'err.login':'البيانات غير صحيحة، تحقّق منها وحاول مرة أخرى.', 'err.loginEmpty':'أدخل بيانات الدخول وكلمة المرور.',
+      'chat.fab':'اسأل مساعد لقيان', 'chat.open':'افتح مساعد لقيان', 'chat.title':'مساعد لقيان',
+      'chat.sub':'يبحث لك في الموجودات ويسجّل بلاغك', 'chat.placeholder':'اكتب وش ضاع منك…', 'chat.inputLabel':'رسالتك للمساعد',
+      'chat.send':'إرسال', 'chat.note':'المساعد يعتمد على الذكاء الاصطناعي وقد يخطئ — راجع البلاغ قبل التواصل.',
+      'chat.welcome':'هلا! أنا مساعد لقيان 👋\nقل لي وش ضاع منك، ووين ومتى تقريبًا، وأدوّر لك في الموجودات. وإذا ما لقيته أسجّل لك بلاغ مفقود.',
+      'chat.s1':'ضاعت سماعاتي البيضاء', 'chat.s2':'فقدت مفاتيح سيارتي', 'chat.s3':'أبي أسجّل بلاغ مفقود',
+      'chat.openItem':'عرض', 'chat.created':'تم تسجيل البلاغ في قائمة المفقودات',
+      'chat.offline':'المساعد يحتاج اتصال بقاعدة البيانات، وهو غير متاح في هذا الوضع. تقدر تستخدم زر «الإبلاغ عن مفقود».',
+      'chat.errNet':'تعذّر الوصول للمساعد، تحقّق من اتصالك وحاول مرة ثانية.', 'chat.retry':'إعادة المحاولة',
+      'role.student':'طالب / طالبة', 'role.studentSub':'تصفّح المفقودات والموجودات وأبلغ عن غرض',
+      'role.admin':'مشرف', 'role.adminSub':'إدارة البلاغات وتعديلها وتحميل التقارير',
+      'detail.title':'تفاصيل البلاغ', 'badge.student':'طالب', 'badge.admin':'مشرف',
+      'toast.welcomeStudent':'مرحبًا بك في لقيان', 'toast.welcomeAdmin':'مرحبًا بك — تم الدخول كمشرف',
+      'status.lost':'مفقود', 'status.found':'موجود', 'status.delivered':'تم التسليم',
+      'meta.results':'{n} نتيجة', 'meta.matching':'مطابقة لبحثك', 'meta.clear':'مسح الفلاتر',
+      'empty.title':'لا توجد نتائج مطابقة', 'empty.body':'جرّب كلمة بحث مختلفة أو امسح الفلاتر المطبّقة.',
+      'card.match':'تطابق محتمل · {items} في {list}', 'list.lost':'المفقودات', 'list.found':'الموجودات',
+      'sim.1':'غرض واحد مشابه', 'sim.2':'غرضان مشابهان', 'sim.n':'{n} أغراض مشابهة',
+      'ago.today':'اليوم', 'ago.1':'منذ يوم واحد', 'ago.2':'منذ يومين', 'ago.few':'منذ {n} أيام', 'ago.many':'منذ {n} يومًا',
+      'detail.location':'الموقع', 'detail.date':'التاريخ', 'detail.section':'القسم', 'detail.returnedOn':'تاريخ التسليم',
+      'matches.lost':'قد يكون غرضك بين هذه الموجودات', 'matches.found':'قد يكون صاحبه أبلغ عنه في المفقودات',
+      'matches.note':'نفس التصنيف ونفس القسم — افتح البلاغ وقارن الوصف والموقع.',
+      'returned.title':'تم تسليم هذا الغرض لصاحبه', 'returned.body':'أُغلق البلاغ ولم يعد بحاجة للتواصل.',
+      'contact.reveal':'هذا الغرض لي — عرض بيانات التواصل', 'contact.label':'وسيلة التواصل', 'contact.note':'بيانات تجريبية لأغراض العرض التوضيحي فقط',
+      'share.label':'مشاركة البلاغ', 'share.copy':'نسخ الرابط', 'share.whatsapp':'واتساب', 'share.native':'مشاركة…',
+      'share.text':'{status} في لقيان: {name} — {location}',
+      'toast.copied':'تم نسخ رابط البلاغ', 'toast.copyFail':'انسخ الرابط من الحقل أدناه', 'toast.notFound':'هذا البلاغ غير موجود على هذا الجهاز',
+      'admin.actions':'إجراءات المشرف', 'admin.return':'تحديد كـ «تم التسليم»', 'admin.unreturn':'إلغاء حالة التسليم',
+      'admin.edit':'تعديل البلاغ', 'admin.delete':'حذف البلاغ',
+      'admin.confirmDel':'سيتم حذف بلاغ «{name}» نهائيًا. هل أنت متأكد؟', 'admin.yesDel':'نعم، احذف البلاغ',
+      'toast.returned':'تم تحديد الغرض كـ «تم التسليم»', 'toast.unreturned':'تم إلغاء حالة التسليم', 'toast.deleted':'تم حذف البلاغ',
+      'toast.saved':'تم حفظ التعديلات', 'toast.postedLost':'تم نشر بلاغ الفقدان بنجاح', 'toast.postedFound':'تم نشر بلاغ العثور بنجاح',
+      'toast.postedMatchLost':'تم نشر البلاغ — وجدنا {items} في الموجودات', 'toast.postedMatchFound':'تم نشر البلاغ — يوجد {items} في المفقودات',
+      'toast.storageFull':'مساحة التخزين ممتلئة — احذف بعض الصور ثم حاول مجددًا', 'toast.reset':'تمت استعادة البيانات التجريبية', 'toast.csv':'تم تحميل ملف التقرير',
+      'dash.meta':'لوحة الإحصائيات', 'dash.all':'جميع الأقسام',
+      'kpi.total':'إجمالي البلاغات', 'kpi.totalSub':'في القسمين', 'kpi.lost':'مفقودات قائمة', 'kpi.lostSub':'لم يُعثر عليها بعد',
+      'kpi.found':'موجودات قائمة', 'kpi.foundSub':'بانتظار أصحابها', 'kpi.ret':'تم التسليم', 'kpi.retSub':'عادت لأصحابها',
+      'kpi.rate':'نسبة الإرجاع', 'kpi.rateSub':'{r} من {t} بلاغًا',
+      'panel.cat':'أكثر التصنيفات فقدًا', 'panel.catSub':'عدد بلاغات المفقودات لكل تصنيف',
+      'panel.loc':'المواقع الأكثر بلاغات', 'panel.locSub':'أعلى 6 مواقع — مفقودات وموجودات',
+      'panel.sec':'مقارنة الأقسام', 'panel.secSub':'توزيع البلاغات ونسبة الإرجاع في كل قسم',
+      'th.section':'القسم', 'th.reports':'البلاغات', 'th.lost':'مفقودات', 'th.found':'موجودات', 'th.returned':'تم التسليم', 'th.rate':'نسبة الإرجاع',
+      'tip.unitLost':'بلاغ مفقود', 'tip.unit':'بلاغ', 'tip.share':'{p}% من المجموع',
+      'dash.foot':'البيانات محفوظة على هذا الجهاز فقط — يمكنك إعادتها إلى البيانات التجريبية الأصلية.',
+      'dash.reset':'استعادة البيانات التجريبية', 'dash.resetConfirm':'اضغط مرة أخرى للتأكيد',
+      'rp.title':'تقرير المفقودات والموجودات', 'rp.sub':'جامعة الملك سعود · تاريخ الإصدار: {d}',
+      'rp.total':'إجمالي البلاغات', 'rp.lost':'مفقودات', 'rp.found':'موجودات', 'rp.ret':'تم التسليم', 'rp.empty':'لا توجد أغراض.',
+      'rp.foot':'لقيان — نموذج تجريبي لعرض توضيحي · بيانات التواصل غير مضمّنة في التقرير حفاظًا على الخصوصية', 'rp.file':'تقرير-لقيان-',
+      'col.item':'الغرض', 'col.name':'اسم الغرض', 'col.status':'الحالة', 'col.category':'التصنيف', 'col.location':'الموقع', 'col.date':'التاريخ',
+      'col.desc':'الوصف', 'col.section':'القسم', 'col.type':'النوع', 'col.returnedDate':'تاريخ التسليم',
+      'tour.step':'{i} من {n}', 'tour.next':'التالي', 'tour.prev':'السابق', 'tour.skip':'تخطي الجولة', 'tour.done':'ابدأ الاستخدام',
+      'tour.0t':'جولة سريعة في لقيان', 'tour.0b':'خلال نصف دقيقة سنريك كيف تجد غرضك المفقود، أو تعيد غرضًا وجدته لصاحبه.',
+      'tour.1t':'اختر قسمك', 'tour.1b':'لكلٍّ من قسم الطلاب وقسم الطالبات قائمة مفقودات وموجودات خاصة به.',
+      'tour.2t':'المفقودات والموجودات', 'tour.2b':'بدّل بين ما فقده الطلاب وما عثروا عليه. إن فقدت شيئًا، ابدأ بتصفح الموجودات.',
+      'tour.3t':'ابحث بسرعة', 'tour.3b':'ابحث بالاسم أو الموقع أو التصنيف، أو صفِّ النتائج من القوائم.',
+      'tour.4t':'أبلغ في ثوانٍ', 'tour.4b':'فقدت شيئًا أو وجدته؟ أضف بلاغًا مع صورة من كاميرا جوالك.',
+      'tour.5t':'افتح أي بلاغ', 'tour.5b':'شاهد التفاصيل والتطابقات المحتملة، وشارك البلاغ أو تواصل مع صاحبه.',
+      'tour.a1t':'لوحة الإحصائيات', 'tour.a1b':'نظرة شاملة على البلاغات، وأكثر التصنيفات والمواقع، ونسبة الإرجاع.',
+      'tour.a2t':'تحميل التقرير', 'tour.a2b':'صدّر كل البلاغات كملف PDF أو Excel. ومن أي بلاغ يمكنك تعديله أو حذفه أو تحديده كـ «تم التسليم».'
+      ,'load.loading':'جارٍ تحميل البلاغات…', 'load.errorTitle':'تعذّر تحميل البلاغات',
+      'load.errorBody':'تحقّق من اتصالك بالإنترنت ثم أعد المحاولة.', 'load.retry':'إعادة المحاولة',
+      'form.saving':'جارٍ الحفظ…', 'err.save':'تعذّر حفظ البلاغ، تحقّق من اتصالك وحاول مرة أخرى.',
+      'err.action':'تعذّر تنفيذ العملية، حاول مرة أخرى.', 'err.adminPw':'انتهت جلسة المشرف، سجّل الدخول مرة أخرى.',
+      'err.network':'تعذّر الاتصال بالخادم، حاول مرة أخرى.', 'gate.checking':'جارٍ التحقق…',
+      'footer.db':'نموذج تجريبي لعرض توضيحي — جامعة الملك سعود · البيانات محفوظة في قاعدة بيانات Supabase',
+      'dash.footDb':'البيانات محفوظة في قاعدة بيانات Supabase ومشتركة بين كل الأجهزة — يمكنك إعادتها إلى البيانات التجريبية الأصلية.'
+    },
+    en: {
+      'app.title':'LaqYan', 'ksu':'King Saud University', 'brand.tagline':'Campus lost & found',
+      'lang.other':'ع', 'lang.switch':'العربية', 'theme.aria':'Appearance', 'theme.dark':'Dark mode', 'theme.light':'Light mode',
+      'role.switch':'Switch account', 'tour.replay':'Take the tour', 'nav.section':'Section', 'sec.male':'Male students', 'sec.female':'Female students', 'seg.male':'Male', 'seg.female':'Female',
+      'nav.reports':'Reports', 'tab.lost':'Lost', 'tab.found':'Found', 'nav.dash':'Statistics', 'tag.admin':'Admin',
+      'cta.title':'Report a found item', 'cta.sub':'Found something? Post it so its owner can find it',
+      'search.ph':'Search by name, location or category…', 'search.aria':'Search', 'filter.cat':'Category', 'filter.loc':'Location',
+      'filter.allCat':'All categories', 'filter.allLoc':'All locations',
+      'btn.reportLost':'Report lost item', 'btn.reportFound':'Report found item', 'btn.download':'Download report',
+      'menu.pdf':'PDF report', 'menu.pdfSub':'Choose "Save as PDF" in the print window', 'menu.csv':'Excel file (CSV)', 'menu.csvSub':'A table of every item that opens in Excel',
+      'footer':'Demo prototype — King Saud University · Data is saved on this device only', 'dash.aria':'Statistics dashboard', 'close':'Close',
+      'form.lostTitle':'Report a lost item', 'form.foundTitle':'Report a found item', 'form.editTitle':'Edit report',
+      'form.submitLost':'Post lost report', 'form.submitFound':'Post found report', 'form.save':'Save changes',
+      'form.name':'Item name', 'form.namePh':'e.g. White wireless earbuds', 'err.name':"Enter the item's name",
+      'form.section':'Section', 'err.section':'Choose a section', 'form.category':'Category', 'err.category':'Choose a category',
+      'form.location':'Location on campus', 'err.location':'Choose a location',
+      'form.desc':'Short description', 'form.descPh':'Colour, distinctive marks, exactly where it was…', 'err.desc':'Add a short description',
+      'form.date':'Date', 'err.date':'Pick a date no later than today',
+      'form.contact':'Contact', 'form.contactPh':'05xxxxxxxx or university email', 'err.contact':'Enter a Saudi mobile number (05xxxxxxxx) or a valid email',
+      'form.photo':'Photo (optional)', 'photo.pick':'Take a photo or choose one', 'photo.hint':"or drag it here — it's resized automatically",
+      'photo.change':'Change', 'photo.remove':'Remove', 'photo.preview':'Photo preview', 'photo.busy':'Preparing photo…', 'err.photo':"Couldn't read that image — try another one",
+      'btn.cancel':'Cancel', 'btn.back':'Back', 'btn.enter':'Sign in',
+      'gate.title':'Welcome to LaqYan', 'gate.sub':'Choose how you want to continue', 'gate.subAdmin':'Sign in with your admin name and password',
+      'gate.subStudent':'Sign in with your student ID and password',
+      'login.studentId':'Student ID', 'login.adminName':'Admin name', 'login.pwd':'Password',
+      'err.login':"Those details don't match — check them and try again.", 'err.loginEmpty':'Enter your sign-in details and password.',
+      'chat.fab':'Ask LaqYan assistant', 'chat.open':'Open LaqYan assistant', 'chat.title':'LaqYan assistant',
+      'chat.sub':'Searches found items and files your report', 'chat.placeholder':'Tell me what you lost…', 'chat.inputLabel':'Your message to the assistant',
+      'chat.send':'Send', 'chat.note':'The assistant uses AI and can make mistakes — check the report before contacting anyone.',
+      'chat.welcome':"Hi! I'm the LaqYan assistant 👋\nTell me what you lost, and roughly where and when, and I'll look through the found items. If it isn't there, I can file a lost report for you. (I reply in Arabic.)",
+      'chat.s1':'ضاعت سماعاتي البيضاء', 'chat.s2':'فقدت مفاتيح سيارتي', 'chat.s3':'أبي أسجّل بلاغ مفقود',
+      'chat.openItem':'View', 'chat.created':'Report added to the lost list',
+      'chat.offline':"The assistant needs the database connection, which isn't available in this mode. Use the “Report lost item” button instead.",
+      'chat.errNet':"Couldn't reach the assistant — check your connection and try again.", 'chat.retry':'Try again',
+      'role.student':'Student', 'role.studentSub':'Browse lost and found items and report one',
+      'role.admin':'Admin', 'role.adminSub':'Manage and edit reports, download statistics',
+      'detail.title':'Report details', 'badge.student':'Student', 'badge.admin':'Admin',
+      'toast.welcomeStudent':'Welcome to LaqYan', 'toast.welcomeAdmin':'Welcome — signed in as admin',
+      'status.lost':'Lost', 'status.found':'Found', 'status.delivered':'Returned',
+      'meta.results':'{n} results', 'meta.result1':'1 result', 'meta.matching':'matching your search', 'meta.clear':'Clear filters',
+      'empty.title':'No matching results', 'empty.body':'Try a different search or clear the filters.',
+      'card.match':'Possible match · {items} in {list}', 'list.lost':'lost reports', 'list.found':'found items',
+      'sim.1':'1 similar item', 'sim.2':'2 similar items', 'sim.n':'{n} similar items',
+      'ago.today':'Today', 'ago.1':'1 day ago', 'ago.2':'2 days ago', 'ago.few':'{n} days ago', 'ago.many':'{n} days ago',
+      'detail.location':'Location', 'detail.date':'Date', 'detail.section':'Section', 'detail.returnedOn':'Returned on',
+      'matches.lost':'Your item might be one of these found items', 'matches.found':'Its owner may have reported it as lost',
+      'matches.note':'Same category and section — open a report and compare the description and location.',
+      'returned.title':'This item has been returned to its owner', 'returned.body':'The report is closed; no contact needed.',
+      'contact.reveal':'This is mine — show contact details', 'contact.label':'Contact', 'contact.note':'Sample data for demo purposes only',
+      'share.label':'Share this report', 'share.copy':'Copy link', 'share.whatsapp':'WhatsApp', 'share.native':'Share…',
+      'share.text':'{status} on LaqYan: {name} — {location}',
+      'toast.copied':'Link copied', 'toast.copyFail':'Copy the link from the box below', 'toast.notFound':"That report isn't on this device",
+      'admin.actions':'Admin actions', 'admin.return':'Mark as returned', 'admin.unreturn':'Undo returned',
+      'admin.edit':'Edit report', 'admin.delete':'Delete report',
+      'admin.confirmDel':'"{name}" will be deleted permanently. Are you sure?', 'admin.yesDel':'Yes, delete it',
+      'toast.returned':'Marked as returned', 'toast.unreturned':'Returned status removed', 'toast.deleted':'Report deleted',
+      'toast.saved':'Changes saved', 'toast.postedLost':'Lost report posted', 'toast.postedFound':'Found report posted',
+      'toast.postedMatchLost':'Report posted — we found {items} among found items', 'toast.postedMatchFound':'Report posted — {items} in lost reports',
+      'toast.storageFull':'Storage is full — remove some photos and try again', 'toast.reset':'Sample data restored', 'toast.csv':'Report downloaded',
+      'dash.meta':'Statistics', 'dash.all':'All sections',
+      'kpi.total':'Total reports', 'kpi.totalSub':'Both sections', 'kpi.lost':'Open lost', 'kpi.lostSub':'Not found yet',
+      'kpi.found':'Open found', 'kpi.foundSub':'Waiting for their owners', 'kpi.ret':'Returned', 'kpi.retSub':'Back with their owners',
+      'kpi.rate':'Return rate', 'kpi.rateSub':'{r} of {t} reports',
+      'panel.cat':'Most-lost categories', 'panel.catSub':'Lost reports per category',
+      'panel.loc':'Locations with the most reports', 'panel.locSub':'Top 6 — lost and found',
+      'panel.sec':'Section comparison', 'panel.secSub':'Reports and return rate per section',
+      'th.section':'Section', 'th.reports':'Reports', 'th.lost':'Lost', 'th.found':'Found', 'th.returned':'Returned', 'th.rate':'Return rate',
+      'tip.unitLost':'lost reports', 'tip.unit':'reports', 'tip.share':'{p}% of total',
+      'dash.foot':'Data is saved on this device only — you can restore the original sample data.',
+      'dash.reset':'Restore sample data', 'dash.resetConfirm':'Click again to confirm',
+      'rp.title':'Lost & Found Report', 'rp.sub':'King Saud University · Issued {d}',
+      'rp.total':'Total reports', 'rp.lost':'Lost', 'rp.found':'Found', 'rp.ret':'Returned', 'rp.empty':'No items.',
+      'rp.foot':'LaqYan — demo prototype · Contact details are excluded from this report for privacy', 'rp.file':'LaqYan-report-',
+      'col.item':'Item', 'col.name':'Item name', 'col.status':'Status', 'col.category':'Category', 'col.location':'Location', 'col.date':'Date',
+      'col.desc':'Description', 'col.section':'Section', 'col.type':'Type', 'col.returnedDate':'Returned on',
+      'tour.step':'{i} of {n}', 'tour.next':'Next', 'tour.prev':'Back', 'tour.skip':'Skip tour', 'tour.done':'Start using LaqYan',
+      'tour.0t':'A quick tour of LaqYan', 'tour.0b':"In half a minute, see how to find something you lost — or get something you found back to its owner.",
+      'tour.1t':'Choose your section', 'tour.1b':'The male and female sections each have their own lost and found lists.',
+      'tour.2t':'Lost and found', 'tour.2b':'Switch between what students lost and what they found. Lost something? Start by browsing Found.',
+      'tour.3t':'Search fast', 'tour.3b':'Search by name, location or category, or narrow things down with the filters.',
+      'tour.4t':'Report in seconds', 'tour.4b':"Lost or found something? Add a report with a photo from your phone's camera.",
+      'tour.5t':'Open any report', 'tour.5b':'See the details and possible matches, share the report, or contact the person who posted it.',
+      'tour.a1t':'Statistics', 'tour.a1b':'An overview of all reports, the top categories and locations, and the return rate.',
+      'tour.a2t':'Download the report', 'tour.a2b':'Export every report as PDF or Excel. From any report you can also edit it, delete it or mark it as returned.'
+      ,'load.loading':'Loading reports…', 'load.errorTitle':"Couldn't load reports",
+      'load.errorBody':'Check your internet connection and try again.', 'load.retry':'Try again',
+      'form.saving':'Saving…', 'err.save':"Couldn't save the report — check your connection and try again.",
+      'err.action':"That didn't work — please try again.", 'err.adminPw':'Your admin session has expired — sign in again.',
+      'err.network':"Couldn't reach the server — try again.", 'gate.checking':'Checking…',
+      'footer.db':'Demo prototype — King Saud University · Data is saved in a Supabase database',
+      'dash.footDb':'Data is saved in a Supabase database and shared across devices — you can restore the original sample data.'
+    }
+  };
+  let lang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'ar';
+  function t(key, vars){
+    let s = I18N[lang][key]; if(s === undefined) s = I18N.ar[key]; if(s === undefined) s = key;
+    return vars ? s.replace(/\{(\w+)\}/g, (_, k) => vars[k] !== undefined ? vars[k] : '') : s;
+  }
+
+  /* ================================================================ Icons */
+  const ICONS = {
+    headphones: '<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2.6" y="13" width="4.4" height="6.4" rx="2.2"/><rect x="17" y="13" width="4.4" height="6.4" rx="2.2"/>',
+    keys: '<circle cx="7.5" cy="12" r="3.6"/><path d="M10.9 12h9.6M16.4 12v3M19.7 12v2.4"/>',
+    charger: '<path d="M8 3v4.2M16 3v4.2M5.6 7.2h12.8l-1 6.1a5.4 5.4 0 0 1-10.8 0l-1-6.1z"/><path d="M12 16.8V21"/>',
+    wallet: '<rect x="3" y="6" width="18" height="13" rx="2.2"/><path d="M3 10.2h18"/><circle cx="17" cy="14.4" r="1.3" fill="currentColor" stroke="none"/>',
+    electronics: '<rect x="5.5" y="3" width="13" height="18" rx="2.2"/><path d="M10 18h4"/>',
+    clothing: '<path d="M8.2 4 4.3 7.1l2 2.8 1.9-1.4V20h7.6V8.5l1.9 1.4 2-2.8L15.8 4l-1.9 1.9h-3.8L8.2 4z"/>',
+    other: '<path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8.4l9 5 9-5V8"/><path d="M12 13v8.4"/>',
+    location: '<path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/>',
+    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    people: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2a4.5 4.5 0 0 1 5 4.3"/>',
+    tag: '<path d="M20.6 12.6 12.9 20.3a1.9 1.9 0 0 1-2.7 0l-6.5-6.5a1.9 1.9 0 0 1 0-2.7L11.4 3.4A1.9 1.9 0 0 1 12.7 3H19a1.9 1.9 0 0 1 1.9 1.9v6.3a1.9 1.9 0 0 1-.3 1.4z"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>',
+    phone: '<path d="M6.6 3.5 9 6a1.5 1.5 0 0 1-.1 2L7.2 9.7a13.5 13.5 0 0 0 7.1 7.1l1.7-1.7a1.5 1.5 0 0 1 2-.1l2.5 2.4a1.5 1.5 0 0 1 .1 2.2l-1.4 1.4c-.8.8-2 1.1-3.1.8C10.7 20.4 3.6 13.3 2.2 7.9a3 3 0 0 1 .8-3.1l1.4-1.4a1.5 1.5 0 0 1 2.2.1z"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+    empty: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/>',
+    arrow: '<path d="M7 17 17 7M9 7h8v8"/>',
+    trash: '<path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4L17.5 7M10 11v6M14 11v6"/>',
+    shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/>',
+    check: '<circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.7L16.2 9.5"/>',
+    undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+    chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    chev: '<path d="M15 6l-6 6 6 6"/>',
+    edit: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+    share: '<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>',
+    copy: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+    chat: '<path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-1-.9.9a3.6 3.6 0 0 1-2.4-2.4l.9-.9-1-1.9z"/>'
+  };
+  function svg(name, extra){ return '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '+(extra||'')+'>'+ICONS[name]+'</svg>'; }
+
+  /* ================================================================ Reference data (ar / en) */
+  const CATEGORIES = [
+    {key:'headphones',  ar:'سماعات',        en:'Headphones'},
+    {key:'keys',        ar:'مفاتيح',        en:'Keys'},
+    {key:'charger',     ar:'شاحن',          en:'Charger'},
+    {key:'wallet',      ar:'محفظة / هوية',  en:'Wallet / ID'},
+    {key:'electronics', ar:'إلكترونيات',    en:'Electronics'},
+    {key:'clothing',    ar:'ملابس',         en:'Clothing'},
+    {key:'other',       ar:'أخرى',          en:'Other'}
+  ];
+  const SECTIONS = [ {key:'male'}, {key:'female'} ];
+  // Locations are stored in Arabic (the canonical value); English is display only.
+  const LOCATIONS = [
+    ['كلية الحاسب والمعلومات','College of Computer & Information Sciences'], ['كلية الهندسة','College of Engineering'],
+    ['كلية العلوم','College of Science'], ['كلية إدارة الأعمال','College of Business Administration'],
+    ['المكتبة المركزية','Central Library'], ['الكافتيريا الرئيسية','Main Cafeteria'], ['المركز الطلابي','Student Center'],
+    ['مسجد الجامعة','University Mosque'], ['صالة الرياضة','Sports Hall'], ['مواقف الطلاب','Student Parking'],
+    ['البوابة الرئيسية','Main Gate'], ['أخرى','Other']
+  ];
+  const LOC_EN = Object.fromEntries(LOCATIONS);
+  const catLabel = key => { const c = CATEGORIES.find(c => c.key === key); return c ? c[lang] : key; };
+  const secLabel = key => t(key === 'female' ? 'sec.female' : 'sec.male');
+  const locLabel = loc => lang === 'en' ? (LOC_EN[loc] || loc) : loc;
+  const statusLabel = s => t('status.'+s);
+  // An item's shown status: once an admin marks it returned, that wins over lost/found.
+  function statusOf(it){ return it.returned ? 'delivered' : it.type; }
+  const nameOf = it => (lang === 'en' && it.en && it.en.name) || it.name;
+  const descOf = it => (lang === 'en' && it.en && it.en.desc) || it.desc;
+
+  /* ================================================================ Seed data */
+  let uid = 100;
+  const SEED = [
+    {section:'male', type:'lost', art:'airpods-pro', name:'سماعات AirPods Pro بيضاء', category:'headphones', location:'كلية الحاسب والمعلومات', date:'2026-09-24', desc:'سماعات AirPods Pro مع العلبة البيضاء، فُقدت بالقرب من القاعة B12 بعد المحاضرة الثانية.', contact:'0555123478',
+      en:{name:'White AirPods Pro', desc:'AirPods Pro in the white case, lost near hall B12 after the second lecture.'}},
+    {section:'male', type:'found', art:'keys-leather', name:'مفاتيح بميدالية جلدية بنية', category:'keys', location:'المكتبة المركزية', date:'2026-09-25', desc:'مجموعة من 3 مفاتيح مربوطة بميدالية جلدية بنية، وُجدت على طاولة القراءة بالطابق الثاني.', contact:'0561239087',
+      en:{name:'Keys on a brown leather tag', desc:'A set of 3 keys on a brown leather keychain, found on a reading table on the second floor.'}},
+    {section:'male', type:'lost', art:'charger-usbc', name:'شاحن لابتوب Dell أسود', category:'charger', location:'كلية الهندسة', date:'2026-09-23', desc:'شاحن لابتوب Dell أسود بسلك طويل، نسيته بجانب مقعد في مدرج قسم الحاسب.', contact:'0509887654',
+      en:{name:'Black Dell laptop charger', desc:'Black Dell laptop charger with a long cable, left next to a seat in the Computer department lecture hall.'}},
+    {section:'female', type:'found', art:'wallet-black', name:'محفظة جلدية سوداء', category:'wallet', location:'الكافتيريا الرئيسية', date:'2026-09-26', desc:'محفظة جلد أسود تحتوي على بطاقات فقط دون نقود، وُجدت أسفل أحد الطاولات.', contact:'laqyan.finder1@student.ksu.edu.sa',
+      en:{name:'Black leather wallet', desc:'Black leather wallet holding cards only, no cash. Found under one of the tables.'}},
+    {section:'female', type:'lost', art:'id-card', name:'بطاقة جامعية (هوية طالبة)', category:'wallet', location:'المركز الطلابي', date:'2026-09-22', desc:'بطاقتي الجامعية سقطت مني على الأغلب بالقرب من صالة الأنشطة الطلابية.', contact:'0533221190',
+      en:{name:'University ID card (female student)', desc:'My university ID card — I probably dropped it near the student activities hall.'}},
+    {section:'male', type:'found', art:'ipad-blue', name:'آيباد رمادي بكفر أزرق', category:'electronics', location:'مسجد الجامعة', date:'2026-09-25', desc:'جهاز آيباد باللون الرمادي داخل كفر أزرق، وُجد في رف الأحذية بمصلى الطلاب.', contact:'0577654321',
+      en:{name:'Grey iPad in a blue case', desc:"Grey iPad in a blue case, found on the shoe rack in the students' prayer room."}},
+    {section:'male', type:'lost', art:'jacket-black', name:'جاكيت رياضي أسود L', category:'clothing', location:'صالة الرياضة', date:'2026-09-21', desc:'جاكيت رياضي أسود مقاس L عليه شعار صغير، تركته على أحد المقاعد بعد التمرين.', contact:'0512340098',
+      en:{name:'Black sports jacket, size L', desc:'Black size-L sports jacket with a small logo, left on a bench after training.'}},
+    {section:'female', type:'found', art:'powerbank', name:'باوربانك أبيض Anker', category:'electronics', location:'مواقف الطلاب', date:'2026-09-26', desc:'باوربانك أبيض من نوع Anker، وُجد على الأرض بالقرب من مدخل موقف الطالبات.', contact:'laqyan.finder2@student.ksu.edu.sa',
+      en:{name:'White Anker power bank', desc:"White Anker power bank, found on the ground near the female students' parking entrance."}},
+    {section:'female', type:'lost', art:'umbrella', name:'مظلة سوداء قابلة للطي', category:'other', location:'البوابة الرئيسية', date:'2026-09-20', desc:'مظلة سوداء صغيرة قابلة للطي، على الأغلب نسيتها عند البوابة الرئيسية صباحًا.', contact:'0544009911',
+      en:{name:'Black folding umbrella', desc:'Small black folding umbrella, probably left at the main gate in the morning.'}},
+    {section:'male', type:'found', art:'earbud-black', name:'سماعة أذن واحدة (يمين)', category:'headphones', location:'كلية العلوم', date:'2026-09-24', desc:'سماعة أذن لاسلكية واحدة سوداء (الجهة اليمنى فقط)، وُجدت في ممر مبنى ٤.', contact:'0521987765',
+      en:{name:'Single earbud (right)', desc:'One black wireless earbud (right side only), found in the Building 4 corridor.'}},
+    {section:'female', type:'lost', art:'glasses-gold', name:'نظارة طبية بإطار ذهبي', category:'other', location:'كلية العلوم', date:'2026-09-25', desc:'نظارة طبية بإطار ذهبي رفيع داخل علبة بيج، فُقدت في معمل الكيمياء بالدور الأول.', contact:'0538807766',
+      en:{name:'Gold-framed prescription glasses', desc:'Prescription glasses with a thin gold frame in a beige case, lost in the first-floor chemistry lab.'}},
+    {section:'female', type:'found', art:'headphones-pink', name:'سماعات Beats وردية', category:'headphones', location:'المكتبة المركزية', date:'2026-09-26', desc:'سماعات رأس Beats باللون الوردي، وُجدت في قاعة المذاكرة الجماعية.', contact:'laqyan.finder3@student.ksu.edu.sa',
+      en:{name:'Pink Beats headphones', desc:'Pink Beats over-ear headphones, found in the group study room.'}},
+    {section:'male', type:'lost', art:'car-key', name:'مفتاح سيارة تويوتا', category:'keys', location:'مواقف الطلاب', date:'2026-09-26', desc:'مفتاح سيارة تويوتا بريموت أسود وميدالية نادي الهلال، سقط غالبًا بين الموقف والبوابة.', contact:'0559034411',
+      en:{name:'Toyota car key', desc:'Toyota car key with a black remote and an Al-Hilal keychain, probably dropped between the car park and the gate.'}},
+    {section:'male', type:'lost', art:'smart-watch', name:'ساعة Apple Watch سوداء', category:'electronics', location:'صالة الرياضة', date:'2026-09-25', desc:'ساعة Apple Watch بسوار رياضي أسود، خلعتها قبل التمرين ونسيتها في غرفة الملابس.', contact:'0547710023',
+      en:{name:'Black Apple Watch', desc:'Apple Watch with a black sport band — took it off before training and left it in the changing room.'}},
+    {section:'male', type:'lost', art:'wallet-brown', name:'محفظة بنية فيها بطاقة بنك', category:'wallet', location:'كلية إدارة الأعمال', date:'2026-09-19', desc:'محفظة جلد بني صغيرة فيها بطاقة بنكية وبطاقة الجامعة، فُقدت في قاعة 2A.', contact:'0503348890',
+      en:{name:'Brown wallet with a bank card', desc:'Small brown leather wallet with a bank card and university ID, lost in room 2A.'}},
+    {section:'male', type:'found', art:'phone-charger', name:'شاحن آيفون أبيض مع رأس', category:'charger', location:'الكافتيريا الرئيسية', date:'2026-09-26', desc:'شاحن آيفون أصلي (سلك ورأس) كان موصولًا بالفيش بجانب الطاولات القريبة من النافذة.', contact:'0566120087',
+      en:{name:'White iPhone charger with plug', desc:'Original iPhone charger (cable and plug), found plugged in by the tables near the window.'}},
+    {section:'male', type:'found', art:'shemagh-red', name:'شماغ أحمر', category:'clothing', location:'مسجد الجامعة', date:'2026-09-24', desc:'شماغ أحمر مطوي وُجد بعد صلاة الظهر عند المدخل الشرقي للمسجد.', contact:'0531190045',
+      en:{name:'Red shemagh', desc:"Folded red shemagh found after Dhuhr prayer at the mosque's east entrance."}},
+    {section:'male', type:'found', art:'calculator', name:'آلة حاسبة Casio fx-991', category:'other', location:'كلية الهندسة', date:'2026-09-23', desc:'آلة حاسبة علمية Casio عليها ملصق باسم مختصر، وُجدت في قاعة الاختبارات بعد الاختبار الفصلي.', contact:'laqyan.finder4@student.ksu.edu.sa',
+      en:{name:'Casio fx-991 calculator', desc:'Casio scientific calculator with a name sticker, found in the exam hall after the midterm.'}},
+    {section:'female', type:'lost', art:'abaya', name:'عباية سوداء مطرزة', category:'clothing', location:'المركز الطلابي', date:'2026-09-24', desc:'عباية سوداء بتطريز ذهبي على الأكمام، تركتها في غرفة الأنشطة بعد الفعالية.', contact:'0556678812',
+      en:{name:'Embroidered black abaya', desc:'Black abaya with gold embroidery on the sleeves, left in the activities room after the event.'}},
+    {section:'female', type:'lost', art:'laptop-stickers', name:'لابتوب MacBook Air فضي', category:'electronics', location:'كلية الحاسب والمعلومات', date:'2026-09-26', desc:'لابتوب MacBook Air فضي عليه ملصقات زهور، داخل غطاء وردي، فُقد في معمل البرمجة 3.', contact:'0549902231',
+      en:{name:'Silver MacBook Air', desc:'Silver MacBook Air with flower stickers in a pink sleeve, lost in programming lab 3.'}},
+    {section:'female', type:'lost', art:'buds-white', name:'سماعات Galaxy Buds بيضاء', category:'headphones', location:'الكافتيريا الرئيسية', date:'2026-09-23', desc:'سماعات Samsung Galaxy Buds داخل علبة بيضاء، تركتها على الطاولة وقت الاستراحة.', contact:'0534417789',
+      en:{name:'White Galaxy Buds', desc:'Samsung Galaxy Buds in a white case, left on a table during the break.'}},
+    {section:'female', type:'found', art:'keys-butterfly', name:'مفاتيح مع ميدالية فراشة', category:'keys', location:'كلية إدارة الأعمال', date:'2026-09-25', desc:'مفتاحان مع ميدالية فراشة بنفسجية، وُجدت على الدرج المؤدي للدور الثاني.', contact:'0567743320',
+      en:{name:'Keys with a butterfly keychain', desc:'Two keys with a purple butterfly keychain, found on the stairs to the second floor.'}},
+    {section:'female', type:'found', art:'charger-barrel', name:'شاحن لابتوب HP', category:'charger', location:'كلية العلوم', date:'2026-09-22', desc:'شاحن لابتوب HP أسود بسلك قصير، وُجد في قاعة المحاضرات الكبرى بعد نهاية اليوم.', contact:'laqyan.finder5@student.ksu.edu.sa',
+      en:{name:'HP laptop charger', desc:'Black HP laptop charger with a short cable, found in the main lecture hall at the end of the day.'}},
+    {section:'female', type:'found', art:'bank-card', name:'بطاقة مكافأة جامعية', category:'wallet', location:'البوابة الرئيسية', date:'2026-09-21', desc:'بطاقة صرف مكافأة باسم طالبة، وُجدت على الأرض بجانب بوابة الدخول الرئيسية صباحًا.', contact:'0512239908',
+      en:{name:'University allowance card', desc:"A student's allowance card, found on the ground next to the main entrance gate in the morning."}}
+  ].map(({art, ...it}) => ({...it, id:'seed-'+(uid++), illus:'assets/items/'+art+'.svg'}));
+
+  // A few sample items already handed back to their owners, so the demo shows all three states.
+  const SEED_RETURNED = {'seed-105':'2026-09-26', 'seed-102':'2026-09-25', 'seed-103':'2026-09-27', 'seed-108':'2026-09-24'};
+  SEED.forEach(it => { if(SEED_RETURNED[it.id]){ it.returned = true; it.returnedDate = SEED_RETURNED[it.id]; } });
+  const SEED_BY_ID = Object.fromEntries(SEED.map(i => [i.id, i]));
+
+  // Reports are kept on this device (localStorage), so a refresh doesn't lose new reports, edits,
+  // deletions or returns. Admins can restore the sample data from the dashboard.
+  const STORE_KEY = 'laqyan-items-v1';
+  function freshSeed(){ return SEED.map(i => ({...i})); }
+  function loadItems(){
+    try{
+      const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+      if(Array.isArray(saved) && saved.every(i => i && i.id && i.type && i.section && i.name)){
+        // Older saves predate the English texts: add them back for unedited sample items.
+        saved.forEach(i => { const s = SEED_BY_ID[i.id]; if(s && !i.en && i.name === s.name) i.en = s.en; });
+        return saved;
+      }
+    }catch(e){}
+    return freshSeed();
+  }
+  function saveItems(){
+    if(useDb) return true;                          // Supabase is the record; nothing to cache
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(items)); return true; }
+    catch(e){ toast(t('toast.storageFull')); return false; }
+  }
+  // Backend: Supabase when configured (lib/supabaseClient.js), otherwise on-device storage.
+  // `?backend=local` forces on-device mode (used by the automated UI tests).
+  const sb = new URLSearchParams(location.search).get('backend') === 'local' ? null : (window.laqyanSupabase || null);
+  const useDb = !!sb;
+  let dbState = useDb ? 'loading' : 'ready';       // 'loading' | 'ready' | 'error'
+  let lastLoad = 0;
+  let items = useDb ? [] : loadItems();
+  uid = Math.max(uid, ...items.map(i => +String(i.id).replace(/\D/g, '') || 0)) + 1;
+  let currentTab = 'lost';
+  let currentSection = 'male';
+
+  /* ---- Supabase row <-> app item (columns: supabase/migrations/20260929120000_create_items.sql) ---- */
+  function rowToItem(r){
+    return {
+      id: r.id, type: r.report_type, section: r.section,
+      name: r.item_name, desc: r.description || '', category: r.category, location: r.location,
+      date: r.item_date, contact: r.contact_info, image: r.image_url || '',
+      illus: r.illustration ? 'assets/items/' + r.illustration + '.svg' : '',
+      returned: r.status === 'returned', returnedDate: r.returned_date || undefined,
+      en: r.name_en ? {name: r.name_en, desc: r.description_en || ''} : undefined
+    };
+  }
+  function valuesToRow(v){
+    return {section: v.section, item_name: v.name, category: v.category, description: v.desc,
+            location: v.location, item_date: v.date, contact_info: v.contact, image_url: v.image || null};
+  }
+  // Load every report (newest first). `quiet` refreshes in the background without the spinner.
+  async function loadFromDb(quiet){
+    if(!quiet){ dbState = 'loading'; refreshViews(); }
+    const {data, error} = await sb.from('items').select('*')
+      .order('item_date', {ascending: false}).order('created_at', {ascending: false});
+    if(error){
+      console.error('LaqYan: loading reports failed', error);
+      if(!quiet){ dbState = 'error'; refreshViews(); }
+      return false;
+    }
+    items = data.map(rowToItem);
+    dbState = 'ready'; lastLoad = Date.now();
+    refreshViews();
+    return true;
+  }
+  // Admin edit / delete / restore run as database functions that check the admin's name and
+  // password against public.users; the details typed on the entry screen are kept for this tab only.
+  let userLogin = '', adminPw = '';
+  try{ userLogin = sessionStorage.getItem('laqyan-user') || ''; adminPw = sessionStorage.getItem('laqyan-admin-pw') || ''; }catch(e){}
+  async function adminRpc(fn, args){
+    const {data, error} = await sb.rpc(fn, Object.assign({p_admin_name: userLogin, p_password: adminPw}, args || {}));
+    if(error){
+      console.error('LaqYan: ' + fn + ' failed', error);
+      toast(t(error.code === '28000' ? 'err.adminPw' : 'err.action'));
+      return {ok: false};
+    }
+    return {ok: true, data};
+  }
+
+  /* ================================================================ Helpers */
+  function todayISO(){
+    const d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function fmtDate(iso){
+    try{
+      return new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'ar', {day:'numeric', month:'long', year:'numeric', numberingSystem:'latn'})
+        .format(new Date(iso+'T00:00:00'));
+    }catch(e){ return iso; }
+  }
+  function daysAgo(iso){
+    const diff = Math.round((new Date(todayISO()+'T00:00:00') - new Date(iso+'T00:00:00')) / 86400000);
+    if(diff <= 0) return t('ago.today');
+    if(diff === 1) return t('ago.1');
+    if(diff === 2) return t('ago.2');
+    return t(diff <= 10 ? 'ago.few' : 'ago.many', {n: diff});
+  }
+  function countItems(n){ return n === 1 ? t('sim.1') : n === 2 ? t('sim.2') : t('sim.n', {n}); }
+  function resultsText(n){ return (lang === 'en' && n === 1) ? t('meta.result1') : t('meta.results', {n}); }
+  // Saudi mobile (05xxxxxxxx, +9665…, 009665…; Arabic-Indic digits accepted) or an email address.
+  function validContact(v){
+    const s = v.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[\s-]/g, '');
+    return /^(05\d{8}|(\+|00)9665\d{8})$/.test(s) || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+  }
+  // Possible matches: the other list, same section + category, not yet returned.
+  function matchesFor(it){
+    if(it.returned) return [];
+    const other = it.type === 'lost' ? 'found' : 'lost';
+    return items.filter(o => o.type === other && !o.returned && o.section === it.section && o.category === it.category);
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function toast(msg){
+    const el = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast._h);
+    toast._h = setTimeout(()=>el.classList.remove('show'), 2800);
+  }
+
+  /* ================================================================ Static text (data-i18n) */
+  function applyStatic(){
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+    document.querySelectorAll('[data-i18n-alt]').forEach(el => { el.alt = t(el.dataset.i18nAlt); });
+    document.title = t('app.title');
+  }
+
+  /* ================================================================ Sign-in: student ID or admin name + password
+     With Supabase the check runs in the database (public.login) against public.users.
+     LOCAL_USERS is only for ?backend=local / no Supabase: it is visible in the page source. */
+  const LOCAL_USERS = {
+    student: {'443101234':'12345', '443105678':'12345', '444109876':'12345'},
+    admin:   {'admin':'12345'}
+  };
+  const root = document.documentElement;
+  function currentRole(){ return root.getAttribute('data-role'); }
+  function isAdmin(){ return currentRole() === 'admin'; }
+  function renderBadge(){
+    const r = currentRole(); if(!r) return;
+    const badge = document.getElementById('roleBadge');
+    badge.innerHTML = (r === 'admin'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11"/></svg>'
+    ) + esc(t(r === 'admin' ? 'badge.admin' : 'badge.student'));
+    badge.title = userLogin;
+  }
+
+  const gateRoles = document.getElementById('gateRoles');
+  const gateLogin = document.getElementById('gateLogin');
+  const loginIdInput = document.getElementById('loginId');
+  const loginPwInput = document.getElementById('loginPassword');
+  const gateSub = document.getElementById('gateSub');
+  let gateStep = 'roles';          // 'roles' | 'student' | 'admin'
+
+  function clearLoginErr(){ document.getElementById('f-login').classList.remove('err'); document.getElementById('f-loginId').classList.remove('err'); }
+  function showGateStep(step, focus){
+    gateStep = step;
+    const login = step !== 'roles', student = step === 'student';
+    gateRoles.hidden = login;
+    gateLogin.hidden = !login;
+    gateSub.textContent = t(!login ? 'gate.sub' : student ? 'gate.subStudent' : 'gate.subAdmin');
+    document.getElementById('loginIdLabel').textContent = t(student ? 'login.studentId' : 'login.adminName');
+    loginIdInput.inputMode = student ? 'numeric' : 'text';
+    loginIdInput.maxLength = student ? 9 : 60;
+    clearLoginErr();
+    if(focus === false) return;
+    if(login){ loginIdInput.value = ''; loginPwInput.value = ''; loginIdInput.focus(); }
+    else document.getElementById('roleStudent').focus();
+  }
+  function enterAs(role){
+    root.setAttribute('data-role', role);
+    try{ sessionStorage.setItem('laqyan-role', role); sessionStorage.setItem('laqyan-user', userLogin); }catch(e){}
+    renderBadge();
+    toggleReportMenu(false);
+    setView('list');                           // cards/details depend on the role
+    window.scrollTo(0, 0);
+    toast(t(role === 'admin' ? 'toast.welcomeAdmin' : 'toast.welcomeStudent'));
+    if(!openFromHash() && !tourSeen(role)) setTimeout(() => startTour(), 450);
+  }
+  function leave(){
+    endTour(false);
+    root.removeAttribute('data-role');
+    try{ ['laqyan-role', 'laqyan-user', 'laqyan-admin-pw'].forEach(k => sessionStorage.removeItem(k)); }catch(e){}
+    userLogin = ''; adminPw = '';
+    resetChat();
+    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
+    setView('list');
+    showGateStep('roles');
+  }
+
+  document.getElementById('roleStudent').addEventListener('click', ()=>showGateStep('student'));
+  document.getElementById('roleAdmin').addEventListener('click', ()=>showGateStep('admin'));
+  document.getElementById('gateBack').addEventListener('click', ()=>showGateStep('roles'));
+  document.getElementById('btnSwitchRole').addEventListener('click', leave);
+  gateLogin.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const role = gateStep === 'student' ? 'student' : 'admin';
+    const id = loginIdInput.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();
+    const pw = loginPwInput.value, errEl = document.getElementById('loginErr');
+    const fail = (key, field) => {
+      errEl.textContent = t(key);
+      document.getElementById('f-login').classList.add('err');
+      if(field) document.getElementById(field).classList.add('err');
+    };
+    clearLoginErr();
+    if(!id || !pw){ fail('err.loginEmpty', !id ? 'f-loginId' : null); (id ? loginPwInput : loginIdInput).focus(); return; }
+    let ok;
+    if(useDb){
+      // Checked inside Supabase (public.login) — the browser never reads the users table.
+      const btn = document.getElementById('gateSubmit');
+      btn.disabled = true; btn.textContent = t('gate.checking');
+      const {data, error} = await sb.rpc('login', {p_role: role, p_login: id, p_password: pw});
+      btn.disabled = false; btn.textContent = t('btn.enter');
+      if(error){ console.error('LaqYan: login failed', error); fail('err.network'); return; }
+      ok = data === true;
+    }else{
+      const accounts = LOCAL_USERS[role];
+      const key = role === 'admin' ? Object.keys(accounts).find(k => k.toLowerCase() === id.toLowerCase()) : id;
+      ok = !!key && accounts[key] === pw;
+    }
+    if(!ok){ fail('err.login'); loginPwInput.select(); return; }
+    userLogin = id;
+    adminPw = role === 'admin' ? pw : '';
+    try{ if(role === 'admin') sessionStorage.setItem('laqyan-admin-pw', pw); }catch(e2){}
+    enterAs(role);
+  });
+  [loginIdInput, loginPwInput].forEach(el => el.addEventListener('input', clearLoginErr));
+
+  /* ================================================================ Light / dark mode */
+  function setMode(mode){
+    root.setAttribute('data-mode', mode);
+    try{ localStorage.setItem('laqyan-mode', mode); }catch(e){}
+    document.querySelectorAll('[data-mode-btn]').forEach(b=>{
+      const on = b.dataset.modeBtn === mode;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on);
+    });
+  }
+  document.querySelectorAll('[data-mode-btn]').forEach(b=>b.addEventListener('click', ()=>setMode(b.dataset.modeBtn)));
+  setMode(root.getAttribute('data-mode') || 'dark');
+
+  /* ================================================================ Selects */
+  function fillSelect(el, options, placeholder){
+    const keep = el.value;
+    el.innerHTML = (placeholder ? '<option value="">'+esc(placeholder)+'</option>' : '') +
+      options.map(o => '<option value="'+esc(o.value)+'">'+esc(o.label)+'</option>').join('');
+    if([...el.options].some(o => o.value === keep)) el.value = keep;
+  }
+  function fillSelects(){
+    const cats = CATEGORIES.map(c => ({value:c.key, label:c[lang]}));
+    const locs = LOCATIONS.map(([ar]) => ({value:ar, label:locLabel(ar)}));
+    fillSelect(document.getElementById('categorySelect'), cats, t('filter.allCat'));
+    fillSelect(document.getElementById('locationSelect'), locs, t('filter.allLoc'));
+    fillSelect(document.getElementById('itemCategory'), cats);
+    fillSelect(document.getElementById('itemLocation'), locs);
+    fillSelect(document.getElementById('itemSection'), SECTIONS.map(s => ({value:s.key, label:secLabel(s.key)})));
+  }
+
+  /* ================================================================ Language switch */
+  function setLang(l){
+    lang = l === 'en' ? 'en' : 'ar';
+    root.setAttribute('lang', lang);
+    root.setAttribute('dir', lang === 'en' ? 'ltr' : 'rtl');
+    try{ localStorage.setItem('laqyan-lang', lang); }catch(e){}
+    applyStatic();
+    fillSelects();
+    showGateStep(gateStep, false);
+    renderBadge();
+    if(reportDialog.open) setReportTexts();
+    refreshViews();
+    if(detailDialog.open && openDetailId) openDetail(openDetailId);
+    if(tourOn) showTourStep(tourIndex);
+  }
+  document.querySelectorAll('[data-lang-toggle]').forEach(b => b.addEventListener('click', () => setLang(lang === 'ar' ? 'en' : 'ar')));
+
+  /* ================================================================ Render list */
+  const grid = document.getElementById('grid');
+
+  function currentFilters(){
+    return {
+      q: document.getElementById('searchInput').value.trim().toLowerCase(),
+      cat: document.getElementById('categorySelect').value,
+      loc: document.getElementById('locationSelect').value
+    };
+  }
+  // Search in both languages so a query works whatever the interface language is.
+  function searchText(it){
+    const c = CATEGORIES.find(c => c.key === it.category) || {};
+    return [it.name, it.desc, it.en && it.en.name, it.en && it.en.desc, it.location, LOC_EN[it.location], c.ar, c.en]
+      .filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function stateHTML(){
+    return dbState === 'loading'
+      ? '<div class="state-box" role="status"><span class="spinner" aria-hidden="true"></span><p>'+esc(t('load.loading'))+'</p></div>'
+      : '<div class="state-box" role="alert">'+svg('empty')+'<h3>'+esc(t('load.errorTitle'))+'</h3><p>'+esc(t('load.errorBody'))+'</p>'+
+        '<button class="btn btn-ghost btn-sm" type="button" data-retry-load>'+esc(t('load.retry'))+'</button></div>';
+  }
+  function renderDbState(target){
+    target.innerHTML = stateHTML();
+    ['countLost','countFound','countMale','countFemale'].forEach(id => { document.getElementById(id).textContent = '–'; });
+    document.getElementById('resultsMeta').textContent = t(dbState === 'loading' ? 'load.loading' : 'load.errorTitle');
+  }
+  document.addEventListener('click', e => { if(e.target.closest('[data-retry-load]')) loadFromDb(); });
+
+  function render(){
+    if(dbState !== 'ready'){ renderDbState(grid); return; }
+    const {q, cat, loc} = currentFilters();
+    const inSection = items.filter(it => it.section === currentSection);
+    const all = inSection.filter(it => it.type === currentTab);
+    document.getElementById('countLost').textContent = inSection.filter(i=>i.type==='lost').length;
+    document.getElementById('countFound').textContent = inSection.filter(i=>i.type==='found').length;
+    document.getElementById('countMale').textContent = items.filter(i=>i.section==='male').length;
+    document.getElementById('countFemale').textContent = items.filter(i=>i.section==='female').length;
+
+    const filtered = all.filter(it => {
+      if(cat && it.category !== cat) return false;
+      if(loc && it.location !== loc) return false;
+      if(q && !searchText(it).includes(q)) return false;
+      return true;
+    })
+    // Open reports first, newest first; returned items sink to the end (stable sort keeps new reports on top).
+    .sort((a, b) => (a.returned ? 1 : 0) - (b.returned ? 1 : 0) || b.date.localeCompare(a.date));
+
+    const meta = document.getElementById('resultsMeta');
+    const filtering = !!(q || cat || loc);
+    meta.innerHTML = '<strong>'+esc(secLabel(currentSection))+' · '+esc(t(currentTab==='lost' ? 'tab.lost' : 'tab.found'))+'</strong> — '+
+      esc(resultsText(filtered.length)) + (filtering ? ' '+esc(t('meta.matching')) : '') +
+      (filtering ? ' <button class="link-btn meta-clear" type="button" data-clear-filters>'+svg('x')+esc(t('meta.clear'))+'</button>' : '');
+
+    if(filtered.length === 0){
+      grid.innerHTML = '<div class="empty-state">'+
+        svg('empty')+
+        '<h3>'+esc(t('empty.title'))+'</h3>'+
+        '<p>'+esc(t('empty.body'))+'</p>'+
+        '<button class="btn btn-ghost btn-sm" id="clearFiltersBtn" type="button" data-clear-filters>'+esc(t('meta.clear'))+'</button>'+
+      '</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(cardHTML).join('');
+    grid.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => openDetail(card.dataset.id));
+    });
+  }
+
+  // Picture for an item: an uploaded photo (fills the frame), else the product illustration (centred).
+  function itemPic(it){
+    if(it.image) return {src: it.image, cls: 'photo'};
+    if(it.illus) return {src: it.illus, cls: 'illus'};
+    return null;
+  }
+
+  function cardHTML(it, i){
+    const pic = itemPic(it);
+    const thumb = pic
+      ? '<img class="'+pic.cls+'" src="'+esc(pic.src)+'" alt="'+esc(nameOf(it))+'" loading="lazy" onerror="var p=this.parentElement, f=document.getElementById(\'fallback-'+it.id+'\'); this.remove(); if(p&&f) p.insertAdjacentHTML(\'afterbegin\', f.innerHTML);">'
+      : '';
+    const fallback = '<div class="icon-badge">'+svg(it.category)+'</div>';
+    const n = matchesFor(it).length;
+    return '<button class="card" type="button" data-id="'+it.id+'" style="--i:'+Math.min(i||0, 10)+'">'+
+      '<div class="card-head">'+
+        '<div><span class="card-title">'+esc(nameOf(it))+'</span>'+
+        '<span class="card-cat">'+esc(catLabel(it.category))+'</span></div>'+
+        '<span class="arrow-btn" aria-hidden="true">'+svg('arrow')+'</span>'+
+      '</div>'+
+      '<div class="card-thumb">'+
+        (pic ? thumb : fallback)+
+        '<span id="fallback-'+it.id+'" style="display:none">'+fallback+'</span>'+
+        '<span class="status-pill '+statusOf(it)+'">'+esc(statusLabel(statusOf(it)))+'</span>'+
+      '</div>'+
+      '<p class="card-desc">'+esc(descOf(it))+'</p>'+
+      '<div class="card-meta">'+
+        '<span class="card-meta-row">'+svg('location')+esc(locLabel(it.location))+'</span>'+
+        '<span class="card-meta-row">'+svg('calendar')+esc(fmtDate(it.date))+' <span class="ago">· '+esc(daysAgo(it.date))+'</span></span>'+
+        (n ? '<span class="card-meta-row match-hint">'+svg('link')+esc(t('card.match', {items: countItems(n), list: t(it.type==='lost' ? 'list.found' : 'list.lost')}))+'</span>' : '')+
+      '</div>'+
+    '</button>';
+  }
+
+  function clearFilters(){
+    document.getElementById('searchInput').value = '';
+    document.getElementById('categorySelect').value = '';
+    document.getElementById('locationSelect').value = '';
+    render();
+  }
+
+  /* ================================================================ List view vs admin dashboard */
+  const mainEl = document.getElementById('main');
+  let currentView = 'list';
+  function setView(view){
+    if(view === 'dash' && !isAdmin()) view = 'list';
+    currentView = view;
+    mainEl.dataset.view = view;
+    const dash = view === 'dash';
+    document.getElementById('navDash').classList.toggle('active', dash);
+    document.getElementById('tabLost').classList.toggle('active', !dash && currentTab==='lost');
+    document.getElementById('tabFound').classList.toggle('active', !dash && currentTab==='found');
+    refreshViews();
+  }
+  function refreshViews(){
+    saveItems();
+    render();
+    if(currentView === 'dash') renderDash();
+  }
+  document.getElementById('navDash').addEventListener('click', ()=>{ setView('dash'); window.scrollTo(0,0); });
+
+  /* Dashboard: whole university (both sections). Tiles for headline numbers, single-hue bars for
+     rankings, a table for the section comparison. Every bar carries its exact value as text. */
+  function pct(n, d){ return d ? Math.round(n*100/d) : 0; }
+  function barList(rows, unit){
+    const max = Math.max(1, ...rows.map(r=>r.value));
+    return '<div class="bars">'+rows.map(r=>
+      '<div class="bar-row" data-tip="<b>'+esc(r.label)+'</b><br>'+r.value+' '+esc(unit)+' · '+esc(t('tip.share', {p: r.share}))+'">'+
+        '<span class="bar-lbl">'+(r.icon ? svg(r.icon) : '')+esc(r.label)+'</span>'+
+        '<span class="bar-track"><span class="bar-fill" style="width:'+(r.value*100/max).toFixed(1)+'%"></span></span>'+
+        '<span class="bar-val">'+r.value+'</span>'+
+      '</div>').join('')+'</div>';
+  }
+  function renderDash(){
+    if(dbState !== 'ready'){ renderDbState(document.getElementById('dash')); return; }
+    const total = items.length;
+    const returned = items.filter(i=>i.returned).length;
+    const openLost = items.filter(i=>i.type==='lost' && !i.returned).length;
+    const openFound = items.filter(i=>i.type==='found' && !i.returned).length;
+    const rate = pct(returned, total);
+
+    const lostAll = items.filter(i=>i.type==='lost');
+    const byCat = CATEGORIES.map(c=>({label:c[lang], icon:c.key, value:lostAll.filter(i=>i.category===c.key).length}))
+      .filter(r=>r.value>0).sort((a,b)=>b.value-a.value)
+      .map(r=>({...r, share:pct(r.value, lostAll.length)}));
+    const byLoc = LOCATIONS.map(([ar])=>({label:locLabel(ar), icon:'location', value:items.filter(i=>i.location===ar).length}))
+      .filter(r=>r.value>0).sort((a,b)=>b.value-a.value).slice(0,6)
+      .map(r=>({...r, share:pct(r.value, total)}));
+
+    const kpi = (lbl, icon, cls, val, sub, extra) =>
+      '<div class="kpi"><div class="kpi-lbl"><span class="'+cls+'">'+svg(icon)+'</span>'+esc(lbl)+'</div>'+
+      '<div class="kpi-val">'+val+'</div><div class="kpi-sub">'+esc(sub)+'</div>'+(extra||'')+'</div>';
+
+    document.getElementById('dash').innerHTML =
+      '<div class="kpis">'+
+        kpi(t('kpi.total'), 'tag', '', total, t('kpi.totalSub'))+
+        kpi(t('kpi.lost'), 'search', 'k-lost', openLost, t('kpi.lostSub'))+
+        kpi(t('kpi.found'), 'other', 'k-found', openFound, t('kpi.foundSub'))+
+        kpi(t('kpi.ret'), 'check', 'k-ret', returned, t('kpi.retSub'))+
+        kpi(t('kpi.rate'), 'chart', 'k-ret', rate+'%', t('kpi.rateSub', {r: returned, t: total}),
+            '<div class="meter" role="img" aria-label="'+esc(t('kpi.rate'))+' '+rate+'%"><span style="width:'+rate+'%"></span></div>')+
+      '</div>'+
+      '<div class="panel"><div class="panel-head"><h3>'+esc(t('panel.cat'))+'</h3><p>'+esc(t('panel.catSub'))+'</p></div>'+barList(byCat, t('tip.unitLost'))+'</div>'+
+      '<div class="panel"><div class="panel-head"><h3>'+esc(t('panel.loc'))+'</h3><p>'+esc(t('panel.locSub'))+'</p></div>'+barList(byLoc, t('tip.unit'))+'</div>'+
+      '<div class="panel wide"><div class="panel-head"><h3>'+esc(t('panel.sec'))+'</h3><p>'+esc(t('panel.secSub'))+'</p></div>'+
+        '<div class="dash-table-wrap"><table class="dash-table"><thead><tr><th>'+esc(t('th.section'))+'</th><th class="num">'+esc(t('th.reports'))+'</th><th class="num">'+esc(t('th.lost'))+'</th><th class="num">'+esc(t('th.found'))+'</th><th class="num">'+esc(t('th.returned'))+'</th><th class="num">'+esc(t('th.rate'))+'</th></tr></thead><tbody>'+
+        SECTIONS.map(s=>{
+          const list = items.filter(i=>i.section===s.key), r = list.filter(i=>i.returned).length;
+          return '<tr><td>'+esc(secLabel(s.key))+'</td><td class="num">'+list.length+'</td><td class="num">'+list.filter(i=>i.type==='lost').length+'</td><td class="num">'+
+            list.filter(i=>i.type==='found').length+'</td><td class="num">'+r+'</td><td class="num">'+pct(r, list.length)+'%</td></tr>';
+        }).join('')+
+        '</tbody></table></div></div>'+
+      '<div class="dash-foot"><span>'+svg('shield')+esc(t(useDb ? 'dash.footDb' : 'dash.foot'))+'</span>'+
+        '<button class="btn btn-ghost btn-sm" id="resetDemo" type="button">'+svg('undo')+' '+esc(t('dash.reset'))+'</button></div>';
+
+    const reset = document.getElementById('resetDemo');
+    reset.addEventListener('click', ()=>{
+      if(reset.dataset.armed !== '1'){            // first click asks, second click confirms
+        reset.dataset.armed = '1';
+        reset.classList.add('btn-danger');
+        reset.innerHTML = svg('undo')+' '+esc(t('dash.resetConfirm'));
+        return;
+      }
+      if(useDb){
+        adminRpc('admin_reset_demo').then(r => { if(r.ok) loadFromDb().then(ok => { if(ok) toast(t('toast.reset')); }); });
+        return;
+      }
+      items = freshSeed();
+      refreshViews();
+      toast(t('toast.reset'));
+    });
+
+    document.getElementById('resultsMeta').innerHTML = '<strong>'+esc(t('dash.meta'))+'</strong> — '+esc(t('dash.all'));
+  }
+
+  // Hover tooltip for dashboard bars
+  const chartTip = document.getElementById('chartTip');
+  document.getElementById('dash').addEventListener('pointermove', (e)=>{
+    const row = e.target.closest('.bar-row');
+    if(!row){ chartTip.classList.remove('show'); return; }
+    chartTip.innerHTML = row.dataset.tip;
+    const w = chartTip.offsetWidth, h = chartTip.offsetHeight;
+    chartTip.style.left = Math.min(window.innerWidth - w - 8, Math.max(8, e.clientX - w/2)) + 'px';
+    chartTip.style.top = Math.max(8, e.clientY - h - 14) + 'px';
+    chartTip.classList.add('show');
+  });
+  document.getElementById('dash').addEventListener('pointerleave', ()=>chartTip.classList.remove('show'));
+
+  /* ================================================================ Tabs & sections */
+  function setTab(tab){
+    currentTab = tab;
+    if(currentView !== 'list'){ setView('list'); }
+    document.getElementById('tabLost').classList.toggle('active', tab==='lost');
+    document.getElementById('tabLost').setAttribute('aria-selected', tab==='lost');
+    document.getElementById('tabFound').classList.toggle('active', tab==='found');
+    document.getElementById('tabFound').setAttribute('aria-selected', tab==='found');
+    render();
+  }
+  function setSection(section){
+    currentSection = section;
+    document.getElementById('secMale').classList.toggle('active', section==='male');
+    document.getElementById('secMale').setAttribute('aria-selected', section==='male');
+    document.getElementById('secFemale').classList.toggle('active', section==='female');
+    document.getElementById('secFemale').setAttribute('aria-selected', section==='female');
+    if(currentView !== 'list') setView('list'); else render();
+  }
+  document.getElementById('tabLost').addEventListener('click', () => setTab('lost'));
+  document.getElementById('tabFound').addEventListener('click', () => setTab('found'));
+  document.getElementById('secMale').addEventListener('click', () => setSection('male'));
+  document.getElementById('secFemale').addEventListener('click', () => setSection('female'));
+
+  // Search re-renders while typing only. (Also listening to 'change' re-rendered the list when the
+  // box lost focus, replacing the "clear filters" button mid-click so the first click never landed.)
+  document.getElementById('searchInput').addEventListener('input', render);
+  ['categorySelect','locationSelect'].forEach(id=>document.getElementById(id).addEventListener('change', render));
+  document.addEventListener('click', (e)=>{ if(e.target.closest('[data-clear-filters]')) clearFilters(); });
+
+  /* ================================================================ Photo picker
+     Photos are shrunk to max 960px JPEG before saving, so they fit in the device storage. */
+  const photoInput = document.getElementById('itemPhoto');
+  const photoDrop = document.getElementById('photoDrop');
+  const photoPreview = document.getElementById('photoPreview');
+  const photoImg = document.getElementById('photoImg');
+  const photoBusy = document.getElementById('photoBusy');
+  let pendingPhoto = '';
+
+  function showPhoto(src){
+    pendingPhoto = src || '';
+    photoImg.src = pendingPhoto;
+    photoPreview.hidden = !pendingPhoto;
+    photoDrop.hidden = !!pendingPhoto;
+  }
+  function shrinkPhoto(file){
+    return new Promise((resolve, reject) => {
+      if(!file || !/^image\//.test(file.type)) return reject(new Error('not an image'));
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, 960 / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.naturalWidth * scale));
+        c.height = Math.max(1, Math.round(img.naturalHeight * scale));
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('unreadable')); };
+      img.src = url;
+    });
+  }
+  async function takePhoto(file){
+    const field = document.getElementById('f-photo');
+    field.classList.remove('err');
+    photoBusy.hidden = false;
+    try{ showPhoto(await shrinkPhoto(file)); }
+    catch(e){ field.classList.add('err'); }
+    finally{ photoBusy.hidden = true; photoInput.value = ''; }
+  }
+  photoDrop.addEventListener('click', () => photoInput.click());
+  document.getElementById('photoChange').addEventListener('click', () => photoInput.click());
+  document.getElementById('photoRemove').addEventListener('click', () => showPhoto(''));
+  photoInput.addEventListener('change', () => { if(photoInput.files[0]) takePhoto(photoInput.files[0]); });
+  ['dragenter','dragover'].forEach(ev => photoDrop.addEventListener(ev, e => { e.preventDefault(); photoDrop.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => photoDrop.addEventListener(ev, e => { e.preventDefault(); photoDrop.classList.remove('drag'); }));
+  photoDrop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if(f) takePhoto(f); });
+
+  /* ================================================================ Report dialog (new report or admin edit) */
+  const reportDialog = document.getElementById('reportDialog');
+  const reportForm = document.getElementById('reportForm');
+  let editingId = null;
+
+  function setReportTexts(){
+    const type = document.getElementById('reportType').value;
+    document.getElementById('reportDialogTitle').textContent = t(editingId ? 'form.editTitle' : type === 'lost' ? 'form.lostTitle' : 'form.foundTitle');
+    document.getElementById('submitReportBtn').textContent = t(editingId ? 'form.save' : type === 'lost' ? 'form.submitLost' : 'form.submitFound');
+  }
+  let submitBusy = false;
+  function setSubmitBusy(on){
+    submitBusy = on;
+    const b = document.getElementById('submitReportBtn');
+    b.disabled = on;
+    b.setAttribute('aria-busy', on ? 'true' : 'false');
+    if(on) b.textContent = t('form.saving'); else setReportTexts();
+  }
+  function showFormError(msg){
+    const el = document.getElementById('formError');
+    el.textContent = msg || '';
+    el.hidden = !msg;
+  }
+  function openReport(type, editItem){
+    reportForm.reset();
+    showFormError('');
+    editingId = editItem ? editItem.id : null;
+    document.getElementById('reportType').value = editItem ? editItem.type : type;
+    document.getElementById('itemSection').value = editItem ? editItem.section : currentSection;
+    document.getElementById('itemDate').value = editItem ? editItem.date : todayISO();
+    document.getElementById('itemDate').max = todayISO();
+    if(editItem){
+      document.getElementById('itemName').value = nameOf(editItem);
+      document.getElementById('itemCategory').value = editItem.category;
+      document.getElementById('itemLocation').value = editItem.location;
+      document.getElementById('itemDesc').value = descOf(editItem);
+      document.getElementById('itemContact').value = editItem.contact;
+    }
+    showPhoto(editItem ? editItem.image : '');
+    photoBusy.hidden = true;
+    setReportTexts();
+    reportForm.querySelectorAll('.field').forEach(f=>f.classList.remove('err'));
+    reportDialog.showModal();
+  }
+
+  ['btnReportLostHeader','btnReportLostMobile'].forEach(id=>document.getElementById(id).addEventListener('click', ()=>openReport('lost')));
+  ['btnReportFoundHeader','btnReportFoundMobile','btnReportFoundSide'].forEach(id=>document.getElementById(id).addEventListener('click', ()=>openReport('found')));
+
+  reportForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    if(submitBusy) return;
+    showFormError('');
+    const fields = {
+      name: document.getElementById('itemName'),
+      section: document.getElementById('itemSection'),
+      category: document.getElementById('itemCategory'),
+      location: document.getElementById('itemLocation'),
+      desc: document.getElementById('itemDesc'),
+      date: document.getElementById('itemDate'),
+      contact: document.getElementById('itemContact')
+    };
+    let valid = true;
+    Object.entries(fields).forEach(([key, el])=>{
+      const fieldEl = document.getElementById('f-'+key);
+      let ok = el.value.trim().length > 0;
+      if(ok && key === 'contact') ok = validContact(el.value);
+      if(ok && key === 'date') ok = el.value <= todayISO();
+      if(fieldEl) fieldEl.classList.toggle('err', !ok);
+      if(!ok) valid = false;
+    });
+    if(!valid){ const first = reportForm.querySelector('.field.err input, .field.err select, .field.err textarea'); if(first) first.focus(); return; }
+
+    const values = {
+      section: fields.section.value,
+      name: fields.name.value.trim(),
+      category: fields.category.value,
+      location: fields.location.value,
+      date: fields.date.value,
+      desc: fields.desc.value.trim(),
+      contact: fields.contact.value.trim(),
+      image: pendingPhoto
+    };
+
+    if(editingId){                                   // admin edit
+      const it = items.find(i => i.id === editingId);
+      if(!it || !isAdmin()) return;
+      const changedText = values.name !== nameOf(it) || values.desc !== descOf(it);
+      if(useDb){
+        const patch = valuesToRow(values);
+        if(changedText){ patch.name_en = null; patch.description_en = null; }   // edited text replaces both languages
+        setSubmitBusy(true);
+        const r = await adminRpc('admin_update_item', {p_id: it.id, p_item: patch});
+        setSubmitBusy(false);
+        if(!r.ok){ showFormError(t('err.save')); return; }
+        Object.assign(it, rowToItem(r.data));
+      }else{
+        Object.assign(it, values);
+        if(changedText) delete it.en;                // edited text replaces both languages
+        if(!saveItems()) return;
+      }
+      reportDialog.close();
+      editingId = null;
+      setSection(it.section); setTab(it.type);
+      openDetail(it.id);
+      toast(t('toast.saved'));
+      return;
+    }
+
+    const type = document.getElementById('reportType').value;
+    let newItem;
+    if(useDb){
+      setSubmitBusy(true);
+      const {data, error} = await sb.from('items')
+        .insert(Object.assign({report_type: type}, valuesToRow(values))).select().single();
+      setSubmitBusy(false);
+      if(error){ console.error('LaqYan: saving the report failed', error); showFormError(t('err.save')); return; }
+      newItem = rowToItem(data);
+      items.unshift(newItem);
+    }else{
+      newItem = {id: 'u-'+(uid++), type, ...values};
+      items.unshift(newItem);
+      if(!saveItems()){ items.shift(); return; }
+    }
+    reportDialog.close();
+    currentSection = newItem.section;
+    setSection(newItem.section);
+    setTab(type);
+    // Point the reporter straight at possible matches in the other list.
+    const m = matchesFor(newItem);
+    if(m.length){
+      openDetail(newItem.id, {showMatches: true});
+      toast(t(type === 'lost' ? 'toast.postedMatchLost' : 'toast.postedMatchFound', {items: countItems(m.length)}));
+    }else{
+      toast(t(type === 'lost' ? 'toast.postedLost' : 'toast.postedFound'));
+    }
+  });
+  // Clear a field's error as soon as the user edits it.
+  reportForm.addEventListener('input', e => { const f = e.target.closest('.field'); if(f) f.classList.remove('err'); });
+  reportForm.addEventListener('change', e => { const f = e.target.closest('.field'); if(f && f.id !== 'f-photo') f.classList.remove('err'); });
+  reportDialog.addEventListener('close', () => { editingId = null; });
+
+  /* ================================================================ Detail dialog */
+  const detailDialog = document.getElementById('detailDialog');
+  let openDetailId = null;
+  detailDialog.addEventListener('close', () => { openDetailId = null; });
+
+  function shareLink(it){ return location.href.split('#')[0] + '#item=' + encodeURIComponent(it.id); }
+  function shareText(it){ return t('share.text', {status: statusLabel(statusOf(it)), name: nameOf(it), location: locLabel(it.location)}); }
+
+  function openDetail(id, opts){
+    const it = items.find(i=>i.id === id);
+    if(!it) return;
+    openDetailId = id;
+    const body = document.getElementById('detailBody');
+    const pic = itemPic(it);
+    const thumbInner = pic
+      ? '<img class="'+pic.cls+'" src="'+esc(pic.src)+'" alt="'+esc(nameOf(it))+'" onerror="var p=this.parentElement; this.remove(); var b=p&&p.querySelector(\'.icon-badge\'); if(b) b.style.display=\'flex\';">'
+      : '';
+    const m = matchesFor(it);
+    const link = shareLink(it);
+    body.innerHTML =
+      '<div class="detail-thumb">'+
+        thumbInner+
+        '<div class="icon-badge" style="'+(pic?'display:none;':'')+'">'+svg(it.category)+'</div>'+
+        '<span class="status-pill '+statusOf(it)+'">'+esc(statusLabel(statusOf(it)))+'</span>'+
+      '</div>'+
+      '<div class="detail-title-row"><h3>'+esc(nameOf(it))+'</h3></div>'+
+      '<div class="detail-tags"><span class="cat-chip">'+svg(it.category)+esc(catLabel(it.category))+'</span></div>'+
+      '<p class="detail-desc">'+esc(descOf(it))+'</p>'+
+      '<div class="detail-grid">'+
+        '<div class="detail-item"><div class="lbl">'+svg('location')+esc(t('detail.location'))+'</div><div class="val">'+esc(locLabel(it.location))+'</div></div>'+
+        '<div class="detail-item"><div class="lbl">'+svg('calendar')+esc(t('detail.date'))+'</div><div class="val">'+esc(fmtDate(it.date))+'</div></div>'+
+        '<div class="detail-item"><div class="lbl">'+svg('people')+esc(t('detail.section'))+'</div><div class="val">'+esc(secLabel(it.section))+'</div></div>'+
+        (it.returned ? '<div class="detail-item"><div class="lbl">'+svg('check')+esc(t('detail.returnedOn'))+'</div><div class="val">'+esc(fmtDate(it.returnedDate))+'</div></div>' : '')+
+      '</div>'+
+      (m.length
+        ? '<div class="matches">'+
+            '<div class="matches-head">'+svg('link')+'<strong>'+esc(t(it.type === 'lost' ? 'matches.lost' : 'matches.found'))+'</strong><span class="matches-count">'+m.length+'</span></div>'+
+            '<p class="matches-note">'+esc(t('matches.note'))+'</p>'+
+            m.map(o => {
+              const p = itemPic(o);
+              return '<button class="match-row" type="button" data-match="'+o.id+'">'+
+                '<span class="match-thumb">'+(p ? '<img class="'+p.cls+'" src="'+esc(p.src)+'" alt="">' : svg(o.category))+'</span>'+
+                '<span class="match-text"><strong>'+esc(nameOf(o))+'</strong><span>'+esc(locLabel(o.location))+' · '+esc(fmtDate(o.date))+'</span></span>'+
+                '<span class="status-pill '+statusOf(o)+'">'+esc(statusLabel(statusOf(o)))+'</span>'+
+                '<span class="match-chev">'+svg('chev')+'</span>'+
+              '</button>';
+            }).join('')+
+          '</div>'
+        : '')+
+      (it.returned
+        ? '<div class="returned-box">'+svg('check')+'<div><strong>'+esc(t('returned.title'))+'</strong><span>'+esc(t('returned.body'))+'</span></div></div>'
+        : '<div class="contact-box" id="contactBox">'+
+            '<button class="btn btn-primary btn-block" id="revealBtn" type="button">'+svg('phone')+' '+esc(t('contact.reveal'))+'</button>'+
+          '</div>')+
+      '<div class="share-row" id="shareRow">'+
+        '<span class="share-lbl">'+svg('share')+esc(t('share.label'))+'</span>'+
+        (navigator.share ? '<button class="btn btn-ghost" id="shareNative" type="button">'+svg('share')+esc(t('share.native'))+'</button>' : '')+
+        '<button class="btn btn-ghost" id="shareCopy" type="button">'+svg('copy')+esc(t('share.copy'))+'</button>'+
+        '<a class="btn btn-ghost" id="shareWa" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(shareText(it)+'\n'+link)+'">'+svg('chat')+esc(t('share.whatsapp'))+'</a>'+
+      '</div>'+
+      (isAdmin()
+        ? '<div class="admin-actions" id="adminActions">'+
+            '<div class="admin-lbl">'+svg('shield')+esc(t('admin.actions'))+'</div>'+
+            '<div class="admin-btns">'+
+              (it.returned
+                ? '<button class="btn btn-ghost" id="unreturnBtn" type="button">'+svg('undo')+' '+esc(t('admin.unreturn'))+'</button>'
+                : '<button class="btn btn-return" id="returnBtn" type="button">'+svg('check')+' '+esc(t('admin.return'))+'</button>')+
+              '<button class="btn btn-ghost" id="editBtn" type="button">'+svg('edit')+' '+esc(t('admin.edit'))+'</button>'+
+              '<button class="btn btn-danger" id="deleteBtn" type="button">'+svg('trash')+' '+esc(t('admin.delete'))+'</button>'+
+            '</div>'+
+          '</div>'
+        : '');
+
+    body.scrollTop = 0;
+    body.querySelectorAll('[data-match]').forEach(b => b.addEventListener('click', () => openDetail(b.dataset.match)));
+
+    const revealBtn = document.getElementById('revealBtn');
+    if(revealBtn) revealBtn.addEventListener('click', function(){
+      document.getElementById('contactBox').innerHTML =
+        '<div class="contact-lbl">'+svg('phone')+esc(t('contact.label'))+'</div>'+
+        '<div class="contact-reveal">'+esc(it.contact)+'</div>'+
+        '<p class="contact-note">'+esc(t('contact.note'))+'</p>';
+    });
+
+    // Share: native sheet (phones), copy link, or WhatsApp.
+    const nativeBtn = document.getElementById('shareNative');
+    if(nativeBtn) nativeBtn.addEventListener('click', () => {
+      navigator.share({title: t('app.title'), text: shareText(it), url: link}).catch(()=>{});
+    });
+    document.getElementById('shareCopy').addEventListener('click', () => {
+      const fallback = () => {
+        const row = document.getElementById('shareRow');
+        let box = row.querySelector('.share-fallback');
+        if(!box){ box = document.createElement('input'); box.className = 'share-fallback'; box.readOnly = true; row.appendChild(box); }
+        box.value = link; box.focus(); box.select();
+        toast(t('toast.copyFail'));
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(link).then(() => toast(t('toast.copied')), fallback);
+      }else fallback();
+    });
+
+    const returnBtn = document.getElementById('returnBtn');
+    if(returnBtn) returnBtn.addEventListener('click', () => setReturned(it, true, returnBtn));
+    const unreturnBtn = document.getElementById('unreturnBtn');
+    if(unreturnBtn) unreturnBtn.addEventListener('click', () => setReturned(it, false, unreturnBtn));
+    const editBtn = document.getElementById('editBtn');
+    if(editBtn) editBtn.addEventListener('click', ()=>{
+      if(!isAdmin()) return;
+      detailDialog.close();
+      openReport(it.type, it);
+    });
+
+    const deleteBtn = document.getElementById('deleteBtn');
+    if(deleteBtn) deleteBtn.addEventListener('click', ()=>{
+      const box = document.getElementById('adminActions');
+      box.innerHTML =
+        '<p class="confirm-text">'+esc(t('admin.confirmDel', {name: nameOf(it)}))+'</p>'+
+        '<div class="form-actions">'+
+          '<button class="btn btn-ghost" id="cancelDelete" type="button">'+esc(t('btn.cancel'))+'</button>'+
+          '<button class="btn btn-danger-solid" id="confirmDelete" type="button">'+svg('trash')+' '+esc(t('admin.yesDel'))+'</button>'+
+        '</div>';
+      document.getElementById('confirmDelete').focus();
+      document.getElementById('cancelDelete').addEventListener('click', ()=>openDetail(id));
+      document.getElementById('confirmDelete').addEventListener('click', async (ev)=>{
+        if(!isAdmin()) return;
+        if(useDb){
+          const b = ev.currentTarget;
+          b.disabled = true; b.setAttribute('aria-busy', 'true');
+          const r = await adminRpc('admin_delete_item', {p_id: id});
+          if(!r.ok){ openDetail(id); return; }
+        }
+        items = items.filter(i => i.id !== id);
+        detailDialog.close();
+        refreshViews();
+        toast(t('toast.deleted'));
+      });
+    });
+
+    if(!detailDialog.open) detailDialog.showModal();
+    // Right after reporting, bring the possible matches into view — that's what the reporter needs next.
+    const matchesBox = opts && opts.showMatches && body.querySelector('.matches');
+    if(matchesBox) body.scrollTop = matchesBox.offsetTop - 12;
+  }
+
+  // Mark as returned / undo. With Supabase this is the one column the browser may update: `status`
+  // (the database fills in returned_date itself).
+  async function setReturned(it, returned, btn){
+    if(!isAdmin()) return;
+    if(useDb){
+      if(btn){ btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
+      const {data, error} = await sb.from('items').update({status: returned ? 'returned' : 'open'})
+        .eq('id', it.id).select().single();
+      if(error){
+        console.error('LaqYan: status update failed', error);
+        toast(t('err.action'));
+        if(btn){ btn.disabled = false; btn.removeAttribute('aria-busy'); }
+        return;
+      }
+      Object.assign(it, rowToItem(data));
+    }else if(returned){ it.returned = true; it.returnedDate = todayISO(); }
+    else{ it.returned = false; delete it.returnedDate; }
+    refreshViews(); openDetail(it.id);
+    toast(t(returned ? 'toast.returned' : 'toast.unreturned'));
+  }
+
+  /* Deep link: #item=<id> opens that report (after the visitor picks a role). */
+  function openFromHash(){
+    const m = location.hash.match(/item=([^&]+)/);
+    if(!m || !currentRole() || dbState !== 'ready') return false;
+    const id = decodeURIComponent(m[1]);
+    try{ history.replaceState(null, '', location.href.split('#')[0]); }catch(e){}
+    const it = items.find(i => i.id === id);
+    if(!it){ toast(t('toast.notFound')); return false; }
+    setSection(it.section); setTab(it.type);
+    openDetail(id);
+    return true;
+  }
+  window.addEventListener('hashchange', openFromHash);
+
+  /* ================================================================ Dialog close handlers */
+  document.querySelectorAll('[data-close-dialog]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.getElementById(btn.dataset.closeDialog).close();
+    });
+  });
+  // Close on backdrop clicks only. A backdrop click targets the <dialog> itself; this also ignores the
+  // synthetic (0,0) click that pressing Enter in a form sends to the submit button.
+  function closeOnBackdrop(dlg){
+    dlg.addEventListener('click', (e)=>{
+      if(e.target !== dlg) return;
+      const r = dlg.getBoundingClientRect();
+      const inside = r.top <= e.clientY && e.clientY <= r.bottom && r.left <= e.clientX && e.clientX <= r.right;
+      if(!inside) dlg.close();
+    });
+  }
+  [reportDialog, detailDialog].forEach(closeOnBackdrop);
+
+  /* ================================================================ Download report (all items, both sections) */
+  const reportBtn = document.getElementById('btnDownloadReport');
+  const reportMenu = document.getElementById('reportMenu');
+  function toggleReportMenu(open){
+    const isOpen = open === undefined ? !reportMenu.classList.contains('open') : open;
+    reportMenu.classList.toggle('open', isOpen);
+    reportBtn.setAttribute('aria-expanded', isOpen);
+  }
+  reportBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(!isAdmin()) return;             // the button is hidden for students; this guards it too
+    toggleReportMenu();
+  });
+  document.addEventListener('click', (e)=>{ if(!e.target.closest('.report-wrap')) toggleReportMenu(false); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') toggleReportMenu(false); });
+
+  function reportGroups(){
+    const byDate = (a,b)=> b.date.localeCompare(a.date);
+    return SECTIONS.map(s => ({
+      section: s,
+      lost: items.filter(i=>i.section===s.key && i.type==='lost').sort(byDate),
+      found: items.filter(i=>i.section===s.key && i.type==='found').sort(byDate)
+    }));
+  }
+  function stamp(){ return todayISO(); }
+
+  function reportTable(list){
+    if(!list.length) return '<p class="rp-empty">'+esc(t('rp.empty'))+'</p>';
+    return '<table class="rp-table"><thead><tr><th>#</th><th>'+esc(t('col.item'))+'</th><th>'+esc(t('col.status'))+'</th><th>'+esc(t('col.category'))+'</th><th>'+esc(t('col.location'))+'</th><th>'+esc(t('col.date'))+'</th><th>'+esc(t('col.desc'))+'</th></tr></thead><tbody>'+
+      list.map((it,n)=>'<tr><td class="num">'+(n+1)+'</td><td><b>'+esc(nameOf(it))+'</b></td><td class="date"><span class="rp-status '+statusOf(it)+'">'+esc(statusLabel(statusOf(it)))+'</span></td><td>'+esc(catLabel(it.category))+'</td><td>'+esc(locLabel(it.location))+'</td><td class="date">'+esc(fmtDate(it.date))+'</td><td>'+esc(descOf(it))+'</td></tr>').join('')+
+      '</tbody></table>';
+  }
+
+  function printReport(){
+    const groups = reportGroups();
+    const el = document.getElementById('printReport');
+    el.setAttribute('dir', lang === 'en' ? 'ltr' : 'rtl');
+    el.innerHTML =
+      '<div class="rp-head">'+
+        '<div><h1>'+esc(t('rp.title'))+'</h1><p>'+esc(t('rp.sub', {d: fmtDate(stamp())}))+'</p></div>'+
+        '<img src="assets/logo/logo-horizontal-light.svg" alt="'+esc(t('app.title'))+'">'+
+      '</div>'+
+      '<div class="rp-summary">'+
+        '<div class="rp-stat"><b>'+items.length+'</b><span>'+esc(t('rp.total'))+'</span></div>'+
+        '<div class="rp-stat"><b>'+items.filter(i=>i.type==='lost').length+'</b><span>'+esc(t('rp.lost'))+'</span></div>'+
+        '<div class="rp-stat"><b>'+items.filter(i=>i.type==='found').length+'</b><span>'+esc(t('rp.found'))+'</span></div>'+
+        '<div class="rp-stat"><b>'+items.filter(i=>i.returned).length+'</b><span>'+esc(t('rp.ret'))+'</span></div>'+
+        groups.map(g=>'<div class="rp-stat"><b>'+(g.lost.length+g.found.length)+'</b><span>'+esc(secLabel(g.section.key))+'</span></div>').join('')+
+      '</div>'+
+      groups.map(g =>
+        '<section class="rp-section"><h2>'+esc(secLabel(g.section.key))+'</h2>'+
+          '<h3><span class="rp-dot" style="background:#F2724B"></span>'+esc(t('tab.lost'))+' ('+g.lost.length+')</h3>'+reportTable(g.lost)+
+          '<h3><span class="rp-dot" style="background:#5FD6B8"></span>'+esc(t('tab.found'))+' ('+g.found.length+')</h3>'+reportTable(g.found)+
+        '</section>').join('')+
+      '<p class="rp-foot">'+esc(t('rp.foot'))+'</p>';
+
+    const oldTitle = document.title;
+    document.title = t('rp.file')+stamp();
+    const restore = ()=>{ document.title = oldTitle; window.removeEventListener('afterprint', restore); };
+    window.addEventListener('afterprint', restore);
+    // Give the report logo a moment to load before the print dialog snapshots the page.
+    const img = el.querySelector('img');
+    const go = ()=> setTimeout(()=>window.print(), 60);
+    if(img && !img.complete){ img.onload = go; img.onerror = go; } else { go(); }
+  }
+
+  function downloadCsv(){
+    const q = v => '"'+String(v).replace(/"/g,'""')+'"';
+    const rows = [[t('col.section'), t('col.type'), t('col.status'), t('col.name'), t('col.category'), t('col.location'), t('col.date'), t('col.returnedDate'), t('col.desc')]];
+    reportGroups().forEach(g=>{
+      [['lost',g.lost],['found',g.found]].forEach(([type,list])=>{
+        list.forEach(it=> rows.push([secLabel(g.section.key), statusLabel(type), statusLabel(statusOf(it)), nameOf(it), catLabel(it.category), locLabel(it.location), it.date, it.returnedDate||'', descOf(it)]));
+      });
+    });
+    // BOM so Excel opens the Arabic text as UTF-8.
+    const csv = '﻿' + rows.map(r=>r.map(q).join(',')).join('\r\n');
+    const filename = t('rp.file')+stamp()+'.csv';
+    // Inside the claude.ai viewer a page can't download directly; it offers the file through the
+    // `downloads` capability (the viewer confirms). Opened as a plain file, use a normal download.
+    if(downloadsCap){
+      downloadsCap.save({filename, data: csv})
+        .then(() => toast(t('toast.csv')))
+        .catch(() => {});                          // declined or unavailable: nothing to do
+      return;
+    }
+    const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    toast(t('toast.csv'));
+  }
+  let downloadsCap = null;
+  if(window.claude && typeof window.claude.use === 'function'){
+    window.claude.use('downloads').then(d => { downloadsCap = d; }, () => {});
+  }
+
+  document.getElementById('reportPdf').addEventListener('click', ()=>{ toggleReportMenu(false); printReport(); });
+  document.getElementById('reportCsv').addEventListener('click', ()=>{ toggleReportMenu(false); downloadCsv(); });
+
+  /* ================================================================ Guided tour
+     Shown once per role on this device (then from «جولة تعريفية»). Each step spotlights the
+     first visible target; the welcome step has none. */
+  const tourEl = document.getElementById('tour');
+  const tourSpot = document.getElementById('tourSpot');
+  const tourCard = document.getElementById('tourCard');
+  let tourOn = false, tourIndex = 0, tourSteps = [];
+  const TOUR_STUDENT = [
+    {key:'0'},
+    {key:'1', sel:['.section-card']},
+    {key:'2', sel:['.nav-card .tabs']},
+    {key:'3', sel:['.filters']},
+    {key:'4', sel:['.top-actions', '.mobile-cta']},
+    {key:'5', sel:['#grid .card']}
+  ];
+  const TOUR_ADMIN = [ {key:'a1', sel:['#navDash']}, {key:'a2', sel:['.report-wrap']} ];
+  function tourSeen(role){ try{ return localStorage.getItem('laqyan-tour-'+role) === '1'; }catch(e){ return true; } }
+  function tourTarget(step){
+    for(const s of (step.sel || [])){
+      const el = document.querySelector(s);
+      if(el && el.offsetWidth > 0 && getComputedStyle(el).display !== 'none') return el;
+    }
+    return null;
+  }
+  function startTour(){
+    if(!currentRole()) return;
+    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
+    if(currentView !== 'list') setView('list');
+    tourSteps = TOUR_STUDENT.concat(isAdmin() ? TOUR_ADMIN : []);
+    tourOn = true; tourIndex = 0;
+    tourEl.hidden = false;
+    showTourStep(0);
+    document.getElementById('tourNext').focus();
+  }
+  function endTour(remember){
+    if(!tourOn) return;
+    tourOn = false; tourEl.hidden = true;
+    if(remember !== false){ try{ localStorage.setItem('laqyan-tour-'+currentRole(), '1'); }catch(e){} }
+  }
+  function placeTour(){
+    if(!tourOn) return;
+    const step = tourSteps[tourIndex];
+    const target = tourTarget(step);
+    const cw = tourCard.offsetWidth, ch = tourCard.offsetHeight, pad = 8, gap = 14, vw = window.innerWidth, vh = window.innerHeight;
+    if(!target){
+      tourSpot.classList.add('none');
+      tourCard.style.left = Math.round((vw - cw)/2)+'px';
+      tourCard.style.top = Math.round((vh - ch)/2)+'px';
+      return;
+    }
+    tourSpot.classList.remove('none');
+    const r = target.getBoundingClientRect();
+    tourSpot.style.left = (r.left - pad)+'px'; tourSpot.style.top = (r.top - pad)+'px';
+    tourSpot.style.width = (r.width + pad*2)+'px'; tourSpot.style.height = (r.height + pad*2)+'px';
+    let top = r.bottom + pad + gap;
+    if(top + ch > vh - 12) top = r.top - pad - gap - ch;           // not enough room below: go above
+    if(top < 12) top = Math.min(vh - ch - 12, Math.max(12, r.top + 12));
+    const left = Math.min(vw - cw - 12, Math.max(12, r.left + r.width/2 - cw/2));
+    tourCard.style.left = Math.round(left)+'px'; tourCard.style.top = Math.round(top)+'px';
+  }
+  function showTourStep(i){
+    tourIndex = Math.max(0, Math.min(tourSteps.length - 1, i));
+    const step = tourSteps[tourIndex], last = tourIndex === tourSteps.length - 1;
+    document.getElementById('tourStep').textContent = t('tour.step', {i: tourIndex + 1, n: tourSteps.length});
+    document.getElementById('tourTitle').textContent = t('tour.'+step.key+'t');
+    document.getElementById('tourBody').textContent = t('tour.'+step.key+'b');
+    document.getElementById('tourNext').textContent = t(last ? 'tour.done' : 'tour.next');
+    document.getElementById('tourPrev').hidden = tourIndex === 0;
+    document.getElementById('tourDots').innerHTML = tourSteps.map((_, k) => '<i class="'+(k === tourIndex ? 'on' : '')+'"></i>').join('');
+    const target = tourTarget(step);
+    if(target) target.scrollIntoView({block:'center', behavior:'instant'});
+    requestAnimationFrame(placeTour);
+  }
+  document.getElementById('tourNext').addEventListener('click', () => tourIndex >= tourSteps.length - 1 ? endTour() : showTourStep(tourIndex + 1));
+  document.getElementById('tourPrev').addEventListener('click', () => showTourStep(tourIndex - 1));
+  document.getElementById('tourSkip').addEventListener('click', () => endTour());
+  document.getElementById('btnTour').addEventListener('click', startTour);
+  window.addEventListener('resize', placeTour);
+  window.addEventListener('scroll', placeTour, {passive:true});
+  document.addEventListener('keydown', (e) => {
+    if(!tourOn) return;
+    const fwd = lang === 'en' ? 'ArrowRight' : 'ArrowLeft', back = lang === 'en' ? 'ArrowLeft' : 'ArrowRight';
+    if(e.key === 'Escape') endTour();
+    else if(e.key === fwd) document.getElementById('tourNext').click();
+    else if(e.key === back && tourIndex > 0) showTourStep(tourIndex - 1);
+  });
+
+  /* ================================================================ Glow follows the pointer */
+  let glowEl = null;
+  function glowTarget(node){
+    if(!node || !node.closest) return null;
+    return node.closest('dialog, .card, .side-card, .gate-card, .kpi, .panel');
+  }
+  function glowOff(el){
+    if(!el) return;
+    ['--mx','--my','--ga','--gw'].forEach(p=>el.style.removeProperty(p));
+  }
+  document.addEventListener('pointermove', (e)=>{
+    const el = glowTarget(e.target);
+    if(el !== glowEl){ glowOff(glowEl); glowEl = el; }
+    if(!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', Math.max(0, Math.min(r.width, e.clientX - r.left)) + 'px');
+    el.style.setProperty('--my', Math.max(0, Math.min(r.height, e.clientY - r.top)) + 'px');
+    el.style.setProperty('--ga', '1');
+    el.style.setProperty('--gw', '190px');
+  }, {passive:true});
+  document.addEventListener('pointerleave', ()=>{ glowOff(glowEl); glowEl = null; });
+
+  /* ================================================================ Chat assistant (مساعد لقيان)
+     The browser only sends the message + recent turns to the chat-assistant Edge Function
+     (supabase/functions/chat-assistant); the Gemini key and the DB secret key stay on the server.
+     The conversation lives in memory only and is cleared on sign-out. */
+  const chatFab = document.getElementById('chatFab');
+  const chatPanel = document.getElementById('chatPanel');
+  const chatLog = document.getElementById('chatLog');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  const CHAT_TURNS = 10, CHAT_TIMEOUT = 90000;
+  let chatHistory = [];            // [{role:'user'|'model', text}]
+  let chatBusy = false;
+
+  function chatScroll(){ chatLog.scrollTop = chatLog.scrollHeight; }
+  function chatAdd(node){ chatLog.appendChild(node); chatScroll(); return node; }
+  function chatEl(tag, cls, html){ const el = document.createElement(tag); el.className = cls; if(html != null) el.innerHTML = html; return el; }
+  // Assistant text: escaped, **bold** kept, new lines kept.
+  function chatText(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>'); }
+  function chatBubble(role, text, extraCls){
+    const el = chatEl('div', 'msg ' + role + (extraCls ? ' ' + extraCls : ''), chatText(text));
+    el.dir = 'auto';
+    return chatAdd(el);
+  }
+  function chatItemCard(it){
+    const pic = itemPic(it);
+    const b = chatEl('button', 'chat-item',
+      '<span class="ci-pic">' + (pic ? '<img class="'+pic.cls+'" src="'+esc(pic.src)+'" alt="" onerror="this.remove()">' : svg(it.category in ICONS ? it.category : 'other')) + '</span>' +
+      '<span class="ci-text"><strong>' + esc(nameOf(it)) + '</strong><small>' + esc(statusLabel(statusOf(it))) + ' · ' +
+        esc(locLabel(it.location)) + ' · ' + esc(fmtDate(it.date)) + '</small></span>' +
+      '<span class="ci-open">' + esc(t('chat.openItem')) + '</span>');
+    b.type = 'button';
+    b.addEventListener('click', () => openDetail(it.id));
+    return b;
+  }
+  function chatWelcome(){
+    chatBubble('bot', t('chat.welcome'));
+    const box = chatEl('div', 'chat-suggest');
+    ['chat.s1', 'chat.s2', 'chat.s3'].forEach(k => {
+      const c = chatEl('button', 'chat-chip'); c.type = 'button'; c.textContent = t(k); c.dir = 'auto';
+      c.addEventListener('click', () => { box.remove(); sendChat(c.textContent); });
+      box.appendChild(c);
+    });
+    chatAdd(box);
+  }
+  function openChat(){
+    chatPanel.hidden = false;
+    chatFab.setAttribute('aria-expanded', 'true');
+    if(!chatLog.childElementCount) chatWelcome();
+    chatScroll();
+    chatInput.focus();
+  }
+  function closeChat(){
+    chatPanel.hidden = true;
+    chatFab.setAttribute('aria-expanded', 'false');
+    chatFab.focus();
+  }
+  function resetChat(){
+    chatHistory = []; chatLog.innerHTML = '';
+    chatPanel.hidden = true; chatFab.setAttribute('aria-expanded', 'false');
+  }
+  function setChatBusy(on){ chatBusy = on; chatSend.disabled = on; }
+
+  async function callAssistant(message){
+    const history = chatHistory.slice(-CHAT_TURNS);
+    const call = sb.functions.invoke('chat-assistant', {body: {message, history, section: currentSection}});
+    const timeout = new Promise(resolve => setTimeout(() => resolve({timeout: true}), CHAT_TIMEOUT));
+    const res = await Promise.race([call, timeout]);
+    if(res.timeout) return {error: 'network'};
+    if(res.error){
+      // Non-2xx: the function still sends a JSON body with a friendly reply when it can.
+      try{ const body = await res.error.context.json(); if(body && body.reply) return body; }catch(e){}
+      console.error('LaqYan: chat-assistant failed', res.error);
+      return {error: 'network'};
+    }
+    return res.data || {error: 'network'};
+  }
+
+  async function sendChat(text){
+    text = String(text || '').trim();
+    if(!text || chatBusy) return;
+    chatLog.querySelectorAll('.chat-suggest, .msg-retry').forEach(el => el.remove());
+    const userEl = chatBubble('user', text);
+    if(!useDb){ chatBubble('bot', t('chat.offline'), 'error'); return; }
+
+    setChatBusy(true);
+    const typing = chatAdd(chatEl('div', 'msg bot chat-typing', '<i></i><i></i><i></i>'));
+    typing.setAttribute('aria-label', t('gate.checking'));
+    let data;
+    try{ data = await callAssistant(text); }catch(e){ console.error('LaqYan: chat-assistant failed', e); data = {error: 'network'}; }
+    typing.remove();
+    setChatBusy(false);
+
+    const failed = !!data.error && !data.created;
+    const bubble = chatBubble('bot', data.reply || t('chat.errNet'), failed ? 'error' : '');
+    if(failed){
+      // Not added to history, so the retry sends the same message again.
+      const retry = chatEl('button', 'btn btn-ghost btn-sm msg-retry'); retry.type = 'button';
+      retry.textContent = t('chat.retry');
+      retry.addEventListener('click', () => { bubble.remove(); userEl.remove(); sendChat(text); });
+      bubble.appendChild(retry);
+      return;
+    }
+    chatHistory.push({role: 'user', text}, {role: 'model', text: data.reply});
+
+    if(data.created){
+      // Same result as posting through the report form: into the list, shown under "المفقودات".
+      const it = rowToItem(data.created);
+      if(!items.some(i => i.id === it.id)) items.unshift(it);
+      setSection(it.section); setTab('lost');
+      const ok = chatEl('div', 'chat-success', '<span class="tick">'+svg('check')+'</span>' + esc(t('chat.created')));
+      chatAdd(ok);
+      chatAdd(chatEl('div', 'chat-items')).appendChild(chatItemCard(it));
+      toast(t('toast.postedLost'));
+      loadFromDb(true);
+    }
+    const shown = (data.items || []).map(id => items.find(i => i.id === id)).filter(Boolean);
+    if(shown.length){
+      const list = chatAdd(chatEl('div', 'chat-items'));
+      shown.forEach(it => list.appendChild(chatItemCard(it)));
+    }
+    chatScroll();
+  }
+
+  chatFab.addEventListener('click', openChat);
+  document.getElementById('chatClose').addEventListener('click', closeChat);
+  chatPanel.addEventListener('keydown', e => { if(e.key === 'Escape'){ e.stopPropagation(); closeChat(); } });
+  chatForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const text = chatInput.value;
+    if(!text.trim() || chatBusy) return;
+    chatInput.value = ''; chatInput.style.height = '';
+    sendChat(text);
+  });
+  chatInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); chatForm.requestSubmit(); }
+  });
+  chatInput.addEventListener('input', () => {      // grow with the text, up to the CSS max-height
+    chatInput.style.height = ''; chatInput.style.height = Math.min(chatInput.scrollHeight + 2, 120) + 'px';
+  });
+
+  /* ================================================================ Init */
+  applyStatic();
+  fillSelects();
+  renderBadge();
+  if(!currentRole()) showGateStep('roles');
+  if(useDb){ document.getElementById('footerNote').dataset.i18n = 'footer.db'; applyStatic(); }
+  setSection('male');
+  setTab('lost');
+  if(useDb){
+    loadFromDb().then(ok => { if(ok) openFromHash(); });
+    // Pick up reports added from other devices when the tab comes back into view.
+    document.addEventListener('visibilitychange', () => {
+      if(!document.hidden && dbState === 'ready' && Date.now() - lastLoad > 15000 && !document.querySelector('dialog[open]')) loadFromDb(true);
+    });
+  }else openFromHash();
+})();
+</script>
