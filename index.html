@@ -287,7 +287,7 @@
   .search-field input{width:100%; padding:0 14px; padding-inline-start:42px;}
   select.filter-select, .field select{
     appearance:none; -webkit-appearance:none; cursor:pointer;
-    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%238A90A8" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>');
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 256 256' fill='%238A90A8'><path d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'/></svg>");
     background-repeat:no-repeat; background-position:left 14px center;
   }
   select.filter-select{padding:0 14px; padding-inline-end:36px; flex:0 1 150px; min-width:120px;}
@@ -833,6 +833,8 @@
   .chat-item .ci-text{flex:1; min-width:0;}
   .chat-item strong{display:block; font-size:13.5px; font-weight:600; color:var(--title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .chat-item small{display:block; font-size:12px; color:var(--muted);}
+  .chat-item .ci-status{color:var(--indigo-soft); font-weight:500;}
+  :root[data-mode="light"] .chat-item .ci-status{color:var(--indigo);}
   .chat-item .ci-open{font-size:12px; color:var(--indigo-soft); flex:none;}
   :root[data-mode="light"] .chat-item .ci-open{color:var(--indigo);}
   .chat-success{
@@ -1049,10 +1051,10 @@
           <div class="brand-tools">
             <div class="theme-toggle" role="group" data-i18n-aria="theme.aria">
               <button class="theme-btn" type="button" data-mode-btn="dark" data-i18n-aria="theme.dark" data-i18n-title="theme.dark">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></svg>
               </button>
               <button class="theme-btn" type="button" data-mode-btn="light" data-i18n-aria="theme.light" data-i18n-title="theme.light">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></svg>
               </button>
             </div>
             <button class="lang-btn" type="button" data-lang-toggle data-i18n="lang.other" data-i18n-aria="lang.switch" data-i18n-title="lang.switch"></button>
@@ -1069,11 +1071,11 @@
           <div class="role-bar">
             <span class="role-badge" id="roleBadge"></span>
             <button class="link-btn" id="btnSwitchRole" type="button">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L204.69,120H112a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,229.66,122.34Z"/></svg>
               <span data-i18n="role.switch"></span>
             </button>
             <button class="link-btn" id="btnTour" type="button">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.4"/><circle cx="12" cy="16.8" r=".7" fill="currentColor"/></svg>
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
               <span data-i18n="tour.replay"></span>
             </button>
           </div>
@@ -1096,22 +1098,22 @@
         <p class="nav-label" data-i18n="nav.reports"></p>
         <div class="tabs" role="tablist" data-i18n-aria="nav.reports">
           <button class="tab-btn active" id="tabLost" role="tab" aria-selected="true" type="button">
-            <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M9.2 9.2a2 2 0 0 1 3.7 1c0 1.3-1.9 1.7-1.9 2.8"/><circle cx="11" cy="15.2" r=".6" fill="currentColor"/></svg>
+            <svg class="nav-ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
             <span data-i18n="tab.lost"></span> <span class="count" id="countLost">0</span>
           </button>
           <button class="tab-btn" id="tabFound" role="tab" aria-selected="false" type="button">
-            <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.7L16.2 9.5"/></svg>
+            <svg class="nav-ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
             <span data-i18n="tab.found"></span> <span class="count" id="countFound">0</span>
           </button>
         </div>
         <button class="tab-btn nav-dash" id="navDash" type="button">
-          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          <svg class="nav-ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/></svg>
           <span data-i18n="nav.dash"></span> <span class="admin-tag" data-i18n="tag.admin"></span>
         </button>
       </nav>
 
       <button class="side-cta" id="btnReportFoundSide" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg>
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M197.58,129.06,146,110l-19-51.62a15.92,15.92,0,0,0-29.88,0L78,110l-51.62,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0L146,178l51.62-19a15.92,15.92,0,0,0,0-29.88ZM137,164.22a8,8,0,0,0-4.74,4.74L112,223.85,91.78,169A8,8,0,0,0,87,164.22L32.15,144,87,123.78A8,8,0,0,0,91.78,119L112,64.15,132.22,119a8,8,0,0,0,4.74,4.74L191.85,144ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"/></svg>
         <div>
           <strong data-i18n="cta.title"></strong>
           <span data-i18n="cta.sub"></span>
@@ -1123,7 +1125,7 @@
       <div class="topbar">
         <div class="filters">
           <div class="search-field">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
             <input type="search" id="searchInput" data-i18n-ph="search.ph" data-i18n-aria="search.aria">
           </div>
           <select class="filter-select" id="categorySelect" data-i18n-aria="filter.cat"></select>
@@ -1131,11 +1133,11 @@
         </div>
         <div class="top-actions">
           <button class="btn btn-outline" id="btnReportLostHeader" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M42.76,50A8,8,0,0,0,40,56V224a8,8,0,0,0,16,0V179.77c26.79-21.16,49.87-9.75,76.45,3.41,16.4,8.11,34.06,16.85,53,16.85,13.93,0,28.54-4.75,43.82-18a8,8,0,0,0,2.76-6V56A8,8,0,0,0,218.76,50c-28,24.23-51.72,12.49-79.21-1.12C111.07,34.76,78.78,18.79,42.76,50ZM216,172.25c-26.79,21.16-49.87,9.74-76.45-3.41-25-12.35-52.81-26.13-83.55-8.4V59.79c26.79-21.16,49.87-9.75,76.45,3.4,25,12.35,52.82,26.13,83.55,8.4Z"/></svg>
             <span data-i18n="btn.reportLost"></span>
           </button>
           <button class="btn btn-primary" id="btnReportFoundHeader" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
             <span data-i18n="btn.reportFound"></span>
           </button>
         </div>
@@ -1145,16 +1147,16 @@
         <p class="results-meta" id="resultsMeta"></p>
         <div class="report-wrap">
           <button class="btn btn-outline btn-sm" id="btnDownloadReport" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="reportMenu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg>
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg>
             <span data-i18n="btn.download"></span>
           </button>
           <div class="report-menu" id="reportMenu" role="menu">
             <button class="menu-item" type="button" role="menuitem" id="reportPdf">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,152a8,8,0,0,1-8,8H192v16h16a8,8,0,0,1,0,16H192v16a8,8,0,0,1-16,0V152a8,8,0,0,1,8-8h32A8,8,0,0,1,224,152ZM92,172a28,28,0,0,1-28,28H56v8a8,8,0,0,1-16,0V152a8,8,0,0,1,8-8H64A28,28,0,0,1,92,172Zm-16,0a12,12,0,0,0-12-12H56v24h8A12,12,0,0,0,76,172Zm88,8a36,36,0,0,1-36,36H112a8,8,0,0,1-8-8V152a8,8,0,0,1,8-8h16A36,36,0,0,1,164,180Zm-16,0a20,20,0,0,0-20-20h-8v40h8A20,20,0,0,0,148,180ZM40,112V40A16,16,0,0,1,56,24h96a8,8,0,0,1,5.66,2.34l56,56A8,8,0,0,1,216,88v24a8,8,0,0,1-16,0V96H152a8,8,0,0,1-8-8V40H56v72a8,8,0,0,1-16,0ZM160,80h28.69L160,51.31Z"/></svg>
               <div><strong data-i18n="menu.pdf"></strong><span data-i18n="menu.pdfSub"></span></div>
             </button>
             <button class="menu-item" type="button" role="menuitem" id="reportCsv">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></svg>
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M48,180c0,11,7.18,20,16,20a14.24,14.24,0,0,0,10.22-4.66A8,8,0,0,1,85.78,206.4,30.06,30.06,0,0,1,64,216c-17.65,0-32-16.15-32-36s14.35-36,32-36a30.06,30.06,0,0,1,21.78,9.6,8,8,0,0,1-11.56,11.06A14.24,14.24,0,0,0,64,160C55.18,160,48,169,48,180Zm79.6-8.69c-4-1.16-8.14-2.35-10.45-3.84-1.25-.81-1.23-1-1.12-1.9a4.57,4.57,0,0,1,2-3.67c4.6-3.12,15.34-1.73,19.82-.56A8,8,0,0,0,142,145.86c-2.12-.55-21-5.22-32.84,2.76a20.58,20.58,0,0,0-9,14.95c-2,15.88,13.65,20.41,23,23.11,12.06,3.49,13.12,4.92,12.78,7.59-.31,2.41-1.26,3.34-2.14,3.93-4.6,3.06-15.17,1.56-19.55.36A8,8,0,0,0,109.94,214a61.34,61.34,0,0,0,15.19,2c5.82,0,12.3-1,17.49-4.46a20.82,20.82,0,0,0,9.19-15.23C154,179,137.49,174.17,127.6,171.31Zm83.09-26.84a8,8,0,0,0-10.23,4.84L188,184.21l-12.47-34.9a8,8,0,0,0-15.07,5.38l20,56a8,8,0,0,0,15.07,0l20-56A8,8,0,0,0,210.69,144.47ZM216,88v24a8,8,0,0,1-16,0V96H152a8,8,0,0,1-8-8V40H56v72a8,8,0,0,1-16,0V40A16,16,0,0,1,56,24h96a8,8,0,0,1,5.66,2.34l56,56A8,8,0,0,1,216,88Zm-27.31-8L160,51.31V80Z"/></svg>
               <div><strong data-i18n="menu.csv"></strong><span data-i18n="menu.csvSub"></span></div>
             </button>
           </div>
@@ -1182,18 +1184,18 @@
 
 <!-- Chat assistant: floating button + panel (backed by the chat-assistant Edge Function) -->
 <button class="chat-fab" id="chatFab" type="button" aria-controls="chatPanel" aria-expanded="false" data-i18n-aria="chat.open">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.2 0-2.3-.2-3.3-.6L4 20l1.3-3.6C4.5 15.1 4 13.4 4 11.5 4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/><path d="M12 8.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg>
+  <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"/></svg>
   <span class="chat-fab-label" data-i18n="chat.fab"></span>
 </button>
 <section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
   <header class="chat-head">
-    <span class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.2 0-2.3-.2-3.3-.6L4 20l1.3-3.6C4.5 15.1 4 13.4 4 11.5 4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/><path d="M12 8.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></span>
+    <span class="chat-avatar"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"/></svg></span>
     <div class="chat-head-text">
       <h2 id="chatTitle" data-i18n="chat.title"></h2>
       <p data-i18n="chat.sub"></p>
     </div>
     <button class="icon-btn" id="chatClose" type="button" data-i18n-aria="close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
     </button>
   </header>
   <div class="chat-log" id="chatLog" role="log" aria-live="polite"></div>
@@ -1201,7 +1203,7 @@
     <label for="chatInput" class="sr-only" data-i18n="chat.inputLabel"></label>
     <textarea id="chatInput" rows="1" maxlength="600" dir="auto" data-i18n-ph="chat.placeholder"></textarea>
     <button class="btn btn-primary chat-send" id="chatSend" type="submit" data-i18n-aria="chat.send">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
     </button>
   </form>
   <p class="chat-note" data-i18n="chat.note"></p>
@@ -1212,7 +1214,7 @@
   <div class="modal-head">
     <h2 id="reportDialogTitle"></h2>
     <button class="icon-btn" data-close-dialog="reportDialog" type="button" data-i18n-aria="close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
     </button>
   </div>
   <div class="modal-body">
@@ -1268,14 +1270,14 @@
         <label for="itemPhoto" data-i18n="form.photo"></label>
         <input type="file" id="itemPhoto" accept="image/*" hidden>
         <button type="button" class="photo-drop" id="photoDrop">
-          <span class="ph-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/></svg></span>
+          <span class="ph-ico"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"/></svg></span>
           <span><strong data-i18n="photo.pick"></strong><small data-i18n="photo.hint"></small></span>
         </button>
         <div class="photo-preview" id="photoPreview" hidden>
           <img id="photoImg" data-i18n-alt="photo.preview" alt="">
           <div class="photo-tools">
-            <button type="button" id="photoChange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/></svg><span data-i18n="photo.change"></span></button>
-            <button type="button" id="photoRemove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span data-i18n="photo.remove"></span></button>
+            <button type="button" id="photoChange"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z"/></svg><span data-i18n="photo.change"></span></button>
+            <button type="button" id="photoRemove"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg><span data-i18n="photo.remove"></span></button>
           </div>
         </div>
         <p class="photo-busy" id="photoBusy" hidden data-i18n="photo.busy"></p>
@@ -1302,20 +1304,20 @@
 
     <div class="gate-step" id="gateRoles">
       <button class="role-card" id="roleStudent" type="button">
-        <span class="role-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11"/><path d="M21.5 9v5"/></svg></span>
+        <span class="role-ico"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M251.76,88.94l-120-64a8,8,0,0,0-7.52,0l-120,64a8,8,0,0,0,0,14.12L32,117.87v48.42a15.91,15.91,0,0,0,4.06,10.65C49.16,191.53,78.51,216,128,216a130,130,0,0,0,48-8.76V240a8,8,0,0,0,16,0V199.51a115.63,115.63,0,0,0,27.94-22.57A15.91,15.91,0,0,0,224,166.29V117.87l27.76-14.81a8,8,0,0,0,0-14.12ZM128,200c-43.27,0-68.72-21.14-80-33.71V126.4l76.24,40.66a8,8,0,0,0,7.52,0L176,143.47v46.34C163.4,195.69,147.52,200,128,200Zm80-33.75a97.83,97.83,0,0,1-16,14.25V134.93l16-8.53ZM188,118.94l-.22-.13-56-29.87a8,8,0,0,0-7.52,14.12L171,128l-43,22.93L25,96,128,41.07,231,96Z"/></svg></span>
         <span class="role-text"><strong data-i18n="role.student"></strong><small data-i18n="role.studentSub"></small></span>
-        <svg class="role-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        <svg class="role-arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
       </button>
       <button class="role-card" id="roleAdmin" type="button">
-        <span class="role-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/></svg></span>
+        <span class="role-ico"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg></span>
         <span class="role-text"><strong data-i18n="role.admin"></strong><small data-i18n="role.adminSub"></small></span>
-        <svg class="role-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        <svg class="role-arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
       </button>
     </div>
 
     <form class="gate-step" id="gateLogin" hidden novalidate>
       <div class="admin-lock">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/></svg>
       </div>
       <div class="field" id="f-loginId">
         <label for="loginId" id="loginIdLabel"></label>
@@ -1343,7 +1345,7 @@
   <div class="modal-head">
     <h2 data-i18n="detail.title"></h2>
     <button class="icon-btn" data-close-dialog="detailDialog" type="button" data-i18n-aria="close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
     </button>
   </div>
   <div class="modal-body" id="detailBody"></div>
@@ -1369,7 +1371,7 @@
 </div>
 
 <div class="toast" id="toast" role="status">
-  <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+  <span class="tick"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg></span>
   <span id="toastMsg"></span>
 </div>
 
@@ -1399,7 +1401,7 @@
       'filter.allCat':'كل التصنيفات', 'filter.allLoc':'كل المواقع',
       'btn.reportLost':'الإبلاغ عن مفقود', 'btn.reportFound':'الإبلاغ عن ملقوط', 'btn.download':'تحميل التقرير',
       'menu.pdf':'تقرير PDF', 'menu.pdfSub':'اختر «حفظ بصيغة PDF» من نافذة الطباعة', 'menu.csv':'ملف Excel (CSV)', 'menu.csvSub':'جدول بكل الأغراض يُفتح في Excel',
-      'footer':'نموذج تجريبي لعرض توضيحي — جامعة الملك سعود · البيانات محفوظة على هذا الجهاز فقط', 'dash.aria':'لوحة الإحصائيات', 'close':'إغلاق',
+      'footer':'نموذج تجريبي لعرض توضيحي، جامعة الملك سعود. البيانات محفوظة على هذا الجهاز فقط', 'dash.aria':'لوحة الإحصائيات', 'close':'إغلاق',
       'form.lostTitle':'الإبلاغ عن غرض مفقود', 'form.foundTitle':'الإبلاغ عن غرض ملقوط', 'form.editTitle':'تعديل البلاغ',
       'form.submitLost':'نشر بلاغ الفقدان', 'form.submitFound':'نشر بلاغ العثور', 'form.save':'حفظ التعديلات',
       'form.name':'اسم الغرض', 'form.namePh':'مثال: سماعات لاسلكية بيضاء', 'err.name':'يرجى إدخال اسم الغرض',
@@ -1408,7 +1410,7 @@
       'form.desc':'وصف مختصر', 'form.descPh':'لون الغرض، علاماته المميزة، مكان العثور عليه بالتحديد…', 'err.desc':'يرجى إضافة وصف مختصر',
       'form.date':'التاريخ', 'err.date':'يرجى تحديد تاريخ لا يتجاوز اليوم',
       'form.contact':'وسيلة التواصل', 'form.contactPh':'05xxxxxxxx أو بريد جامعي', 'err.contact':'أدخل رقم جوال سعودي (05xxxxxxxx) أو بريدًا إلكترونيًا صحيحًا',
-      'form.photo':'صورة الغرض (اختياري)', 'photo.pick':'التقط صورة أو اختر من المعرض', 'photo.hint':'أو اسحب الصورة إلى هنا — تُصغَّر تلقائيًا',
+      'form.photo':'صورة الغرض (اختياري)', 'photo.pick':'التقط صورة أو اختر من المعرض', 'photo.hint':'أو اسحب الصورة إلى هنا، وتُصغَّر تلقائيًا',
       'photo.change':'تغيير', 'photo.remove':'إزالة', 'photo.preview':'معاينة صورة الغرض', 'photo.busy':'جارٍ تجهيز الصورة…', 'err.photo':'تعذّرت قراءة الصورة، جرّب صورة أخرى',
       'btn.cancel':'إلغاء', 'btn.back':'رجوع', 'btn.enter':'دخول',
       'gate.title':'مرحبًا بك في لقيان', 'gate.sub':'اختر طريقة الدخول للمتابعة', 'gate.subAdmin':'سجّل الدخول باسم المشرف وكلمة المرور',
@@ -1417,8 +1419,8 @@
       'err.login':'البيانات غير صحيحة، تحقّق منها وحاول مرة أخرى.', 'err.loginEmpty':'أدخل بيانات الدخول وكلمة المرور.',
       'chat.fab':'اسأل مساعد لقيان', 'chat.open':'افتح مساعد لقيان', 'chat.title':'مساعد لقيان',
       'chat.sub':'يبحث لك في الموجودات ويسجّل بلاغك', 'chat.placeholder':'اكتب وش ضاع منك…', 'chat.inputLabel':'رسالتك للمساعد',
-      'chat.send':'إرسال', 'chat.note':'المساعد يعتمد على الذكاء الاصطناعي وقد يخطئ — راجع البلاغ قبل التواصل.',
-      'chat.welcome':'هلا! أنا مساعد لقيان 👋\nقل لي وش ضاع منك، ووين ومتى تقريبًا، وأدوّر لك في الموجودات. وإذا ما لقيته أسجّل لك بلاغ مفقود.',
+      'chat.send':'إرسال', 'chat.note':'المساعد يعتمد على الذكاء الاصطناعي وقد يخطئ، فراجع البلاغ قبل التواصل.',
+      'chat.welcome':'هلا! أنا مساعد لقيان.\nقل لي وش ضاع منك، ووين ومتى تقريبًا، وأدوّر لك في الموجودات. وإذا ما لقيته أسجّل لك بلاغ مفقود.',
       'chat.s1':'ضاعت سماعاتي البيضاء', 'chat.s2':'فقدت مفاتيح سيارتي', 'chat.s3':'أبي أسجّل بلاغ مفقود',
       'chat.openItem':'عرض', 'chat.created':'تم تسجيل البلاغ في قائمة المفقودات',
       'chat.searching':'أدوّر لك في الموجودات…', 'chat.thinking':'لحظات، أجهّز الرد…',
@@ -1427,7 +1429,7 @@
       'role.student':'طالب / طالبة', 'role.studentSub':'تصفّح المفقودات والموجودات وأبلغ عن غرض',
       'role.admin':'مشرف', 'role.adminSub':'إدارة البلاغات وتعديلها وتحميل التقارير',
       'detail.title':'تفاصيل البلاغ', 'badge.student':'طالب', 'badge.admin':'مشرف',
-      'toast.welcomeStudent':'مرحبًا بك في لقيان', 'toast.welcomeAdmin':'مرحبًا بك — تم الدخول كمشرف',
+      'toast.welcomeStudent':'مرحبًا بك في لقيان', 'toast.welcomeAdmin':'مرحبًا بك، تم الدخول كمشرف',
       'status.lost':'مفقود', 'status.found':'موجود', 'status.delivered':'تم التسليم',
       'meta.results':'{n} نتيجة', 'meta.matching':'مطابقة لبحثك', 'meta.clear':'مسح الفلاتر',
       'empty.title':'لا توجد نتائج مطابقة', 'empty.body':'جرّب كلمة بحث مختلفة أو امسح الفلاتر المطبّقة.',
@@ -1436,33 +1438,33 @@
       'ago.today':'اليوم', 'ago.1':'منذ يوم واحد', 'ago.2':'منذ يومين', 'ago.few':'منذ {n} أيام', 'ago.many':'منذ {n} يومًا',
       'detail.location':'الموقع', 'detail.date':'التاريخ', 'detail.section':'القسم', 'detail.returnedOn':'تاريخ التسليم',
       'matches.lost':'قد يكون غرضك بين هذه الموجودات', 'matches.found':'قد يكون صاحبه أبلغ عنه في المفقودات',
-      'matches.note':'نفس التصنيف ونفس القسم — افتح البلاغ وقارن الوصف والموقع.',
+      'matches.note':'نفس التصنيف ونفس القسم. افتح البلاغ وقارن الوصف والموقع.',
       'returned.title':'تم تسليم هذا الغرض لصاحبه', 'returned.body':'أُغلق البلاغ ولم يعد بحاجة للتواصل.',
-      'contact.reveal':'هذا الغرض لي — عرض بيانات التواصل', 'contact.label':'وسيلة التواصل', 'contact.note':'بيانات تجريبية لأغراض العرض التوضيحي فقط',
+      'contact.reveal':'هذا الغرض لي، اعرض بيانات التواصل', 'contact.label':'وسيلة التواصل', 'contact.note':'بيانات تجريبية لأغراض العرض التوضيحي فقط',
       'share.label':'مشاركة البلاغ', 'share.copy':'نسخ الرابط', 'share.whatsapp':'واتساب', 'share.native':'مشاركة…',
-      'share.text':'{status} في لقيان: {name} — {location}',
+      'share.text':'{status} في لقيان: {name}، {location}',
       'toast.copied':'تم نسخ رابط البلاغ', 'toast.copyFail':'انسخ الرابط من الحقل أدناه', 'toast.notFound':'هذا البلاغ غير موجود على هذا الجهاز',
       'admin.actions':'إجراءات المشرف', 'admin.return':'تحديد كـ «تم التسليم»', 'admin.unreturn':'إلغاء حالة التسليم',
       'admin.edit':'تعديل البلاغ', 'admin.delete':'حذف البلاغ',
       'admin.confirmDel':'سيتم حذف بلاغ «{name}» نهائيًا. هل أنت متأكد؟', 'admin.yesDel':'نعم، احذف البلاغ',
       'toast.returned':'تم تحديد الغرض كـ «تم التسليم»', 'toast.unreturned':'تم إلغاء حالة التسليم', 'toast.deleted':'تم حذف البلاغ',
       'toast.saved':'تم حفظ التعديلات', 'toast.postedLost':'تم نشر بلاغ الفقدان بنجاح', 'toast.postedFound':'تم نشر بلاغ العثور بنجاح',
-      'toast.postedMatchLost':'تم نشر البلاغ — وجدنا {items} في الموجودات', 'toast.postedMatchFound':'تم نشر البلاغ — يوجد {items} في المفقودات',
-      'toast.storageFull':'مساحة التخزين ممتلئة — احذف بعض الصور ثم حاول مجددًا', 'toast.reset':'تمت استعادة البيانات التجريبية', 'toast.csv':'تم تحميل ملف التقرير',
+      'toast.postedMatchLost':'تم نشر البلاغ، ووجدنا {items} في الموجودات', 'toast.postedMatchFound':'تم نشر البلاغ، ويوجد {items} في المفقودات',
+      'toast.storageFull':'مساحة التخزين ممتلئة. احذف بعض الصور ثم حاول مجددًا', 'toast.reset':'تمت استعادة البيانات التجريبية', 'toast.csv':'تم تحميل ملف التقرير',
       'dash.meta':'لوحة الإحصائيات', 'dash.all':'جميع الأقسام',
       'kpi.total':'إجمالي البلاغات', 'kpi.totalSub':'في القسمين', 'kpi.lost':'مفقودات قائمة', 'kpi.lostSub':'لم يُعثر عليها بعد',
       'kpi.found':'موجودات قائمة', 'kpi.foundSub':'بانتظار أصحابها', 'kpi.ret':'تم التسليم', 'kpi.retSub':'عادت لأصحابها',
       'kpi.rate':'نسبة الإرجاع', 'kpi.rateSub':'{r} من {t} بلاغًا',
       'panel.cat':'أكثر التصنيفات فقدًا', 'panel.catSub':'عدد بلاغات المفقودات لكل تصنيف',
-      'panel.loc':'المواقع الأكثر بلاغات', 'panel.locSub':'أعلى 6 مواقع — مفقودات وموجودات',
+      'panel.loc':'المواقع الأكثر بلاغات', 'panel.locSub':'أعلى 6 مواقع في المفقودات والموجودات',
       'panel.sec':'مقارنة الأقسام', 'panel.secSub':'توزيع البلاغات ونسبة الإرجاع في كل قسم',
       'th.section':'القسم', 'th.reports':'البلاغات', 'th.lost':'مفقودات', 'th.found':'موجودات', 'th.returned':'تم التسليم', 'th.rate':'نسبة الإرجاع',
       'tip.unitLost':'بلاغ مفقود', 'tip.unit':'بلاغ', 'tip.share':'{p}% من المجموع',
-      'dash.foot':'البيانات محفوظة على هذا الجهاز فقط — يمكنك إعادتها إلى البيانات التجريبية الأصلية.',
+      'dash.foot':'البيانات محفوظة على هذا الجهاز فقط، ويمكنك إعادتها إلى البيانات التجريبية الأصلية.',
       'dash.reset':'استعادة البيانات التجريبية', 'dash.resetConfirm':'اضغط مرة أخرى للتأكيد',
       'rp.title':'تقرير المفقودات والموجودات', 'rp.sub':'جامعة الملك سعود · تاريخ الإصدار: {d}',
       'rp.total':'إجمالي البلاغات', 'rp.lost':'مفقودات', 'rp.found':'موجودات', 'rp.ret':'تم التسليم', 'rp.empty':'لا توجد أغراض.',
-      'rp.foot':'لقيان — نموذج تجريبي لعرض توضيحي · بيانات التواصل غير مضمّنة في التقرير حفاظًا على الخصوصية', 'rp.file':'تقرير-لقيان-',
+      'rp.foot':'لقيان: نموذج تجريبي لعرض توضيحي. بيانات التواصل غير مضمّنة في التقرير حفاظًا على الخصوصية', 'rp.file':'تقرير-لقيان-',
       'col.item':'الغرض', 'col.name':'اسم الغرض', 'col.status':'الحالة', 'col.category':'التصنيف', 'col.location':'الموقع', 'col.date':'التاريخ',
       'col.desc':'الوصف', 'col.section':'القسم', 'col.type':'النوع', 'col.returnedDate':'تاريخ التسليم',
       'tour.step':'{i} من {n}', 'tour.next':'التالي', 'tour.prev':'السابق', 'tour.skip':'تخطي الجولة', 'tour.done':'ابدأ الاستخدام',
@@ -1479,8 +1481,8 @@
       'form.saving':'جارٍ الحفظ…', 'err.save':'تعذّر حفظ البلاغ، تحقّق من اتصالك وحاول مرة أخرى.',
       'err.action':'تعذّر تنفيذ العملية، حاول مرة أخرى.', 'err.adminPw':'انتهت جلسة المشرف، سجّل الدخول مرة أخرى.',
       'err.network':'تعذّر الاتصال بالخادم، حاول مرة أخرى.', 'gate.checking':'جارٍ التحقق…',
-      'footer.db':'نموذج تجريبي لعرض توضيحي — جامعة الملك سعود · البيانات محفوظة في قاعدة بيانات Supabase',
-      'dash.footDb':'البيانات محفوظة في قاعدة بيانات Supabase ومشتركة بين كل الأجهزة — يمكنك إعادتها إلى البيانات التجريبية الأصلية.'
+      'footer.db':'نموذج تجريبي لعرض توضيحي، جامعة الملك سعود. البيانات محفوظة في قاعدة بيانات Supabase',
+      'dash.footDb':'البيانات محفوظة في قاعدة بيانات Supabase ومشتركة بين كل الأجهزة، ويمكنك إعادتها إلى البيانات التجريبية الأصلية.'
     },
     en: {
       'app.title':'LaqYan', 'ksu':'King Saud University', 'brand.tagline':'Campus lost & found',
@@ -1492,7 +1494,7 @@
       'filter.allCat':'All categories', 'filter.allLoc':'All locations',
       'btn.reportLost':'Report lost item', 'btn.reportFound':'Report found item', 'btn.download':'Download report',
       'menu.pdf':'PDF report', 'menu.pdfSub':'Choose "Save as PDF" in the print window', 'menu.csv':'Excel file (CSV)', 'menu.csvSub':'A table of every item that opens in Excel',
-      'footer':'Demo prototype — King Saud University · Data is saved on this device only', 'dash.aria':'Statistics dashboard', 'close':'Close',
+      'footer':'Demo prototype, King Saud University. Data is saved on this device only', 'dash.aria':'Statistics dashboard', 'close':'Close',
       'form.lostTitle':'Report a lost item', 'form.foundTitle':'Report a found item', 'form.editTitle':'Edit report',
       'form.submitLost':'Post lost report', 'form.submitFound':'Post found report', 'form.save':'Save changes',
       'form.name':'Item name', 'form.namePh':'e.g. White wireless earbuds', 'err.name':"Enter the item's name",
@@ -1501,26 +1503,26 @@
       'form.desc':'Short description', 'form.descPh':'Colour, distinctive marks, exactly where it was…', 'err.desc':'Add a short description',
       'form.date':'Date', 'err.date':'Pick a date no later than today',
       'form.contact':'Contact', 'form.contactPh':'05xxxxxxxx or university email', 'err.contact':'Enter a Saudi mobile number (05xxxxxxxx) or a valid email',
-      'form.photo':'Photo (optional)', 'photo.pick':'Take a photo or choose one', 'photo.hint':"or drag it here — it's resized automatically",
-      'photo.change':'Change', 'photo.remove':'Remove', 'photo.preview':'Photo preview', 'photo.busy':'Preparing photo…', 'err.photo':"Couldn't read that image — try another one",
+      'form.photo':'Photo (optional)', 'photo.pick':'Take a photo or choose one', 'photo.hint':"or drag it here, it's resized automatically",
+      'photo.change':'Change', 'photo.remove':'Remove', 'photo.preview':'Photo preview', 'photo.busy':'Preparing photo…', 'err.photo':"Couldn't read that image. Try another one",
       'btn.cancel':'Cancel', 'btn.back':'Back', 'btn.enter':'Sign in',
       'gate.title':'Welcome to LaqYan', 'gate.sub':'Choose how you want to continue', 'gate.subAdmin':'Sign in with your admin name and password',
       'gate.subStudent':'Sign in with your student ID and password',
       'login.studentId':'Student ID', 'login.adminName':'Admin name', 'login.pwd':'Password',
-      'err.login':"Those details don't match — check them and try again.", 'err.loginEmpty':'Enter your sign-in details and password.',
+      'err.login':"Those details don't match. Check them and try again.", 'err.loginEmpty':'Enter your sign-in details and password.',
       'chat.fab':'Ask LaqYan assistant', 'chat.open':'Open LaqYan assistant', 'chat.title':'LaqYan assistant',
       'chat.sub':'Searches found items and files your report', 'chat.placeholder':'Tell me what you lost…', 'chat.inputLabel':'Your message to the assistant',
-      'chat.send':'Send', 'chat.note':'The assistant uses AI and can make mistakes — check the report before contacting anyone.',
-      'chat.welcome':"Hi! I'm the LaqYan assistant 👋\nTell me what you lost, and roughly where and when, and I'll look through the found items. If it isn't there, I can file a lost report for you. (I reply in Arabic.)",
+      'chat.send':'Send', 'chat.note':'The assistant uses AI and can make mistakes. Check the report before contacting anyone.',
+      'chat.welcome':"Hi! I'm the LaqYan assistant.\nTell me what you lost, and roughly where and when, and I'll look through the found items. If it isn't there, I can file a lost report for you. (I reply in Arabic.)",
       'chat.s1':'ضاعت سماعاتي البيضاء', 'chat.s2':'فقدت مفاتيح سيارتي', 'chat.s3':'أبي أسجّل بلاغ مفقود',
       'chat.openItem':'View', 'chat.created':'Report added to the lost list',
       'chat.searching':'Looking through found items…', 'chat.thinking':'One moment, preparing a reply…',
       'chat.offline':"The assistant needs the database connection, which isn't available in this mode. Use the “Report lost item” button instead.",
-      'chat.errNet':"Couldn't reach the assistant — check your connection and try again.", 'chat.retry':'Try again',
+      'chat.errNet':"Couldn't reach the assistant. Check your connection and try again.", 'chat.retry':'Try again',
       'role.student':'Student', 'role.studentSub':'Browse lost and found items and report one',
       'role.admin':'Admin', 'role.adminSub':'Manage and edit reports, download statistics',
       'detail.title':'Report details', 'badge.student':'Student', 'badge.admin':'Admin',
-      'toast.welcomeStudent':'Welcome to LaqYan', 'toast.welcomeAdmin':'Welcome — signed in as admin',
+      'toast.welcomeStudent':'Welcome to LaqYan', 'toast.welcomeAdmin':'Welcome, you are signed in as admin',
       'status.lost':'Lost', 'status.found':'Found', 'status.delivered':'Returned',
       'meta.results':'{n} results', 'meta.result1':'1 result', 'meta.matching':'matching your search', 'meta.clear':'Clear filters',
       'empty.title':'No matching results', 'empty.body':'Try a different search or clear the filters.',
@@ -1529,37 +1531,37 @@
       'ago.today':'Today', 'ago.1':'1 day ago', 'ago.2':'2 days ago', 'ago.few':'{n} days ago', 'ago.many':'{n} days ago',
       'detail.location':'Location', 'detail.date':'Date', 'detail.section':'Section', 'detail.returnedOn':'Returned on',
       'matches.lost':'Your item might be one of these found items', 'matches.found':'Its owner may have reported it as lost',
-      'matches.note':'Same category and section — open a report and compare the description and location.',
+      'matches.note':'Same category and section. Open a report and compare the description and location.',
       'returned.title':'This item has been returned to its owner', 'returned.body':'The report is closed; no contact needed.',
-      'contact.reveal':'This is mine — show contact details', 'contact.label':'Contact', 'contact.note':'Sample data for demo purposes only',
+      'contact.reveal':'This is mine, show contact details', 'contact.label':'Contact', 'contact.note':'Sample data for demo purposes only',
       'share.label':'Share this report', 'share.copy':'Copy link', 'share.whatsapp':'WhatsApp', 'share.native':'Share…',
-      'share.text':'{status} on LaqYan: {name} — {location}',
+      'share.text':'{status} on LaqYan: {name}, {location}',
       'toast.copied':'Link copied', 'toast.copyFail':'Copy the link from the box below', 'toast.notFound':"That report isn't on this device",
       'admin.actions':'Admin actions', 'admin.return':'Mark as returned', 'admin.unreturn':'Undo returned',
       'admin.edit':'Edit report', 'admin.delete':'Delete report',
       'admin.confirmDel':'"{name}" will be deleted permanently. Are you sure?', 'admin.yesDel':'Yes, delete it',
       'toast.returned':'Marked as returned', 'toast.unreturned':'Returned status removed', 'toast.deleted':'Report deleted',
       'toast.saved':'Changes saved', 'toast.postedLost':'Lost report posted', 'toast.postedFound':'Found report posted',
-      'toast.postedMatchLost':'Report posted — we found {items} among found items', 'toast.postedMatchFound':'Report posted — {items} in lost reports',
-      'toast.storageFull':'Storage is full — remove some photos and try again', 'toast.reset':'Sample data restored', 'toast.csv':'Report downloaded',
+      'toast.postedMatchLost':'Report posted. We found {items} among found items', 'toast.postedMatchFound':'Report posted. {items} in lost reports',
+      'toast.storageFull':'Storage is full. Remove some photos and try again', 'toast.reset':'Sample data restored', 'toast.csv':'Report downloaded',
       'dash.meta':'Statistics', 'dash.all':'All sections',
       'kpi.total':'Total reports', 'kpi.totalSub':'Both sections', 'kpi.lost':'Open lost', 'kpi.lostSub':'Not found yet',
       'kpi.found':'Open found', 'kpi.foundSub':'Waiting for their owners', 'kpi.ret':'Returned', 'kpi.retSub':'Back with their owners',
       'kpi.rate':'Return rate', 'kpi.rateSub':'{r} of {t} reports',
       'panel.cat':'Most-lost categories', 'panel.catSub':'Lost reports per category',
-      'panel.loc':'Locations with the most reports', 'panel.locSub':'Top 6 — lost and found',
+      'panel.loc':'Locations with the most reports', 'panel.locSub':'Top 6 for lost and found',
       'panel.sec':'Section comparison', 'panel.secSub':'Reports and return rate per section',
       'th.section':'Section', 'th.reports':'Reports', 'th.lost':'Lost', 'th.found':'Found', 'th.returned':'Returned', 'th.rate':'Return rate',
       'tip.unitLost':'lost reports', 'tip.unit':'reports', 'tip.share':'{p}% of total',
-      'dash.foot':'Data is saved on this device only — you can restore the original sample data.',
+      'dash.foot':'Data is saved on this device only. You can restore the original sample data.',
       'dash.reset':'Restore sample data', 'dash.resetConfirm':'Click again to confirm',
       'rp.title':'Lost & Found Report', 'rp.sub':'King Saud University · Issued {d}',
       'rp.total':'Total reports', 'rp.lost':'Lost', 'rp.found':'Found', 'rp.ret':'Returned', 'rp.empty':'No items.',
-      'rp.foot':'LaqYan — demo prototype · Contact details are excluded from this report for privacy', 'rp.file':'LaqYan-report-',
+      'rp.foot':'LaqYan demo prototype. Contact details are excluded from this report for privacy', 'rp.file':'LaqYan-report-',
       'col.item':'Item', 'col.name':'Item name', 'col.status':'Status', 'col.category':'Category', 'col.location':'Location', 'col.date':'Date',
       'col.desc':'Description', 'col.section':'Section', 'col.type':'Type', 'col.returnedDate':'Returned on',
       'tour.step':'{i} of {n}', 'tour.next':'Next', 'tour.prev':'Back', 'tour.skip':'Skip tour', 'tour.done':'Start using LaqYan',
-      'tour.0t':'A quick tour of LaqYan', 'tour.0b':"In half a minute, see how to find something you lost — or get something you found back to its owner.",
+      'tour.0t':'A quick tour of LaqYan', 'tour.0b':"In half a minute, see how to find something you lost, or get something you found back to its owner.",
       'tour.1t':'Choose your section', 'tour.1b':'The male and female sections each have their own lost and found lists.',
       'tour.2t':'Lost and found', 'tour.2b':'Switch between what students lost and what they found. Lost something? Start by browsing Found.',
       'tour.3t':'Search fast', 'tour.3b':'Search by name, location or category, or narrow things down with the filters.',
@@ -1569,11 +1571,11 @@
       'tour.a2t':'Download the report', 'tour.a2b':'Export every report as PDF or Excel. From any report you can also edit it, delete it or mark it as returned.'
       ,'load.loading':'Loading reports…', 'load.errorTitle':"Couldn't load reports",
       'load.errorBody':'Check your internet connection and try again.', 'load.retry':'Try again',
-      'form.saving':'Saving…', 'err.save':"Couldn't save the report — check your connection and try again.",
-      'err.action':"That didn't work — please try again.", 'err.adminPw':'Your admin session has expired — sign in again.',
-      'err.network':"Couldn't reach the server — try again.", 'gate.checking':'Checking…',
-      'footer.db':'Demo prototype — King Saud University · Data is saved in a Supabase database',
-      'dash.footDb':'Data is saved in a Supabase database and shared across devices — you can restore the original sample data.'
+      'form.saving':'Saving…', 'err.save':"Couldn't save the report. Check your connection and try again.",
+      'err.action':"That didn't work. Please try again.", 'err.adminPw':'Your admin session has expired. Sign in again.',
+      'err.network':"Couldn't reach the server. Try again.", 'gate.checking':'Checking…',
+      'footer.db':'Demo prototype, King Saud University. Data is saved in a Supabase database',
+      'dash.footDb':'Data is saved in a Supabase database and shared across devices. You can restore the original sample data.'
     }
   };
   let lang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'ar';
@@ -1583,36 +1585,38 @@
   }
 
   /* ================================================================ Icons */
+  // Icons: Phosphor (regular weight, MIT license, phosphoricons.com), inner SVG of each glyph.
   const ICONS = {
-    headphones: '<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2.6" y="13" width="4.4" height="6.4" rx="2.2"/><rect x="17" y="13" width="4.4" height="6.4" rx="2.2"/>',
-    keys: '<circle cx="7.5" cy="12" r="3.6"/><path d="M10.9 12h9.6M16.4 12v3M19.7 12v2.4"/>',
-    charger: '<path d="M8 3v4.2M16 3v4.2M5.6 7.2h12.8l-1 6.1a5.4 5.4 0 0 1-10.8 0l-1-6.1z"/><path d="M12 16.8V21"/>',
-    wallet: '<rect x="3" y="6" width="18" height="13" rx="2.2"/><path d="M3 10.2h18"/><circle cx="17" cy="14.4" r="1.3" fill="currentColor" stroke="none"/>',
-    electronics: '<rect x="5.5" y="3" width="13" height="18" rx="2.2"/><path d="M10 18h4"/>',
-    clothing: '<path d="M8.2 4 4.3 7.1l2 2.8 1.9-1.4V20h7.6V8.5l1.9 1.4 2-2.8L15.8 4l-1.9 1.9h-3.8L8.2 4z"/>',
-    other: '<path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8.4l9 5 9-5V8"/><path d="M12 13v8.4"/>',
-    location: '<path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/>',
-    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
-    people: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2a4.5 4.5 0 0 1 5 4.3"/>',
-    tag: '<path d="M20.6 12.6 12.9 20.3a1.9 1.9 0 0 1-2.7 0l-6.5-6.5a1.9 1.9 0 0 1 0-2.7L11.4 3.4A1.9 1.9 0 0 1 12.7 3H19a1.9 1.9 0 0 1 1.9 1.9v6.3a1.9 1.9 0 0 1-.3 1.4z"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>',
-    phone: '<path d="M6.6 3.5 9 6a1.5 1.5 0 0 1-.1 2L7.2 9.7a13.5 13.5 0 0 0 7.1 7.1l1.7-1.7a1.5 1.5 0 0 1 2-.1l2.5 2.4a1.5 1.5 0 0 1 .1 2.2l-1.4 1.4c-.8.8-2 1.1-3.1.8C10.7 20.4 3.6 13.3 2.2 7.9a3 3 0 0 1 .8-3.1l1.4-1.4a1.5 1.5 0 0 1 2.2.1z"/>',
-    search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
-    empty: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/>',
-    arrow: '<path d="M7 17 17 7M9 7h8v8"/>',
-    trash: '<path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4L17.5 7M10 11v6M14 11v6"/>',
-    shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/>',
-    check: '<circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.7L16.2 9.5"/>',
-    undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
-    chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
-    x: '<path d="M18 6 6 18M6 6l12 12"/>',
-    chev: '<path d="M15 6l-6 6 6 6"/>',
-    edit: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
-    share: '<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>',
-    copy: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
-    chat: '<path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-1-.9.9a3.6 3.6 0 0 1-2.4-2.4l.9-.9-1-1.9z"/>'
+    headphones: '<path d="M201.89,54.66A103.43,103.43,0,0,0,128.79,24H128A104,104,0,0,0,24,128v56a24,24,0,0,0,24,24H64a24,24,0,0,0,24-24V144a24,24,0,0,0-24-24H40.36A88,88,0,0,1,128,40h.67a87.71,87.71,0,0,1,87,80H192a24,24,0,0,0-24,24v40a24,24,0,0,0,24,24h16a24,24,0,0,0,24-24V128A103.41,103.41,0,0,0,201.89,54.66ZM64,136a8,8,0,0,1,8,8v40a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V136Zm152,48a8,8,0,0,1-8,8H192a8,8,0,0,1-8-8V144a8,8,0,0,1,8-8h24Z"/>',
+    keys: '<path d="M216.57,39.43A80,80,0,0,0,83.91,120.78L28.69,176A15.86,15.86,0,0,0,24,187.31V216a16,16,0,0,0,16,16H72a8,8,0,0,0,8-8V208H96a8,8,0,0,0,8-8V184h16a8,8,0,0,0,5.66-2.34l9.56-9.57A79.73,79.73,0,0,0,160,176h.1A80,80,0,0,0,216.57,39.43ZM224,98.1c-1.09,34.09-29.75,61.86-63.89,61.9H160a63.7,63.7,0,0,1-23.65-4.51,8,8,0,0,0-8.84,1.68L116.69,168H96a8,8,0,0,0-8,8v16H72a8,8,0,0,0-8,8v16H40V187.31l58.83-58.82a8,8,0,0,0,1.68-8.84A63.72,63.72,0,0,1,96,95.92c0-34.14,27.81-62.8,61.9-63.89A64,64,0,0,1,224,98.1ZM192,76a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"/>',
+    charger: '<path d="M237.66,66.34a8,8,0,0,0-11.32,0L192,100.69,155.31,64l34.35-34.34a8,8,0,1,0-11.32-11.32L144,52.69,117.66,26.34a8,8,0,0,0-11.32,11.32L112.69,44l-53,53a40,40,0,0,0,0,56.57l15.71,15.71L26.34,218.34a8,8,0,0,0,11.32,11.32l49.09-49.09,15.71,15.71a40,40,0,0,0,56.57,0l53-53,6.34,6.35a8,8,0,0,0,11.32-11.32L203.31,112l34.35-34.34A8,8,0,0,0,237.66,66.34ZM147.72,185a24,24,0,0,1-33.95,0L71,142.23a24,24,0,0,1,0-33.95l53-53L200.69,132Z"/>',
+    wallet: '<path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z"/>',
+    electronics: '<path d="M176,16H80A24,24,0,0,0,56,40V216a24,24,0,0,0,24,24h96a24,24,0,0,0,24-24V40A24,24,0,0,0,176,16ZM72,64H184V192H72Zm8-32h96a8,8,0,0,1,8,8v8H72V40A8,8,0,0,1,80,32Zm96,192H80a8,8,0,0,1-8-8v-8H184v8A8,8,0,0,1,176,224Z"/>',
+    clothing: '<path d="M247.59,61.22,195.83,33A8,8,0,0,0,192,32H160a8,8,0,0,0-8,8,24,24,0,0,1-48,0,8,8,0,0,0-8-8H64a8,8,0,0,0-3.84,1L8.41,61.22A15.76,15.76,0,0,0,1.82,82.48l19.27,36.81A16.37,16.37,0,0,0,35.67,128H56v80a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V128h20.34a16.37,16.37,0,0,0,14.58-8.71l19.27-36.81A15.76,15.76,0,0,0,247.59,61.22ZM35.67,112a.62.62,0,0,1-.41-.13L16.09,75.26,56,53.48V112ZM184,208H72V48h16.8a40,40,0,0,0,78.38,0H184Zm36.75-96.14a.55.55,0,0,1-.41.14H200V53.48l39.92,21.78Z"/>',
+    other: '<path d="M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32l80.34,44-29.77,16.3-80.35-44ZM128,120,47.66,76l33.9-18.56,80.34,44ZM40,90l80,43.78v85.79L40,175.82Zm176,85.78h0l-80,43.79V133.82l32-17.51V152a8,8,0,0,0,16,0V107.55L216,90v85.77Z"/>',
+    location: '<path d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.45-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"/>',
+    calendar: '<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/>',
+    people: '<path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"/>',
+    tag: '<path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z"/>',
+    phone: '<path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/>',
+    search: '<path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/>',
+    empty: '<path d="M152,112a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h64A8,8,0,0,1,152,112Zm77.66,117.66a8,8,0,0,1-11.32,0l-50.06-50.07a88.11,88.11,0,1,1,11.31-11.31l50.07,50.06A8,8,0,0,1,229.66,229.66ZM112,184a72,72,0,1,0-72-72A72.08,72.08,0,0,0,112,184Z"/>',
+    arrow: '<path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/>',
+    trash: '<path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/>',
+    shield: '<path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/>',
+    check: '<path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/>',
+    undo: '<path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/>',
+    chart: '<path d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/>',
+    link: '<path d="M240,88.23a54.43,54.43,0,0,1-16,37L189.25,160a54.27,54.27,0,0,1-38.63,16h-.05A54.63,54.63,0,0,1,96,119.84a8,8,0,0,1,16,.45A38.62,38.62,0,0,0,150.58,160h0a38.39,38.39,0,0,0,27.31-11.31l34.75-34.75a38.63,38.63,0,0,0-54.63-54.63l-11,11A8,8,0,0,1,135.7,59l11-11A54.65,54.65,0,0,1,224,48,54.86,54.86,0,0,1,240,88.23ZM109,185.66l-11,11A38.41,38.41,0,0,1,70.6,208h0a38.63,38.63,0,0,1-27.29-65.94L78,107.31A38.63,38.63,0,0,1,144,135.71a8,8,0,0,0,16,.45A54.86,54.86,0,0,0,144,96a54.65,54.65,0,0,0-77.27,0L32,130.75A54.62,54.62,0,0,0,70.56,224h0a54.28,54.28,0,0,0,38.64-16l11-11A8,8,0,0,0,109,185.66Z"/>',
+    x: '<path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>',
+    chev: '<path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/>',
+    edit: '<path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/>',
+    share: '<path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z"/>',
+    copy: '<path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/>',
+    chat: '<path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/>',
+    grad: '<path d="M251.76,88.94l-120-64a8,8,0,0,0-7.52,0l-120,64a8,8,0,0,0,0,14.12L32,117.87v48.42a15.91,15.91,0,0,0,4.06,10.65C49.16,191.53,78.51,216,128,216a130,130,0,0,0,48-8.76V240a8,8,0,0,0,16,0V199.51a115.63,115.63,0,0,0,27.94-22.57A15.91,15.91,0,0,0,224,166.29V117.87l27.76-14.81a8,8,0,0,0,0-14.12ZM128,200c-43.27,0-68.72-21.14-80-33.71V126.4l76.24,40.66a8,8,0,0,0,7.52,0L176,143.47v46.34C163.4,195.69,147.52,200,128,200Zm80-33.75a97.83,97.83,0,0,1-16,14.25V134.93l16-8.53ZM188,118.94l-.22-.13-56-29.87a8,8,0,0,0-7.52,14.12L171,128l-43,22.93L25,96,128,41.07,231,96Z"/>',
   };
-  function svg(name, extra){ return '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '+(extra||'')+'>'+ICONS[name]+'</svg>'; }
+  function svg(name, extra){ return '<svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor" aria-hidden="true" '+(extra||'')+'>'+ICONS[name]+'</svg>'; }
 
   /* ================================================================ Reference data (ar / en) */
   const CATEGORIES = [
@@ -1655,7 +1659,7 @@
     {section:'female', type:'found', art:'wallet-black', name:'محفظة جلدية سوداء', category:'wallet', location:'الكافتيريا الرئيسية', date:'2026-09-26', desc:'محفظة جلد أسود تحتوي على بطاقات فقط دون نقود، وُجدت أسفل أحد الطاولات.', contact:'laqyan.finder1@student.ksu.edu.sa',
       en:{name:'Black leather wallet', desc:'Black leather wallet holding cards only, no cash. Found under one of the tables.'}},
     {section:'female', type:'lost', art:'id-card', name:'بطاقة جامعية (هوية طالبة)', category:'wallet', location:'المركز الطلابي', date:'2026-09-22', desc:'بطاقتي الجامعية سقطت مني على الأغلب بالقرب من صالة الأنشطة الطلابية.', contact:'0533221190',
-      en:{name:'University ID card (female student)', desc:'My university ID card — I probably dropped it near the student activities hall.'}},
+      en:{name:'University ID card (female student)', desc:'My university ID card. I probably dropped it near the student activities hall.'}},
     {section:'male', type:'found', art:'ipad-blue', name:'آيباد رمادي بكفر أزرق', category:'electronics', location:'مسجد الجامعة', date:'2026-09-25', desc:'جهاز آيباد باللون الرمادي داخل كفر أزرق، وُجد في رف الأحذية بمصلى الطلاب.', contact:'0577654321',
       en:{name:'Grey iPad in a blue case', desc:"Grey iPad in a blue case, found on the shoe rack in the students' prayer room."}},
     {section:'male', type:'lost', art:'jacket-black', name:'جاكيت رياضي أسود L', category:'clothing', location:'صالة الرياضة', date:'2026-09-21', desc:'جاكيت رياضي أسود مقاس L عليه شعار صغير، تركته على أحد المقاعد بعد التمرين.', contact:'0512340098',
@@ -1673,7 +1677,7 @@
     {section:'male', type:'lost', art:'car-key', name:'مفتاح سيارة تويوتا', category:'keys', location:'مواقف الطلاب', date:'2026-09-26', desc:'مفتاح سيارة تويوتا بريموت أسود وميدالية نادي الهلال، سقط غالبًا بين الموقف والبوابة.', contact:'0559034411',
       en:{name:'Toyota car key', desc:'Toyota car key with a black remote and an Al-Hilal keychain, probably dropped between the car park and the gate.'}},
     {section:'male', type:'lost', art:'smart-watch', name:'ساعة Apple Watch سوداء', category:'electronics', location:'صالة الرياضة', date:'2026-09-25', desc:'ساعة Apple Watch بسوار رياضي أسود، خلعتها قبل التمرين ونسيتها في غرفة الملابس.', contact:'0547710023',
-      en:{name:'Black Apple Watch', desc:'Apple Watch with a black sport band — took it off before training and left it in the changing room.'}},
+      en:{name:'Black Apple Watch', desc:'Apple Watch with a black sport band. I took it off before training and left it in the changing room.'}},
     {section:'male', type:'lost', art:'wallet-brown', name:'محفظة بنية فيها بطاقة بنك', category:'wallet', location:'كلية إدارة الأعمال', date:'2026-09-19', desc:'محفظة جلد بني صغيرة فيها بطاقة بنكية وبطاقة الجامعة، فُقدت في قاعة 2A.', contact:'0503348890',
       en:{name:'Brown wallet with a bank card', desc:'Small brown leather wallet with a bank card and university ID, lost in room 2A.'}},
     {section:'male', type:'found', art:'phone-charger', name:'شاحن آيفون أبيض مع رأس', category:'charger', location:'الكافتيريا الرئيسية', date:'2026-09-26', desc:'شاحن آيفون أصلي (سلك ورأس) كان موصولًا بالفيش بجانب الطاولات القريبة من النافذة.', contact:'0566120087',
@@ -1841,10 +1845,7 @@
   function renderBadge(){
     const r = currentRole(); if(!r) return;
     const badge = document.getElementById('roleBadge');
-    badge.innerHTML = (r === 'admin'
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11"/></svg>'
-    ) + esc(t(r === 'admin' ? 'badge.admin' : 'badge.student'));
+    badge.innerHTML = svg(r === 'admin' ? 'shield' : 'grad') + esc(t(r === 'admin' ? 'badge.admin' : 'badge.student'));
     badge.title = userLogin;
   }
 
@@ -1909,7 +1910,7 @@
     if(!id || !pw){ fail('err.loginEmpty', !id ? 'f-loginId' : null); (id ? loginPwInput : loginIdInput).focus(); return; }
     let ok;
     if(useDb){
-      // Checked inside Supabase (public.login) — the browser never reads the users table.
+      // Checked inside Supabase (public.login); the browser never reads the users table.
       const btn = document.getElementById('gateSubmit');
       btn.disabled = true; btn.textContent = t('gate.checking');
       const {data, error} = await sb.rpc('login', {p_role: role, p_login: id, p_password: pw});
@@ -2001,7 +2002,7 @@
   }
   function renderDbState(target){
     target.innerHTML = stateHTML();
-    ['countLost','countFound','countMale','countFemale'].forEach(id => { document.getElementById(id).textContent = '–'; });
+    ['countLost','countFound','countMale','countFemale'].forEach(id => { document.getElementById(id).textContent = '-'; });
     document.getElementById('resultsMeta').textContent = t(dbState === 'loading' ? 'load.loading' : 'load.errorTitle');
   }
   document.addEventListener('click', e => { if(e.target.closest('[data-retry-load]')) loadFromDb(); });
@@ -2027,7 +2028,7 @@
 
     const meta = document.getElementById('resultsMeta');
     const filtering = !!(q || cat || loc);
-    meta.innerHTML = '<strong>'+esc(secLabel(currentSection))+' · '+esc(t(currentTab==='lost' ? 'tab.lost' : 'tab.found'))+'</strong> — '+
+    meta.innerHTML = '<strong>'+esc(secLabel(currentSection))+' · '+esc(t(currentTab==='lost' ? 'tab.lost' : 'tab.found'))+'</strong>: '+
       esc(resultsText(filtered.length)) + (filtering ? ' '+esc(t('meta.matching')) : '') +
       (filtering ? ' <button class="link-btn meta-clear" type="button" data-clear-filters>'+svg('x')+esc(t('meta.clear'))+'</button>' : '');
 
@@ -2179,7 +2180,7 @@
       toast(t('toast.reset'));
     });
 
-    document.getElementById('resultsMeta').innerHTML = '<strong>'+esc(t('dash.meta'))+'</strong> — '+esc(t('dash.all'));
+    document.getElementById('resultsMeta').innerHTML = '<strong>'+esc(t('dash.meta'))+'</strong>: '+esc(t('dash.all'));
   }
 
   // Hover tooltip for dashboard bars
@@ -2554,7 +2555,7 @@
     });
 
     if(!detailDialog.open) detailDialog.showModal();
-    // Right after reporting, bring the possible matches into view — that's what the reporter needs next.
+    // Right after reporting, bring the possible matches into view, that's what the reporter needs next.
     const matchesBox = opts && opts.showMatches && body.querySelector('.matches');
     if(matchesBox) body.scrollTop = matchesBox.offsetTop - 12;
   }
@@ -2871,8 +2872,8 @@
     const pic = itemPic(it);
     const b = chatEl('button', 'chat-item',
       '<span class="ci-pic">' + (pic ? '<img class="'+pic.cls+'" src="'+esc(pic.src)+'" alt="" onerror="this.remove()">' : svg(it.category in ICONS ? it.category : 'other')) + '</span>' +
-      '<span class="ci-text"><strong>' + esc(nameOf(it)) + '</strong><small>' + esc(statusLabel(statusOf(it))) + ' · ' +
-        esc(locLabel(it.location)) + ' · ' + esc(fmtDate(it.date)) + '</small></span>' +
+      '<span class="ci-text"><strong>' + esc(nameOf(it)) + '</strong><small class="ci-status">' + esc(statusLabel(statusOf(it))) + '</small>' +
+        '<small>' + esc(locLabel(it.location)) + ' · ' + esc(fmtDate(it.date)) + '</small></span>' +
       '<span class="ci-open">' + esc(t('chat.openItem')) + '</span>');
     b.type = 'button';
     b.addEventListener('click', () => openDetail(it.id));
